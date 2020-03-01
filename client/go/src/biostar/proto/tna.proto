@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package tna;
+
+option go_package = "biostar/service/tna";
+option java_package = "com.supremainc.sdk.tna";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service TNA {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);  
+
+  rpc GetTNALog(GetTNALogRequest) returns (GetTNALogResponse);
+  rpc GetJobCodeLog(GetJobCodeLogRequest) returns (GetJobCodeLogResponse);
+}
+
+enum Mode {
+	UNUSED      = 0;
+	BY_USER     = 1;
+	BY_SCHEDULE = 2;
+	LAST_CHOICE = 3;
+  FIXED       = 4;
+}
+
+
+enum Key {
+	UNSPECIFIED = 0;
+
+	KEY_1 = 1;
+	KEY_2 = 2;
+	KEY_3 = 3;
+	KEY_4 = 4;
+	KEY_5 = 5;
+	KEY_6 = 6;
+	KEY_7 = 7;
+	KEY_8 = 8;
+	KEY_9 = 9;
+	KEY_10 = 10;
+	KEY_11 = 11;
+	KEY_12 = 12;
+	KEY_13 = 13;
+	KEY_14 = 14;
+	KEY_15 = 15;
+	KEY_16 = 16;
+}
+
+message TNAConfig {
+  Mode mode = 1;
+  Key key = 2;
+  bool isRequired = 3;
+  repeated uint32 schedules = 4;
+  repeated string labels = 5;
+}
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  TNAConfig config = 1;
+}
+
+message SetConfigRequest {
+  uint32 deviceID = 1;
+  TNAConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  TNAConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message JobCode {
+  uint32 code = 1;
+  string label = 2;
+}
+
+message TNALog {
+  uint32 ID = 1;
+  uint32 timestamp = 2;
+  uint32 deviceID = 3;
+  string userID = 4;
+  uint32 eventCode = 5;
+  Key TNAKey = 6;
+}
+
+
+message TNAEventFilter {
+  uint32 startTime = 1;
+  uint32 endTime = 2;
+  repeated string userIDs = 3;
+  repeated Key TNAKeys = 4;
+}
+
+
+message JobCodeLog {
+  uint32 ID = 1;
+  uint32 timestamp = 2;
+  uint32 deviceID = 3;
+  string userID = 4;
+  uint32 eventCode = 5;
+  uint32 jobCode = 6;
+}
+
+
+message JobCodeEventFilter {
+  uint32 startTime = 1;
+  uint32 endTime = 2;
+  repeated string userIDs = 3;
+  repeated uint32 jobCodes = 4;
+}
+
+
+message GetTNALogRequest {
+  uint32 deviceID = 1;
+  uint32 startEventID = 2;
+  uint32 maxNumOfLog = 3;
+  TNAEventFilter filter = 4;
+}
+
+
+message GetTNALogResponse {
+  repeated TNALog TNAEvents = 1;
+}
+
+
+message GetJobCodeLogRequest {
+  uint32 deviceID = 1;
+  uint32 startEventID = 2;
+  uint32 maxNumOfLog = 3;
+}
+
+
+message GetJobCodeLogResponse {
+  repeated JobCodeLog jobCodeEvents = 1;
+}

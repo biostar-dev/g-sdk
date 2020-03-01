@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package time;
+
+option go_package = "biostar/service/time";
+option java_package = "com.supremainc.sdk.time";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Time {
+	rpc Get(GetRequest) returns (GetResponse);
+	rpc Set(SetRequest) returns (SetResponse);
+	rpc SetMulti(SetMultiRequest) returns (SetMultiResponse);
+
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);
+
+  rpc GetDSTConfig(GetDSTConfigRequest) returns (GetDSTConfigResponse);
+  rpc SetDSTConfig(SetDSTConfigRequest) returns (SetDSTConfigResponse);
+  rpc SetDSTConfigMulti(SetDSTConfigMultiRequest) returns (SetDSTConfigMultiResponse);  
+}
+
+
+message GetRequest {
+	uint32 deviceID = 1;
+}
+
+message GetResponse {
+	uint64 GMTTime = 1;
+}
+
+message SetRequest {
+	uint32 deviceID = 1;
+	uint64 GMTTime = 2;
+}
+
+message SetResponse {
+}
+
+message SetMultiRequest {
+	repeated uint32 deviceIDs = 1;
+	uint64 GMTTime = 2;
+}
+
+message SetMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+
+
+message TimeConfig {
+  int32 timeZone = 1;
+  bool syncWithServer = 2;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  TimeConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID = 1;
+  TimeConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  TimeConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+enum Month {
+	MONTH_JANUARY = 0;
+	MONTH_FEBRUARY = 1;
+	MONTH_MARCH = 2;
+	MONTH_APRIL = 3;
+	MONTH_MAY = 4;
+	MONTH_JUNE = 5;
+	MONTH_JULY = 6;
+	MONTH_AUGUST = 7;
+	MONTH_SEPTEMBER = 8;
+	MONTH_OCTOBER = 9;
+	MONTH_NOVEMBER = 10;
+	MONTH_DECEMBER = 11;
+}
+
+enum Weekday {
+	WEEKDAY_SUNDAY = 0;
+	WEEKDAY_MONDAY = 1;
+	WEEKDAY_TUESDAY = 2;
+	WEEKDAY_WEDNESDAY = 3;
+	WEEKDAY_THURSDAY = 4;
+	WEEKDAY_FRIDAY = 5;
+	WEEKDAY_SATURDAY = 6;
+}
+
+enum Ordinal {
+	ORDINAL_FIRST = 0;
+	ORDINAL_SECOND = 1;
+	ORDINAL_THIRD = 2;
+	ORDINAL_FOURTH = 3;
+	ORDINAL_FIFTH = 4;
+	ORDINAL_SIXTH = 5;
+	ORDINAL_SEVENTH = 6;
+	ORDINAL_EIGHTH = 7;
+	ORDINAL_NINTH = 8;
+	ORDINAL_TENTH = 9;
+
+	ORDINAL_LAST = -1;
+}
+
+message WeekTime {
+  uint32 year = 1;
+  Month month = 2;
+  Ordinal ordinal = 3;
+  Weekday weekday = 4;
+  uint32 hour = 5;
+  uint32 minute = 6;
+  uint32 second = 7;
+}
+
+message DSTSchedule {
+  WeekTime startTime = 1;
+  WeekTime endTime = 2;
+  int32 timeOffset = 3;
+}
+
+message DSTConfig {
+  repeated DSTSchedule schedules = 1;
+}
+
+message GetDSTConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetDSTConfigResponse {
+  DSTConfig config = 1;
+}
+
+
+message SetDSTConfigRequest {
+  uint32 deviceID = 1;
+  DSTConfig config = 2;
+}
+
+message SetDSTConfigResponse {
+}
+
+message SetDSTConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  DSTConfig config = 2;
+}
+
+message SetDSTConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

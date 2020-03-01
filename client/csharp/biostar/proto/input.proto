@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package input;
+
+option go_package = "biostar/service/input";
+option java_package = "com.supremainc.sdk.input";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Input {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+message SupervisedInputRange {
+  uint32 MinValue = 1;
+  uint32 MaxValue = 2;
+}
+
+message SupervisedInputConfig {
+  SupervisedInputRange short = 1;
+  SupervisedInputRange open = 2;
+  SupervisedInputRange on = 3;
+  SupervisedInputRange off = 4;
+}
+
+enum SupervisedRegistanceValue {
+  SUPERVISED_REG_1K = 0;
+  SUPERVISED_REG_2_2K = 1;
+  SUPERVISED_REG_4_7K = 2;
+  SUPERVISED_REG_10K = 3;
+  SUPERVISED_REG_CUSTOM = 255;
+}
+
+message SupervisedInput {
+  uint32 portIndex = 1;
+  SupervisedRegistanceValue registance = 3;
+  SupervisedInputConfig config = 4;
+}
+
+message InputConfig {
+  uint32 numOfInput = 1;
+  uint32 numOfSupervisedInput = 2;
+  repeated SupervisedInput supervisedInputs = 3;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  InputConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  InputConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  InputConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

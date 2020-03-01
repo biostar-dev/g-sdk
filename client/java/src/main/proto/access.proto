@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package access;
+
+option go_package = "biostar/service/access";
+option java_package = "com.supremainc.sdk.access";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Access {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+  rpc Add(AddRequest) returns (AddResponse);
+  rpc AddMulti(AddMultiRequest) returns (AddMultiResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc DeleteMulti(DeleteMultiRequest) returns (DeleteMultiResponse);
+  rpc DeleteAll(DeleteAllRequest) returns (DeleteAllResponse); 
+  rpc DeleteAllMulti(DeleteAllMultiRequest) returns (DeleteAllMultiResponse); 
+
+  rpc GetLevelList(GetLevelListRequest) returns (GetLevelListResponse);
+  rpc AddLevel(AddLevelRequest) returns (AddLevelResponse);
+  rpc AddLevelMulti(AddLevelMultiRequest) returns (AddLevelMultiResponse);
+  rpc DeleteLevel(DeleteLevelRequest) returns (DeleteLevelResponse);
+  rpc DeleteLevelMulti(DeleteLevelMultiRequest) returns (DeleteLevelMultiResponse);
+  rpc DeleteAllLevel(DeleteAllLevelRequest) returns (DeleteAllLevelResponse);
+  rpc DeleteAllLevelMulti(DeleteAllLevelMultiRequest) returns (DeleteAllLevelMultiResponse);  
+}
+
+message GetListRequest {
+  uint32 deviceID = 1;
+}
+
+message AccessGroup {
+  uint32 ID = 1;
+  string name = 2;
+  repeated uint32 levelIDs = 3;
+}
+
+message GetListResponse {
+  repeated AccessGroup groups = 1;
+}
+
+
+message AddRequest {
+  uint32 deviceID = 1;
+  repeated AccessGroup groups = 2;
+}
+
+message AddResponse {
+}
+
+message AddMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated AccessGroup groups = 2;
+}
+
+message AddMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DeleteRequest {
+  uint32 deviceID = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteResponse {
+}
+
+message DeleteMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message DeleteAllRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllResponse {
+}
+
+message DeleteAllMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;    
+}
+
+
+message GetLevelListRequest {
+  uint32 deviceID = 1;
+}
+
+message DoorSchedule {
+  uint32 doorID = 1;
+  uint32 scheduleID = 2;
+}
+
+message AccessLevel {
+  uint32 ID = 1;
+  string name = 2;
+  repeated DoorSchedule doorSchedules = 3;
+}
+
+message GetLevelListResponse {
+  repeated AccessLevel levels = 1;
+}
+
+message AddLevelRequest {
+  uint32 deviceID = 1;
+  repeated AccessLevel levels = 2;
+}
+
+message AddLevelResponse {
+}
+
+message AddLevelMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated AccessLevel levels = 2;
+}
+
+message AddLevelMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DeleteLevelRequest {
+  uint32 deviceID = 1;
+  repeated uint32 levelIDs = 2;
+}
+
+message DeleteLevelResponse {
+}
+
+message DeleteLevelMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated uint32 levelIDs = 2;
+}
+
+message DeleteLevelMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message DeleteAllLevelRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllLevelResponse {
+}
+
+message DeleteAllLevelMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllLevelMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;    
+}

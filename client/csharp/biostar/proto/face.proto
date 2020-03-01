@@ -1,0 +1,211 @@
+syntax = "proto3";
+
+package face;
+
+option go_package = "biostar/service/face";
+option java_package = "com.supremainc.sdk.face";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Face {
+  rpc Scan(ScanRequest) returns (ScanResponse);
+
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);   
+
+  rpc GetAuthGroup(GetAuthGroupRequest) returns (GetAuthGroupResponse);
+  rpc AddAuthGroup(AddAuthGroupRequest) returns (AddAuthGroupResponse);
+  rpc AddAuthGroupMulti(AddAuthGroupMultiRequest) returns (AddAuthGroupMultiResponse);
+  rpc DeleteAuthGroup(DeleteAuthGroupRequest) returns (DeleteAuthGroupResponse);
+  rpc DeleteAuthGroupMulti(DeleteAuthGroupMultiRequest) returns (DeleteAuthGroupMultiResponse);
+  rpc DeleteAllAuthGroup(DeleteAllAuthGroupRequest) returns (DeleteAllAuthGroupResponse); 
+  rpc DeleteAllAuthGroupMulti(DeleteAllAuthGroupMultiRequest) returns (DeleteAllAuthGroupMultiResponse);   
+}
+
+message FaceData {
+  int32 index = 1;
+  uint32 flag = 2;
+  repeated bytes templates = 3;
+
+  bytes imageData = 5;
+}
+
+message ScanRequest {
+  uint32 deviceID = 1;
+  FaceEnrollThreshold enrollThreshold = 2;
+}
+
+message ScanResponse {
+  FaceData faceData = 2;
+}
+
+message AuthGroup {
+  uint32 ID = 1;
+  string name = 2; 
+}
+
+message GetAuthGroupRequest {
+  uint32 deviceID = 1;
+}
+
+message GetAuthGroupResponse {
+  repeated AuthGroup authGroups = 1;
+}
+
+message AddAuthGroupRequest {
+  uint32 deviceID = 1;
+  repeated AuthGroup authGroups = 2;
+}
+
+message AddAuthGroupResponse {
+
+}
+
+message AddAuthGroupMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated AuthGroup authGroups = 2;  
+}
+
+message AddAuthGroupMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DeleteAuthGroupRequest {
+  uint32 deviceID = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteAuthGroupResponse {
+
+}
+
+message DeleteAuthGroupMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteAuthGroupMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message DeleteAllAuthGroupRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllAuthGroupResponse {
+
+}
+
+message DeleteAllAuthGroupMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllAuthGroupMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+enum FaceSecurityLevel {
+  option allow_alias = true;
+  BS2_FACE_SECURITY_NORMAL = 0x00;
+  BS2_FACE_SECURITY_SECURE = 0x01;
+  BS2_FACE_SECURITY_MORE_SECURE = 0x02;
+  
+  BS2_FACE_SECURITY_DEFAULT = 0x00; // NORMAL
+}
+
+enum FaceEnrollThreshold {
+  option allow_alias = true;
+  BS2_FACE_ENROLL_THRESHOLD_0 = 0x00;
+	BS2_FACE_ENROLL_THRESHOLD_1 = 0x01;
+	BS2_FACE_ENROLL_THRESHOLD_2 = 0x02;
+	BS2_FACE_ENROLL_THRESHOLD_3 = 0x03;
+	BS2_FACE_ENROLL_THRESHOLD_4 = 0x04;
+	BS2_FACE_ENROLL_THRESHOLD_5 = 0x05;
+	BS2_FACE_ENROLL_THRESHOLD_6 = 0x06;
+	BS2_FACE_ENROLL_THRESHOLD_7 = 0x07;
+	BS2_FACE_ENROLL_THRESHOLD_8 = 0x08;
+	BS2_FACE_ENROLL_THRESHOLD_9 = 0x09;
+
+  BS2_FACE_ENROLL_THRESHOLD_DEFAULT = 0x04;
+}
+
+enum FaceLightCondition {
+  option allow_alias = true;
+	BS2_FACE_LIGHT_CONDITION_INDOOR = 0x00;
+	BS2_FACE_LIGHT_CONDITION_OUTDOOR = 0x01;
+	BS2_FACE_LIGHT_CONDITION_AUTO = 0x02;
+	BS2_FACE_LIGHT_CONDITION_DARK = 0x03;
+
+	BS2_FACE_LIGHT_CONDITION_DEFAULT = 0x00; // INDOOR
+
+}
+
+enum FaceDetectSensitivity {
+  option allow_alias = true;
+	BS2_FACE_DETECT_SENSITIVITY_OFF = 0x00;
+	BS2_FACE_DETECT_SENSITIVITY_LOW = 0x01;
+	BS2_FACE_DETECT_SENSITIVITY_MIDDLE = 0x02;
+	BS2_FACE_DETECT_SENSITIVITY_HIGH = 0x03;
+  
+  BS2_FACE_DETECT_SENSITIVITY_DEFAULT = 0x02; // MIDDLE
+
+}
+
+enum FaceLFDLevel {
+  option allow_alias = true;
+	BS2_FACE_LFD_LEVEL_OFF = 0x00;
+	BS2_FACE_LFD_LEVEL_LOW = 0x01;
+	BS2_FACE_LFD_LEVEL_MIDDLE = 0x02;
+	BS2_FACE_LFD_LEVEL_HIGH = 0x03;
+  
+  BS2_FACE_LFD_LEVEL_DEFAULT = 0x00; // OFF
+}
+
+enum FacePreviewOption {
+  option allow_alias = true;
+	BS2_FACE_PREVIEW_NONE = 0x00;
+	BS2_FACE_PREVIEW_HALF = 0x01;
+	BS2_FACE_PREVIEW_FULL = 0x02;
+	BS2_FACE_PREVIEW_DEFAULT = 0x01; // HALF
+}
+
+message FaceConfig {
+  FaceSecurityLevel securityLevel = 1;
+  FaceLightCondition lightCondition = 2;
+  FaceEnrollThreshold enrollThreshold = 3;
+  FaceDetectSensitivity detectSensitivity = 4;
+  uint32 enrollTimeout = 5; // between 30 ~ 60 sec. Default 60 sec
+  FaceLFDLevel LFDLevel = 6;
+  bool quickEnrollment = 7;
+  FacePreviewOption previewOption = 8;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  FaceConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID = 1;
+  FaceConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  FaceConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

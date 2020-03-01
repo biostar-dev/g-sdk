@@ -1,0 +1,206 @@
+syntax = "proto3";
+
+package display;
+
+option go_package = "biostar/service/display";
+option java_package = "com.supremainc.sdk.display";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Display {
+  rpc UpdateLanguagePack(UpdateLanguagePackRequest) returns (UpdateLanguagePackResponse);
+  rpc UpdateLanguagePackMulti(UpdateLanguagePackMultiRequest) returns (UpdateLanguagePackMultiResponse);
+
+/*  
+  rpc UpdateNotice(UpdateNoticeRequest) returns (UpdateNoticeResponse);
+  rpc UpdateNoticeMulti(UpdateNoticeMultiRequest) returns (UpdateNoticeMultiResponse);
+  
+  rpc UpdateBackgroundImage(UpdateBackgroundImageRequest) returns (UpdateBackgroundImageResponse);
+  rpc UpdateBackgroundImageMulti(UpdateBackgroundImageMultiRequest) returns (UpdateBackgroundImageMultiResponse);
+
+  rpc UpdateSlideImages(UpdateSlideImagesRequest) returns (UpdateSlideImagesResponse);
+  rpc UpdateSlideImagesMulti(UpdateSlideImagesMultiRequest) returns (UpdateSlideImagesMultiResponse);
+  
+  rpc UpdateSound(UpdateSoundRequest) returns (UpdateSoundResponse);
+  rpc UpdateSoundMulti(UpdateSoundMultiRequest) returns (UpdateSoundMultiResponse); 
+*/  
+
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+enum LanguageType {
+	BS2_LANGUAGE_KOREAN = 0;
+	BS2_LANGUAGE_ENGLISH = 1;
+	BS2_LANGUAGE_CUSTOM = 2;
+}
+
+enum BackgroundType {
+	BS2_BG_LOGO = 0;
+	BS2_BG_NOTICE = 1;
+	BS2_BG_SLIDE = 2;
+	BS2_BG_PDF = 3;
+}
+
+enum BackgroundTheme {
+	BS2_BG_THEME_01 = 0;
+	BS2_BG_THEME_02 = 1;
+	BS2_BG_THEME_03 = 2;
+	BS2_BG_THEME_04 = 3;
+}
+
+enum DateFormat {
+	BS2_DATE_FORMAT_YYYYMMDD = 0;
+	BS2_DATE_FORMAT_MMDDYYYY = 1;
+	BS2_DATE_FORMAT_DDMMYYYY = 2;
+}
+
+enum TimeFormat {
+  BS2_TIME_FORMAT_12_HOUR = 0;
+  BS2_TIME_FORMAT_24_HOUR = 1;
+}
+
+message DisplayConfig {
+  LanguageType language = 1;
+  BackgroundType background = 2;
+  BackgroundTheme theme = 3;
+  
+  uint32 volume = 4;
+  bool useVoice = 5;
+
+  DateFormat dateFormat = 6;
+  TimeFormat timeFormat = 7;
+  bool showDateTime = 8;
+  
+  uint32 menuTimeout = 9;
+  uint32 msgTimeout = 10;
+  uint32 backlightTimeout = 11;
+
+  bool useUserPhrase = 12;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  DisplayConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  DisplayConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  DisplayConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message UpdateLanguagePackRequest{
+  uint32 deviceID = 1;
+  bytes data = 2;
+}
+
+message UpdateLanguagePackResponse{
+}
+
+message UpdateLanguagePackMultiRequest{
+  repeated uint32 deviceIDs = 1;
+  bytes data = 2;
+}
+
+message UpdateLanguagePackMultiResponse{
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message UpdateNoticeRequest{
+  uint32 deviceID = 1;
+  string notice = 2;
+}
+
+message UpdateNoticeResponse{
+}
+
+message UpdateNoticeMultiRequest{
+  repeated uint32 deviceIDs = 1;
+  string notice = 2;
+}
+
+message UpdateNoticeMultiResponse{
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message UpdateBackgroundImageRequest {
+  uint32 deviceID = 1;
+  bytes PNGImage = 2;
+}
+
+message UpdateBackgroundImageResponse {
+}
+
+message UpdateBackgroundImageMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  bytes PNGImage = 2;
+}
+
+message UpdateBackgroundImageMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message UpdateSlideImagesRequest {
+  uint32 deviceID = 1;
+  repeated bytes PNGImages = 2;
+}
+
+message UpdateSlideImagesResponse {
+}
+
+message UpdateSlideImagesMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated bytes PNGImages = 2;
+}
+
+message UpdateSlideImagesMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+enum SoundIndex {
+  SOUND_INDEX_WELCOME = 0;
+  SOUND_INDEX_AUTH_SUCCESS = 1;
+  SOUND_INDEX_AUTH_FAIL = 2;
+  SOUND_INDEX_ALARM_1 = 3;
+  SOUND_INDEX_ALARM_2 = 4;
+}
+
+message UpdateSoundRequest {
+  uint32 deviceID = 1;
+  SoundIndex index = 2;
+  bytes waveData = 3;
+}
+
+message UpdateSoundResponse {
+}
+
+message UpdateSoundMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  SoundIndex index = 2;
+  bytes waveData = 3;
+}
+
+message UpdateSoundMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

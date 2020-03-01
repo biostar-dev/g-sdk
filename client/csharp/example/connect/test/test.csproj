@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Grpc" Version="1.17.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.17.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="../../../biostar/proto/*.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../../connect/*.cs" />
+    <Compile Include="../../client/*.cs" />
+    <Compile Include="../../cli/*.cs" />
+  </ItemGroup>
+
+
+</Project>

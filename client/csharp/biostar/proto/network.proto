@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package network;
+
+option go_package = "biostar/service/network";
+option java_package = "com.supremainc.sdk.network";
+option java_multiple_files = true;
+
+import "err.proto";
+import "connect.proto";
+
+
+service Network {
+  rpc GetIPConfig(GetIPConfigRequest) returns (GetIPConfigResponse);  
+  rpc SetIPConfig(SetIPConfigRequest) returns (SetIPConfigResponse);
+  rpc SetIPConfigMulti(SetIPConfigMultiRequest) returns (SetIPConfigMultiResponse);
+
+  rpc GetWLANConfig(GetWLANConfigRequest) returns (GetWLANConfigResponse);  
+  rpc SetWLANConfig(SetWLANConfigRequest) returns (SetWLANConfigResponse);
+  rpc SetWLANConfigMulti(SetWLANConfigMultiRequest) returns (SetWLANConfigMultiResponse);  
+}
+
+message GetIPConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetIPConfigResponse {
+  IPConfig config = 1;
+}
+
+
+message SetIPConfigRequest {
+  uint32 deviceID= 1;
+  IPConfig config = 2;
+}
+
+message SetIPConfigResponse {
+}
+
+message SetIPConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  IPConfig config = 2;
+}
+
+message SetIPConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+enum EthernetBaseband {
+	BASEBAND_10BASE_T	  = 0;
+	BASEBAND_100BASE_T	= 1;
+}
+
+
+message IPConfig {
+  bool    useDHCP = 1;
+  string  IPAddr = 2;
+  string  gateway = 3;
+  string  subnetMask = 4;
+  int32   port = 5;
+
+  connect.ConnectionMode connectionMode = 6;
+
+  string  serverAddr = 7;
+  int32   serverPort = 8;
+  int32   SSLServerPort = 9;
+
+  bool    useDNS = 10;
+  string  DNSServer = 11;
+  string  serverURL = 12;
+
+  int32   MTUSize = 13;
+  EthernetBaseband baseband = 14;
+}
+
+
+message GetWLANConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetWLANConfigResponse {
+  WLANConfig config = 1;
+}
+
+
+message SetWLANConfigRequest {
+  uint32 deviceID= 1;
+  WLANConfig config = 2;
+}
+
+message SetWLANConfigResponse {
+}
+
+message SetWLANConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  WLANConfig config = 2;
+}
+
+message SetWLANConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+enum WLANOperationMode {
+	WLAN_OPMODE_MANAGED = 0;
+  WLAN_OPMODE_ADHOC = 1;
+}
+
+enum WLANAuthType {
+  WLAN_AUTH_OPEN = 0;
+	WLAN_AUTH_SHARED = 1;
+	WLAN_AUTH_WPA_PSK = 2;
+	WLAN_AUTH_WPA2_PSK = 3;
+}
+
+enum WLANEncryptionType {
+  WLAN_ENC_NONE = 0;
+	BS2_WLAN_ENC_WEP = 1;
+	BS2_WLAN_ENC_TKIP_AES = 2;
+	BS2_WLAN_ENC_AES = 3;
+	BS2_WLAN_ENC_TKIP = 4;
+}
+
+message WLANConfig {
+  bool enabled = 1;
+  WLANOperationMode opMode = 2;
+  WLANAuthType authType = 3;
+  WLANEncryptionType encType = 4;
+
+  string ESSID = 5;
+  string authKey = 6;
+}

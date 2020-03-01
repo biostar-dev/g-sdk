@@ -1,0 +1,288 @@
+syntax = "proto3";
+
+package device;
+
+option go_package = "biostar/service/device";
+option java_package = "com.supremainc.sdk.device";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Device {
+	rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);
+	rpc GetCapabilityInfo(GetCapabilityInfoRequest) returns (GetCapabilityInfoResponse);
+
+	rpc DeleteRootCA(DeleteRootCARequest) returns (DeleteRootCAResponse);
+
+	rpc Lock(LockRequest) returns (LockResponse);
+	rpc LockMulti(LockMultiRequest) returns (LockMultiResponse);
+
+	rpc Unlock(UnlockRequest) returns (UnlockResponse);
+	rpc UnlockMulti(UnlockMultiRequest) returns (UnlockMultiResponse);
+
+	rpc Reboot(RebootRequest) returns (RebootResponse);
+	rpc RebootMulti(RebootMultiRequest) returns (RebootMultiResponse);
+	
+	rpc FactoryReset(FactoryResetRequest) returns (FactoryResetResponse);
+	rpc FactoryResetMulti(FactoryResetMultiRequest) returns (FactoryResetMultiResponse);
+
+	rpc ClearDB(ClearDBRequest) returns (ClearDBResponse);
+	rpc ClearDBMulti(ClearDBMultiRequest) returns (ClearDBMultiResponse);
+	  
+  rpc ResetConfig(ResetConfigRequest) returns (ResetConfigResponse);
+  rpc ResetConfigMulti(ResetConfigMultiRequest) returns (ResetConfigMultiResponse);
+ 
+	rpc UpgradeFirmware(UpgradeFirmwareRequest) returns (UpgradeFirmwareResponse);
+	rpc UpgradeFirmwareMulti(UpgradeFirmwareMultiRequest) returns (UpgradeFirmwareMultiResponse);
+}
+
+
+message GetInfoRequest {
+	uint32 deviceID = 1;
+}
+
+message FactoryInfo {
+	string MACAddr = 2;
+	string modelName = 3;
+	string firmwareVersion = 4;
+	string kernelVersion = 5;
+	string BSCoreVersion = 6;
+	string boardVersion = 7;
+}
+
+message GetInfoResponse {
+	FactoryInfo info = 1;
+}
+
+
+message GetCapabilityInfoRequest {
+	uint32 deviceID = 1;
+}
+
+
+message CapabilityInfo {
+	Type type = 1;
+	
+	uint32 maxNumOfUser = 2;
+
+	bool PINSupported = 3;
+	bool cardSupported = 4;
+	bool card1xSupported = 5;
+	bool SEOSSupported = 6;
+	bool fingerSupported = 7;
+	bool faceSupported = 8;
+
+	bool userNameSupported = 10;
+	bool userPhotoSupported = 11;
+	bool userPhraseSupported = 12;
+	bool alphanumericIDSupported = 13;
+
+//	bool SSLSupported
+	bool WLANSupported = 20;
+	bool imageLogSupported = 21;
+	bool VOIPSupported = 22;	
+
+	bool TNASupported = 30;
+	bool jobCodeSupported = 31;
+
+	bool wiegandSupported = 40;
+	bool wiegandMultiSupported = 41;
+	bool triggerActionSupported = 42;
+	bool DSTSupported = 43;
+	bool DNSSupported = 44;	
+	
+	bool OSDPKeySupported = 50;
+	bool RS485ExtSupported = 51;
+}
+
+
+
+message GetCapabilityInfoResponse {
+	CapabilityInfo capInfo = 1;
+}
+
+
+message DeleteRootCARequest {
+	uint32 deviceID = 1;
+}
+
+message DeleteRootCAResponse {
+}
+
+message LockRequest {
+	uint32 deviceID = 1;
+}
+
+message LockResponse {
+}
+
+message LockMultiRequest {
+	repeated uint32 deviceIDs = 1;
+}
+
+message LockMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;	
+}
+
+message UnlockRequest {
+	uint32 deviceID = 1;
+}
+
+message UnlockResponse {
+}
+
+message UnlockMultiRequest {
+	repeated uint32 deviceIDs = 1;
+}
+
+message UnlockMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;	
+}
+
+
+message RebootRequest {
+	uint32 deviceID = 1;
+}
+
+message RebootResponse {
+}
+
+message RebootMultiRequest {
+	repeated uint32 deviceIDs = 1;
+}
+
+message RebootMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;	
+}
+
+
+message FactoryResetRequest {
+	uint32 deviceID = 1;
+}
+
+message FactoryResetResponse {
+}
+
+message FactoryResetMultiRequest {
+	repeated uint32 deviceIDs = 1;
+}
+
+message FactoryResetMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;	
+}
+
+
+message ClearDBRequest {
+	uint32 deviceID = 1;
+}
+
+message ClearDBResponse {
+}
+
+message ClearDBMultiRequest {
+	repeated uint32 deviceIDs = 1;
+}
+
+message ClearDBMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;	
+}
+
+
+message ResetConfigRequest {
+  uint32 deviceID = 1;
+  bool withNetwork = 2;
+  bool withDB = 3;
+}
+
+message ResetConfigResponse {
+}
+
+message ResetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  bool withNetwork = 2;
+  bool withDB = 3;
+}
+
+message ResetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+
+enum Type {
+  option allow_alias = true;
+  UNDEFINED       = 0x00;
+	BIOENTRY_PLUS		= 0x01;
+	BIOENTRY_W			= 0x02;
+	BIOLITE_NET			= 0x03;
+	XPASS				    = 0x04;
+	XPASS_S2			  = 0x05;
+	ENTRY_MAX			  = 0x05;
+	SECURE_IO_2			= 0x06;
+	DOOR_MODULE_20	= 0x07;
+	BIOSTATION_2		= 0x08;
+	BIOSTATION_A2		= 0x09;
+	FACESTATION_2		= 0x0A;
+	IO_DEVICE			  = 0x0B;
+	BIOSTATION_L2		= 0x0C;
+	BIOENTRY_W2			= 0x0D;
+	RS485_SLAVE     = 0x80;
+	CORESTATION_40  = 0x0E;
+	OUTPUT_MODULE   = 0x0F;
+	INPUT_MODULE    = 0x10;
+	BIOENTRY_P2			= 0x11;
+	BIOLITE_N2 			= 0x12;
+	XPASS2				  = 0x13;
+	XPASS_S3			  = 0x14;
+	BIOENTRY_R2			= 0x15;
+	XPASS_D2			  = 0x16;
+	DOOR_MODULE_21	= 0x17;
+	XPASS_D2_KEYPAD = 0x18;
+	FACELITE				= 0x19;
+	XPASS2_KEYPAD		= 0x1A;
+	UNKNOWN				  = 0xFF;
+}
+
+
+enum SwitchType {
+  NORMALLY_OPEN = 0x00;
+  NORMALLY_CLOSED = 0x01;
+}
+
+enum LEDColor {
+	LED_COLOR_OFF = 0x00;
+	LED_COLOR_RED = 0x01;
+	LED_COLOR_YELLOW = 0x02;
+	LED_COLOR_GREEN = 0x03;
+	LED_COLOR_CYAN = 0x04;
+	LED_COLOR_BLUE = 0x05;
+	LED_COLOR_MAGENTA = 0x06;
+	LED_COLOR_WHITE = 0x07;
+}
+
+enum BuzzerTone {
+	BUZZER_TONE_OFF = 0x00;
+	BUZZER_TONE_LOW = 0x01;
+	BUZZER_TONE_MIDDLE = 0x02;
+	BUZZER_TONE_HIGH = 0x03;
+}
+
+
+message UpgradeFirmwareRequest {
+	uint32 deviceID = 1;
+	bytes firmwareData = 2;
+}
+
+message UpgradeFirmwareResponse {
+}
+
+
+message UpgradeFirmwareMultiRequest {
+	repeated uint32 deviceIDs = 1;
+	bytes firmwareData = 2;
+}
+
+message UpgradeFirmwareMultiResponse {
+	repeated err.ErrorResponse deviceErrors = 1;
+}
+

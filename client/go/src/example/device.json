@@ -1,0 +1,16 @@
+{
+  "devices": [
+    {
+      "deviceID": 939504224,
+      "connectionMode": 1,
+      "IPAddr": "192.168.0.110",
+      "port": 51211
+    },
+    {
+      "deviceID": 540092578,
+      "connectionMode": 0,
+      "IPAddr": "192.168.0.120",
+      "port": 51211
+    }    
+  ]
+}

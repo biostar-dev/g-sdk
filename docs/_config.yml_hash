@@ -1,0 +1,181 @@
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely edit after that. If you find
+# yourself editing this file very often, consider using Jekyll's data files
+# feature for the data you need to update frequently.
+#
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+# These are used to personalize your new site. If you look in the HTML files,
+# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
+# You can create any custom variable you would like, and they will be accessible
+# in the templates via {{ site.myvariable }}.
+title: Device Gateway
+subtitle: New way to communicate
+email:
+description: >- # this means to ignore newlines until "baseurl:"
+  Device Gateway is a new way of communicating with BioStar devices. It is a lightweight, scalable, and cross-platform solution which will expedite your development. 
+  Based on gRPC, it will support most widely-used programming languages such as Java, C#, Python, node.js, etc.
+github_username: biostar-dev
+minimal_mistakes_skin: default
+search: true
+search_full_content: true
+
+# Build settings
+markdown: kramdown
+remote_theme: mmistakes/minimal-mistakes
+# Outputting
+permalink: /:categories/:title/
+paginate: 5 # amount of posts to show
+paginate_path: /page:num/
+timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+source: dd49ccaa89bcb47b3bd8451d8ee2c83fcbe0d193
+destination: dd49ccaa89bcb47b3bd8451d8ee2c83fcbe0d193/_site
+baseurl: /dd49ccaa89bcb47b3bd8451d8ee2c83fcbe0d193
+
+include:
+  - _pages
+  - _posts
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/
+
+# Plugins (previously gems:)
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jemoji
+  - jekyll-include-cache
+
+author:
+  name   : "Resources"
+#  avatar : "/assets/images/bio-photo.jpg"
+  bio    : ""
+  links:
+    - label: "Suprema Inc."
+      icon: "fas fa-fw fa-link"
+      url: "https://www.supremainc.com"
+    - label: "Knowledge Base"
+      icon: "fas fa-fw fa-question"
+      url: "http://kb.supremainc.com/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/biostar-dev/device-sdk-client/"
+
+footer:
+  links:
+    - label: "Suprema Inc."
+      icon: "fas fa-fw fa-link"
+      url: "https://www.supremainc.com"
+    - label: "Knowledge Base"
+      icon: "fas fa-fw fa-question"
+      url: "http://kb.supremainc.com/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/biostar-dev/device-sdk-client/"
+
+collections:
+  apis:
+    output: true
+  tutorials:
+    output: true    
+
+defaults:
+  # _posts
+  - scope:
+      path: "_posts"
+      type: posts
+    values:
+      layout: single
+#      author_profile: true
+      read_time: true
+#      comments: true
+#      share: true
+#      related: true
+      classes: wide
+
+  # _pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      classes: wide
+
+  # _apis
+  - scope:
+      path: "_apis"
+      types: apis
+    values:
+      layout: single
+      toc: true
+      toc_sticky: true    
+      permalink: /api/:title/
+      sidebar: 
+        nav: "api"        
+
+  - scope:
+      path: "_tutorials"
+      types: tutorials
+    values:
+      layout: single
+      classes: wide    
+
+  - scope:
+      path: "_tutorials/quick"
+      types: tutorials
+    values:
+      sidebar:
+        nav: "quick"
+
+  - scope:
+      path: "_tutorials/overview"
+      types: tutorials
+    values:
+      sidebar:
+        nav: "overview"
+
+  - scope:
+      path: "_tutorials/csharp"
+      types: tutorials
+    values:
+      permalink: /csharp/:title/
+      sidebar:
+        nav: "csharp"
+
+  - scope:
+      path: "_tutorials/java"
+      types: tutorials
+    values:
+      permalink: /java/:title/
+      sidebar:
+        nav: "java"
+
+  - scope:
+      path: "_tutorials/go"
+      types: tutorials
+    values:
+      permalink: /go/:title/
+      sidebar:
+        nav: "go"
+
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/

@@ -1,0 +1,242 @@
+syntax = "proto3";
+
+package connect;
+
+option go_package = "biostar/service/connect";
+option java_package = "com.supremainc.sdk.connect";
+option java_multiple_files = true;
+
+import "device.proto";
+import "err.proto";
+
+service Connect {
+  rpc Connect(ConnectRequest) returns (ConnectResponse);
+
+  rpc AddAsyncConnection(AddAsyncConnectionRequest) returns (AddAsyncConnectionResponse);
+  rpc DeleteAsyncConnection(DeleteAsyncConnectionRequest) returns (DeleteAsyncConnectionResponse);
+
+  rpc SetAcceptFilter(SetAcceptFilterRequest) returns (SetAcceptFilterResponse);
+  rpc GetAcceptFilter(GetAcceptFilterRequest) returns (GetAcceptFilterResponse);
+  rpc GetPendingList(GetPendingListRequest) returns (GetPendingListResponse);
+
+  rpc GetDeviceList(GetDeviceListRequest) returns (GetDeviceListResponse);
+
+  rpc Disconnect(DisconnectRequest) returns (DisconnectResponse);
+  rpc DisconnectAll(DisconnectAllRequest) returns (DisconnectAllResponse);
+
+  rpc SearchDevice(SearchDeviceRequest) returns (SearchDeviceResponse);
+
+  rpc SetConnectionMode(SetConnectionModeRequest) returns (SetConnectionModeResponse);
+  rpc SetConnectionModeMulti(SetConnectionModeMultiRequest) returns (SetConnectionModeMultiResponse);
+  
+  rpc EnableSSL(EnableSSLRequest) returns (EnableSSLResponse);
+  rpc EnableSSLMulti(EnableSSLMultiRequest) returns (EnableSSLMultiResponse);
+
+  rpc DisableSSL(DisableSSLRequest) returns (DisableSSLResponse);
+  rpc DisableSSLMulti(DisableSSLMultiRequest) returns (DisableSSLMultiResponse);
+
+	rpc SubscribeStatus(SubscribeStatusRequest) returns (stream StatusChange);
+}
+
+message ConnectInfo {
+  string IPAddr = 1; 
+  int32 port = 2;
+  bool useSSL = 3;
+}
+
+message ConnectRequest {
+  ConnectInfo connectInfo = 1;
+}
+
+message ConnectResponse {
+  uint32 deviceID = 1;
+}
+
+message AsyncConnectInfo {
+  uint32 deviceID = 1;
+  string IPAddr = 2; 
+  int32 port = 3;
+  bool useSSL = 4;
+}
+
+message AddAsyncConnectionRequest {
+  repeated AsyncConnectInfo connectInfos = 1;
+}
+
+message AddAsyncConnectionResponse {
+}
+
+message DeleteAsyncConnectionRequest {
+  repeated uint32 deviceIDs = 1;;
+}
+
+message DeleteAsyncConnectionResponse {
+}
+
+message AcceptFilter {
+  bool allowAll = 1;
+  repeated uint32 deviceIDs = 2;
+  repeated string IPAddrs = 3;
+  repeated string subnetMasks = 4;
+}
+
+message SetAcceptFilterRequest {
+  AcceptFilter filter = 1;
+}
+
+message SetAcceptFilterResponse {
+}
+
+message GetAcceptFilterRequest {
+}
+
+message GetAcceptFilterResponse {
+  AcceptFilter filter = 1;
+}
+
+message PendingDeviceInfo {
+  uint32 deviceID       = 1;
+  string IPAddr         = 2;
+  uint32 lastTry        = 3;
+}
+
+message GetPendingListRequest {
+}
+
+message GetPendingListResponse {
+  repeated PendingDeviceInfo deviceInfos = 1;
+}
+
+enum ConnectionMode {
+  option allow_alias = true;
+
+	SERVER_TO_DEVICE	= 0;	///< server connects to device
+  DEVICE_TO_SERVER	= 1;	///< device connects to server
+  
+  DEFAULT = 0;
+}
+
+enum Status {
+	// Normal Status
+	DISCONNECTED   	= 0x00;
+	TCP_CONNECTED		= 0x01;
+	TLS_CONNECTED  	= 0x02;
+
+	// TCP Connection Error Status
+  TCP_CANNOT_CONNECT = 0x100;
+  TCP_NOT_ALLOWED    = 0x101;
+
+	// TLS Connection Error Status
+  TLS_CANNOT_CONNECT = 0x200;
+  TLS_NOT_ALLOWED    = 0x201;
+}
+
+message DeviceInfo {
+  uint32 deviceID       = 1;
+  ConnectionMode connectionMode = 2;
+  string IPAddr         = 3;
+  int32 port            = 4;
+  Status status         = 5;
+  bool autoReconnect    = 6;
+  bool useSSL = 7;
+}
+
+message GetDeviceListRequest {
+}
+
+message GetDeviceListResponse {
+  repeated DeviceInfo deviceInfos = 1;
+}
+
+
+message DisconnectRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DisconnectResponse {
+}
+
+message DisconnectAllRequest {
+}
+
+message DisconnectAllResponse {
+}
+
+
+message SearchDeviceRequest {
+  uint32 timeout = 1;
+}
+
+message SearchDeviceInfo  {
+  uint32 deviceID = 1;
+  device.Type type = 2;
+  bool useDHCP = 3;
+  ConnectionMode connectionMode = 4; 
+  string IPAddr = 5;
+  int32 port = 6;
+  bool useSSL = 7;
+}
+
+message SearchDeviceResponse {
+  repeated SearchDeviceInfo deviceInfos = 1;
+}
+
+message SubscribeStatusRequest {
+  int32 queueSize = 1;
+}
+
+message StatusChange {
+  uint32 deviceID = 1;
+  Status status = 2;
+  uint32 timestamp = 3;
+}
+
+message SetConnectionModeRequest {
+  uint32 deviceID = 1;
+  ConnectionMode connectionMode = 2;
+}
+
+message SetConnectionModeResponse {
+}
+
+message SetConnectionModeMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  ConnectionMode connectionMode = 2;
+}
+
+message SetConnectionModeMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message EnableSSLRequest {
+  uint32 deviceID = 1;
+}
+
+message EnableSSLResponse {
+}
+
+message EnableSSLMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message EnableSSLMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DisableSSLRequest {
+  uint32 deviceID = 1;
+}
+
+message DisableSSLResponse {
+}
+
+message DisableSSLMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DisableSSLMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+

@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package schedule;
+
+option go_package = "biostar/service/schedule";
+option java_package = "com.supremainc.sdk.schedule";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Schedule {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+  rpc Add(AddRequest) returns (AddResponse);
+  rpc AddMulti(AddMultiRequest) returns (AddMultiResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc DeleteMulti(DeleteMultiRequest) returns (DeleteMultiResponse);
+  rpc DeleteAll(DeleteAllRequest) returns (DeleteAllResponse); 
+  rpc DeleteAllMulti(DeleteAllMultiRequest) returns (DeleteAllMultiResponse); 
+
+  rpc GetHolidayList(GetHolidayListRequest) returns (GetHolidayListResponse);
+  rpc AddHoliday(AddHolidayRequest) returns (AddHolidayResponse);
+  rpc AddHolidayMulti(AddHolidayMultiRequest) returns (AddHolidayMultiResponse);
+  rpc DeleteHoliday(DeleteHolidayRequest) returns (DeleteHolidayResponse);
+  rpc DeleteHolidayMulti(DeleteHolidayMultiRequest) returns (DeleteHolidayMultiResponse);
+  rpc DeleteAllHoliday(DeleteAllHolidayRequest) returns (DeleteAllHolidayResponse);
+  rpc DeleteAllHolidayMulti(DeleteAllHolidayMultiRequest) returns (DeleteAllHolidayMultiResponse);
+}
+
+
+message ScheduleInfo {
+  uint32 ID = 1;
+  string name = 2;
+  DailySchedule daily = 3;
+  WeeklySchedule weekly = 4;
+  repeated HolidaySchedule holidays = 5;
+}
+
+message DaySchedule {
+  repeated TimePeriod periods = 1;
+}
+
+message TimePeriod {
+  int32 startTime = 1; // in minutes
+  int32 endTime = 2; // in minutes
+}
+
+message WeeklySchedule {
+  repeated DaySchedule daySchedules = 1;
+}
+
+message DailySchedule {
+  uint32 startDate = 1; // unix time
+  repeated DaySchedule daySchedules = 2; // max 90
+}
+
+message HolidaySchedule {
+  uint32 groupID = 1;
+  DaySchedule daySchedule = 2;
+}
+
+message HolidayGroup {
+  uint32 ID = 1;
+  string name = 2;
+  repeated Holiday holidays = 3;
+}
+
+
+enum HolidayRecurrence {
+  DO_NOT_RECUR = 0;
+  RECUR_YEARLY = 1;
+  RECUR_MONTHLY = 2;
+  RECUR_WEEKLY = 3;
+}
+
+
+message Holiday {
+  uint32 date = 1;
+  HolidayRecurrence recurrence = 2;
+}
+
+
+message GetListRequest {
+  uint32 deviceID = 1;
+} 
+
+message GetListResponse {
+  repeated ScheduleInfo schedules = 1;
+}
+
+message AddRequest {
+  uint32 deviceID = 1;
+  repeated ScheduleInfo schedules = 2;
+}
+
+message AddResponse {
+}
+
+
+message AddMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated ScheduleInfo schedules = 2;
+}
+
+message AddMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+
+message DeleteRequest {
+  uint32 deviceID = 1;
+  repeated uint32 scheduleIDs = 2;
+}
+
+message DeleteResponse {
+
+}
+
+message DeleteMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated uint32 scheduleIDs = 2;
+}
+
+message DeleteMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DeleteAllRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllResponse {
+
+}
+
+message DeleteAllMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+
+message GetHolidayListRequest {
+  uint32 deviceID = 1;
+} 
+
+message GetHolidayListResponse {
+  repeated HolidayGroup groups = 1;
+}
+
+message AddHolidayRequest {
+  uint32 deviceID = 1;
+  repeated HolidayGroup groups = 2;
+}
+
+message AddHolidayResponse {
+}
+
+message AddHolidayMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated HolidayGroup groups = 2;
+}
+
+message AddHolidayMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message DeleteHolidayRequest {
+  uint32 deviceID = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteHolidayResponse {
+
+}
+
+message DeleteHolidayMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated uint32 groupIDs = 2;
+}
+
+message DeleteHolidayMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message DeleteAllHolidayRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllHolidayResponse {
+
+}
+
+message DeleteAllHolidayMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllHolidayMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+

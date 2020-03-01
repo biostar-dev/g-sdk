@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package cert;
+
+option go_package = "biostar/service/cert";
+option java_package = "com.supremainc.sdk.cert";
+option java_multiple_files = true;
+
+service Cert {
+  // Root CA
+  rpc CreateCA(CreateCARequest) returns (CreateCAResponse);
+  rpc SetCA(SetCARequest) returns (SetCAResponse);
+  rpc GetCA(GetCARequest) returns (GetCAResponse);
+
+  // Server Certificate
+  rpc CreateServerCertificate(CreateServerCertificateRequest) returns (CreateServerCertificateResponse);
+  rpc SetServerCertificate(SetServerCertificateRequest) returns (SetServerCertificateResponse);
+  rpc GetServerCertificate(GetServerCertificateRequest) returns (GetServerCertificateResponse);
+}
+
+message PKIName {
+  string country = 1;
+  string province = 2;
+  string city = 3;
+  string organization = 4;
+  string organizationUnit = 5;
+  string commonName = 6;
+}
+
+message CreateCARequest {
+  PKIName subject = 1;
+  int32 expireAfterYears = 2;
+}
+
+message CreateCAResponse {
+  string CACert = 1;
+  string CAKey = 2;
+}
+
+message SetCARequest {
+  string CACert = 1;
+  string CAKey = 2;
+}
+
+message SetCAResponse {
+}
+
+message GetCARequest {
+}
+
+message GetCAResponse {
+  string CACert = 1;
+  string CAKey = 2;
+}
+
+message CreateServerCertificateRequest {
+  PKIName subject = 1;
+  repeated string domainNames = 2;
+  repeated string IPAddrs = 3;
+  int32 expireAfterYears = 4;
+}
+
+message CreateServerCertificateResponse {
+  string serverCert = 1;
+  string serverKey = 2;
+}
+
+message SetServerCertificateRequest {
+  string serverCert = 1;
+  string serverKey = 2;
+}
+
+message SetServerCertificateResponse {
+}
+
+message GetServerCertificateRequest {
+}
+
+message GetServerCertificateResponse {
+  string serverCert = 1;
+  string serverKey = 2;
+}
+
+
+

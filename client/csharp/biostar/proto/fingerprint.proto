@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package fingerprint;
+
+option go_package = "biostar/service/fingerprint";
+option java_package = "com.supremainc.sdk.fingerprint";
+option java_multiple_files = true;
+
+service Fingerprint {
+  rpc Scan(ScanRequest) returns (ScanResponse);
+  rpc GetImage(GetImageRequest) returns (GetImageResponse);
+}
+
+message FingerprintData {
+  int32 index = 1;
+  int32 flag = 2;
+  repeated bytes templates = 3;
+}
+
+message ScanRequest {
+  uint32 deviceID = 1;  
+  int32 templateFormat = 2;
+}
+
+message ScanResponse {
+  bytes templateData = 1;
+}
+
+message GetImageRequest {
+  uint32 deviceID = 1;
+}
+
+message GetImageResponse {
+  int32 width = 1;
+  int32 height = 2;
+  bytes grayPixel = 3;
+}

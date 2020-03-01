@@ -1,0 +1,300 @@
+syntax = "proto3";
+
+package card;
+
+option go_package = "biostar/service/card";
+option java_package = "com.supremainc.sdk.card";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Card {
+  rpc Scan(ScanRequest) returns (ScanResponse);
+  rpc Erase(EraseRequest) returns (EraseResponse);
+  rpc Write(WriteRequest) returns (WriteResponse);
+
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);  
+
+  rpc GetBlacklist(GetBlacklistRequest) returns (GetBlacklistResponse);
+  rpc AddBlacklist(AddBlacklistRequest) returns (AddBlacklistResponse);
+  rpc AddBlacklistMulti(AddBlacklistMultiRequest) returns (AddBlacklistMultiResponse);
+  rpc DeleteBlacklist(DeleteBlacklistRequest) returns (DeleteBlacklistResponse);
+  rpc DeleteBlacklistMulti(DeleteBlacklistMultiRequest) returns (DeleteBlacklistMultiResponse);
+  rpc DeleteAllBlacklist(DeleteAllBlacklistRequest) returns (DeleteAllBlacklistResponse); 
+  rpc DeleteAllBlacklistMulti(DeleteAllBlacklistMultiRequest) returns (DeleteAllBlacklistMultiResponse); 
+
+  rpc Get1XConfig(Get1XConfigRequest) returns (Get1XConfigResponse);
+  rpc Set1XConfig(Set1XConfigRequest) returns (Set1XConfigResponse);
+  rpc Set1XConfigMulti(Set1XConfigMultiRequest) returns (Set1XConfigMultiResponse);   
+}
+
+enum Type {
+  CARD_TYPE_UNKNOWN		= 0x00;
+  CARD_TYPE_CSN				= 0x01;
+  CARD_TYPE_SECURE		= 0x02;
+  CARD_TYPE_ACCESS		= 0x03;
+  CARD_TYPE_WIEGAND		= 0x0A;    
+}
+
+message CSNCardData {
+  Type type = 1;
+  int32 size = 2;
+  bytes data = 3;
+}
+
+message SmartCardHeader {
+  uint32 headerCRC = 1;
+  uint32 cardCRC = 2;
+  Type type = 3;
+  uint32 numOfTemplate = 4;
+  uint32 templateSize = 5;
+  uint32 issueCount = 6;
+  uint32 duressMask = 7;
+  uint32 cardAuthMode = 8;
+  bool useAlphanumericID = 9;
+}
+
+message SmartCardCredential {
+  bytes PIN = 1;
+  repeated bytes templates = 2;
+}
+
+message AccessOnCardData {
+  repeated uint32 accessGroupIDs = 1;
+  uint32 startTime = 2;
+  uint32 endTime = 3;
+}
+
+message SmartCardData {
+  SmartCardHeader header = 1;
+  bytes cardID = 2;
+  SmartCardCredential credential = 3;
+  AccessOnCardData accessOnData = 4;
+} 
+
+message CardData {
+  Type type = 1;
+  CSNCardData CSNCardData = 2; // null if it is a smartcard
+  SmartCardData smartCardData = 3; // null if it is a CSN card
+}
+
+
+message ScanRequest {
+  uint32 deviceID = 1;  
+}
+
+message ScanResponse {
+  CardData cardData = 1;
+}
+
+
+message EraseRequest {
+  uint32 deviceID = 1;  
+}
+
+message EraseResponse {
+}
+
+
+message WriteRequest {
+  uint32 deviceID = 1;  
+  SmartCardData smartCardData = 2;
+}
+
+message WriteResponse {
+}
+
+
+
+message MifareConfig {
+  bytes primaryKey = 1;
+  bytes secondaryKey = 2;
+  int32 startBlockIndex = 3;
+}
+
+message IClassConfig {
+  bytes primaryKey = 1;
+  bytes secondaryKey = 2;
+  int32 startBlockIndex = 3;
+}
+
+enum DESFireEncryptionType {
+  ENC_DES_3DES = 0;
+  ENC_AES = 1;
+}
+
+message DESFireConfig {
+  bytes primaryKey = 1;
+  bytes secondaryKey = 2;
+  bytes appID = 3;
+  uint32 fileID = 4;
+  DESFireEncryptionType encryptionType = 5;
+}
+
+message SEOSConfig {
+  bytes OIDADF = 1;
+  uint32 sizeADF = 2;
+  repeated uint32 OIDDataObjectID = 3;
+  repeated uint32 sizeDataObject = 4;
+  bytes primaryKeyAuth = 5;
+  bytes secondaryKeyAuth = 6;
+}
+
+
+enum CardByteOrder {
+  MSB = 0;
+  LSB = 1;
+}
+
+enum CardDataType {
+	DATA_BINARY	= 0;
+	DATA_ASCII	= 1;
+	DATA_UTF16	= 2;
+	DATA_BCD		= 3;  
+}
+
+message CardConfig {
+  CardByteOrder byteOrder = 1;
+  bool useWiegandFormat = 2;
+  CardDataType dataType = 3;
+  bool useSecondaryKey = 4;
+
+  MifareConfig mifareConfig = 5;
+  IClassConfig iClassConfig = 6;
+  DESFireConfig DESFireConfig = 7;
+  SEOSConfig SEOSConfig = 8;
+
+  uint32 formatID = 9;
+}
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  CardConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID = 1;
+  CardConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  CardConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message BlacklistItem {
+  bytes cardID = 1;
+  uint32 issueCount = 2;
+}
+
+message GetBlacklistRequest {
+  uint32 deviceID = 1;
+}
+
+message GetBlacklistResponse {
+  repeated BlacklistItem blacklist = 1;
+}
+
+message AddBlacklistRequest {
+  uint32 deviceID = 1;
+  repeated BlacklistItem cardInfos = 2;
+}
+
+message AddBlacklistResponse {
+}
+
+message AddBlacklistMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated BlacklistItem cardInfos = 2;
+}
+
+message AddBlacklistMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message DeleteBlacklistRequest {
+  uint32 deviceID = 1;
+  repeated BlacklistItem cardInfos = 2;
+}
+
+message DeleteBlacklistResponse {
+}
+
+message DeleteBlacklistMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated BlacklistItem cardInfos = 2;
+}
+
+message DeleteBlacklistMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message DeleteAllBlacklistRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllBlacklistResponse {
+}
+
+message DeleteAllBlacklistMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DeleteAllBlacklistMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message Card1XConfig {
+  bool disabled = 1;
+  bool useCSNOnly = 2;
+  bool bioEntryCompatible = 3;
+
+  bool useSecondaryKey = 4;
+  bytes primaryKey = 5;
+  bytes secondaryKey = 6;
+
+  uint32 CISIndex = 7;
+  uint32 numOfTemplate = 8;
+  uint32 templateSize = 9;
+  repeated uint32 templateStartBlocks = 10;
+}
+
+message Get1XConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message Get1XConfigResponse {
+  Card1XConfig config = 1;
+}
+
+
+message Set1XConfigRequest {
+  uint32 deviceID = 1;
+  Card1XConfig config = 2;
+}
+
+message Set1XConfigResponse {
+}
+
+message Set1XConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  Card1XConfig config = 2;
+}
+
+message Set1XConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+

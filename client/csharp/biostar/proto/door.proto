@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package door;
+
+option go_package = "biostar/service/door";
+option java_package = "com.supremainc.sdk.door";
+option java_multiple_files = true;
+
+import "device.proto";
+import "action.proto";
+
+service Door {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+  rpc Add(AddRequest) returns (AddResponse);
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc DeleteAll(DeleteAllRequest) returns (DeleteAllResponse);
+  
+  rpc Lock(LockRequest) returns (LockResponse);
+  rpc Unlock(UnlockRequest) returns (UnlockResponse);
+  rpc Release(ReleaseRequest) returns (ReleaseResponse);
+
+  rpc SetAlarm(SetAlarmRequest) returns (SetAlarmResponse);  
+}
+
+message Relay {
+  uint32 deviceID = 1;
+  uint32 port = 2;
+}
+
+
+message Sensor {
+  uint32 deviceID = 1;
+  uint32 port = 2;
+  device.SwitchType type = 3;
+}
+
+message ExitButton {
+  uint32 deviceID = 1;
+  uint32 port = 2;
+  device.SwitchType type = 3;
+}
+
+enum DoorFlag {
+  NONE = 0x00;
+  SCHEDULED = 0x01;
+  EMERGENCY = 0x02;
+  OPERATOR = 0x04;
+}
+
+enum AlarmFlag {
+  NO_ALARM = 0x00;
+  FORCED_OPEN = 0x01;
+  HELD_OPEN = 0x02;
+  APB_VIOLATION = 0x04;
+}
+
+message Status {
+  uint32 doorID = 1;
+  bool isOpen = 2;
+  bool isUnlocked = 3;
+  bool heldOpen = 4;
+  uint32 unlockFlags = 5;
+  uint32 lockFlags = 6;
+  uint32 alarmFlags = 7;
+  uint32 lastOpenTime = 8;
+}
+
+enum DualAuthDevice {
+	DUAL_AUTH_NO_DEVICE				  = 0x00;
+	DUAL_AUTH_ENTRY_DEVICE_ONLY	= 0x01;
+	DUAL_AUTH_EXIT_DEVICE_ONLY	= 0x02;
+	DUAL_AUTH_BOTH_DEVICE			  = 0x03;
+};
+
+enum DualAuthType {
+	DUAL_AUTH_NONE			= 0x00;
+	DUAL_AUTH_LAST			= 0x01;
+};
+
+
+message DoorInfo {
+  uint32 doorID = 1;
+  string name = 2;
+  
+  uint32 entryDeviceID = 3;
+  uint32 exitDeviceID = 4;
+
+  Relay relay = 5;
+  Sensor sensor = 6;
+  ExitButton button = 7;
+
+  uint32 autoLockTimeout = 8;
+  uint32 heldOpenTimeout = 9;
+
+  bool instantLock = 10;
+  uint32 unlockFlags = 11;
+  uint32 lockFlags = 12;
+  bool unconditionalLock = 13;
+
+  repeated action.Action forcedOpenActions = 14;
+  repeated action.Action heldOpenActions = 15;
+
+  uint32 dualAuthScheduleID = 16;
+  DualAuthDevice dualAuthDevice = 17;
+  DualAuthType dualAuthType = 18;
+  uint32 dualAuthTimeout = 19;
+  repeated uint32 dualAuthGroupIDs = 20;
+
+  // Antipassback Zone
+}
+
+message GetListRequest {
+  uint32 deviceID = 1;
+}
+
+message GetListResponse {
+  repeated DoorInfo doors = 1;
+}
+
+message GetStatusRequest {
+  uint32 deviceID = 1;
+}
+
+message GetStatusResponse {
+  repeated Status status = 1;
+}
+
+message AddRequest {
+  uint32 deviceID = 1;
+  repeated DoorInfo doors = 2;
+}
+
+message AddResponse {
+}
+
+message DeleteRequest {
+  uint32 deviceID = 1;
+  repeated uint32 doorIDs = 2;
+}
+
+message DeleteResponse {
+}
+
+message DeleteAllRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllResponse {
+}
+
+message LockRequest {
+  uint32 deviceID = 1;
+  repeated uint32 doorIDs = 2;
+  uint32 doorFlag = 3;
+}
+
+message LockResponse {
+}
+
+message UnlockRequest {
+  uint32 deviceID = 1;
+  repeated uint32 doorIDs = 2;
+  uint32 doorFlag = 3;
+
+}
+
+message UnlockResponse {
+}
+
+message ReleaseRequest {
+  uint32 deviceID = 1;
+  repeated uint32 doorIDs = 2;
+  uint32 doorFlag = 3;
+}
+
+message ReleaseResponse {
+}
+
+message SetAlarmRequest {
+  uint32 deviceID = 1;
+  repeated uint32 doorIDs = 2;
+  uint32 alarmFlag = 3;
+}
+
+message SetAlarmResponse {
+}

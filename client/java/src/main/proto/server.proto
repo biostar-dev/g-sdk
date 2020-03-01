@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package server;
+
+option go_package = "biostar/service/server";
+option java_package = "com.supremainc.sdk.server";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+service Server {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+
+  rpc SubscribeStatus(SubscribeStatusRequest) returns (stream StatusChange);
+}
+
+
+message ServerInfo {
+  uint32 serverID = 1;
+  repeated uint32 deviceIDs = 2;
+  bool isConnected = 3;
+}
+
+
+message GetListRequest {
+
+}
+
+message GetListResponse {
+  repeated ServerInfo serverInfos = 1; 
+}
+
+enum Status {
+	// Normal Status
+	DISCONNECTED   	= 0x00;
+  CONNECTED		    = 0x01;
+}
+
+message SubscribeStatusRequest {
+}
+
+message StatusChange {
+  uint32 serverID = 1;
+  Status status = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+

@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package wiegand;
+
+option go_package = "biostar/service/wiegand";
+option java_package = "com.supremainc.sdk.wiegand";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Wiegand {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+enum WiegandMode {
+	WIEGAND_IN_ONLY = 0;
+	WIEGAND_OUT_ONLY = 1;
+	WIEGAND_IN_OUT = 2;
+}
+
+enum WiegandParity {
+	WIEGAND_PARITY_NONE = 0;
+	WIEGAND_PARITY_ODD = 1;
+	WIEGAND_PARITY_EVEN = 2;
+}
+
+
+message ParityField {
+  uint32 parityPos = 1;
+  WiegandParity parityType = 2;
+  bytes data = 3;
+}
+
+message WiegandFormat {
+  uint32 formatID = 1;
+  uint32 length = 2;
+  repeated bytes IDFields = 3;
+  repeated ParityField parityFields = 4;
+}
+
+
+message WiegandConfig {
+  WiegandMode mode = 1;
+  bool useWiegandBypass = 2;
+  bool useFailCode = 3;
+  uint32 failCode = 4; // 1 byte
+
+  uint32 outPulseWidth = 5;
+  uint32 outPulseInterval = 6;
+
+  repeated WiegandFormat formats = 7;
+  repeated WiegandFormat slaveFormats = 8;
+  WiegandFormat CSNFormat = 9;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  WiegandConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  WiegandConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  WiegandConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

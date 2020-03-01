@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package error;
+
+option go_package = "biostar/service/error";
+option java_package = "com.supremainc.sdk.error";
+option java_multiple_files = true;
+
+service Error {
+
+}
+
+message ErrorResponse {
+  uint32 deviceID = 1;
+  int32 code = 2;
+  string msg = 3;
+}

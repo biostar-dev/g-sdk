@@ -1,0 +1,139 @@
+main:
+  - title: "Overview"
+    url: /overview/
+  - title: "Getting Started"
+    url: /quick/
+  - title: "API"
+    url: /api/
+  - title: "Java"
+    url: /java/
+  - title: "C#"
+    url: /csharp/    
+  - title: "Go"
+    url: /go/
+  - title: "Articles"
+    url: /categories/
+
+overview:
+  - title: "Release Notes"
+    url: /release/
+
+api:
+  - title: Overview
+    url: /api/#overview
+
+  - title: API
+    url: /api/
+    children:
+      - title: Access
+        url: /api/access/
+      - title: Action
+        url: /api/action/
+      - title: Admin
+        url: /api/admin/
+      - title: Auth
+        url: /api/auth/
+      - title: Card
+        url: /api/card/
+      - title: Cert
+        url: /api/cert/
+      - title: Connect
+        url: /api/connect/
+      - title: Device
+        url: /api/device/
+      - title: Display
+        url: /api/display/
+      - title: Door
+        url: /api/door/
+      - title: Err
+        url: /api/err/
+      - title: Event
+        url: /api/event/
+      - title: Face
+        url: /api/face/
+      - title: Finger
+        url: /api/finger/
+      - title: Network
+        url: /api/network/
+      - title: Schedule
+        url: /api/schedule/
+      - title: Status
+        url: /api/status/
+      - title: System
+        url: /api/system/
+      - title: Time
+        url: /api/time/
+      - title: T&A
+        url: /api/tna/
+      - title: User
+        url: /api/user/
+      - title: Wiegand
+        url: /api/wiegand/
+
+  - title: "Languages"
+    children:
+      - title: Java
+        url: /api/java/
+      - title: C#
+        url: /api/csharp/
+      - title: Go
+        url: /api/go/
+
+quick:
+  - title: Gateway
+    children:
+      - title: "Installation"
+        url: /gateway/install/
+      - title: "Configuration"
+        url: /gateway/config/
+  - title: Client
+    url: /client/
+
+java:
+  - title: "Installation"
+    url: "/java/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/java/quick/"
+      - title: "Connect API"
+        url: "/java/connect/"
+#      - title: "User"
+#        url: "/java/tutorials/user/"
+#      - title: "Authentication"
+#        url: "/java/tutorials/auth/"
+#      - title: "Event"
+#        url: "/java/tutorials/event/"
+
+csharp:
+  - title: "Installation"
+    url: "/csharp/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/csharp/quick/"      
+      - title: "Connect API"
+        url: "/csharp/connect/"
+#      - title: "User"
+#        url: "/csharp/tutorials/user/"
+#      - title: "Authentication"
+#        url: "/csharp/tutorials/auth/"
+#      - title: "Event"
+#        url: "/csharp/tutorials/event/"
+
+go:
+  - title: "Installation"
+    url: "/go/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/go/quick/"
+      - title: "Connect API"
+        url: "/go/connect/"
+#      - title: "User"
+#        url: "/go/tutorials/user/"
+#      - title: "Authentication"
+#        url: "/go/tutorials/auth/"
+#      - title: "Event"
+#        url: "/go/tutorials/event/"
+

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "biostar/service/system";
+option java_package = "com.supremainc.sdk.system";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service System {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+enum CameraFrequency {
+  FREQ_NONE = 0x00;
+  FREQ_50HZ = 1;
+  FREQ_60HZ = 2;
+}
+
+message SystemConfig {
+  int32 timeZone = 1;
+  bool syncTime = 2;
+  bool isLocked = 3; 
+  bool useInterphone = 4;
+  bool OSDPKeyEncrypted = 5;
+  bool useJobCode = 6;
+  bool useAlphanumericID = 7;
+  CameraFrequency cameraFrequency = 8;
+  bool useSecureTamper = 9;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  SystemConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  SystemConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  SystemConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+

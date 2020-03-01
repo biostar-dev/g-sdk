@@ -1,0 +1,350 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "biostar/service/user";
+option java_package = "com.supremainc.sdk.user";
+option java_multiple_files = true;
+
+import "card.proto";
+import "finger.proto";
+import "face.proto";
+import "tna.proto";
+import "err.proto";
+
+service User {
+  rpc GetList(GetListRequest) returns (GetListResponse);
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc GetPartial(GetPartialRequest) returns (GetPartialResponse);
+  
+  rpc Enroll(EnrollRequest) returns (EnrollResponse);
+  rpc EnrollMulti(EnrollMultiRequest) returns (EnrollMultiResponse);
+
+  rpc Delete(DeleteRequest) returns (DeleteResponse);
+  rpc DeleteMulti(DeleteMultiRequest) returns (DeleteMultiResponse);
+
+  rpc DeleteAll(DeleteAllRequest) returns (DeleteAllResponse);
+  rpc DeleteAllMulti(DeleteAllMultiRequest) returns (DeleteAllMultiResponse);
+
+  rpc GetCard(GetCardRequest) returns (GetCardResponse);
+  rpc SetCard(SetCardRequest) returns (SetCardResponse);
+  rpc SetCardMulti(SetCardMultiRequest) returns (SetCardMultiResponse);
+
+  rpc GetFinger(GetFingerRequest) returns (GetFingerResponse);
+  rpc SetFinger(SetFingerRequest) returns (SetFingerResponse);
+  rpc SetFingerMulti(SetFingerMultiRequest) returns (SetFingerMultiResponse);
+
+  rpc GetFace(GetFaceRequest) returns (GetFaceResponse);
+  rpc SetFace(SetFaceRequest) returns (SetFaceResponse);
+  rpc SetFaceMulti(SetFaceMultiRequest) returns (SetFaceMultiResponse);
+
+  rpc GetAccessGroup(GetAccessGroupRequest) returns (GetAccessGroupResponse);
+  rpc SetAccessGroup(SetAccessGroupRequest) returns (SetAccessGroupResponse);
+  rpc SetAccessGroupMulti(SetAccessGroupMultiRequest) returns (SetAccessGroupMultiResponse);
+
+  rpc GetJobCode(GetJobCodeRequest) returns (GetJobCodeResponse);
+  rpc SetJobCode(SetJobCodeRequest) returns (SetJobCodeResponse);
+  rpc SetJobCodeMulti(SetJobCodeMultiRequest) returns (SetJobCodeMultiResponse);
+
+  rpc GetPINHash(GetPINHashRequest) returns (GetPINHashResponse);
+}
+
+message UserHdr {
+  string ID = 1;
+  int32 numOfCard = 2;
+  int32 numOfFinger = 3;
+  int32 numOfFace = 4;
+  uint32 authGroupID = 5;
+}
+
+message GetListRequest {
+  uint32 deviceID = 1;
+}
+
+message GetListResponse {
+  repeated UserHdr hdrs = 1;
+}
+
+message UserSetting {
+  uint32 startTime = 1;
+  uint32 endTime = 2;
+
+  uint32 fingerAuthMode = 3;
+  uint32 cardAuthMode = 4;
+  uint32 IDAuthMode = 5;
+  uint32 securityLevel = 6;
+}
+
+message UserInfo {
+  UserHdr hdr = 1;
+  UserSetting setting = 2;
+  string name = 3;
+  repeated card.CSNCardData cards = 4;
+  repeated finger.FingerData fingers = 5;
+  repeated face.FaceData faces = 6;
+  repeated uint32 accessGroupIDs = 7;
+  repeated tna.JobCode jobCodes = 8;
+  bytes PIN = 9;
+  bytes photo = 10;
+}
+
+message GetRequest {
+  uint32 deviceID = 1;  
+  repeated string userIDs = 2;
+}
+
+message GetResponse {
+  repeated UserInfo users = 1;
+}
+
+enum InfoMask {
+	USER_MASK_ID_ONLY	= 0x0000;
+	USER_MASK_HDR	= 0x0001;
+	USER_MASK_SETTING	= 0x0002;
+	USER_MASK_NAME = 0x0004;
+	USER_MASK_PHOTO	= 0x0008;
+	USER_MASK_PIN	= 0x0010;
+	USER_MASK_CARD = 0x0020;
+	USER_MASK_FINGER = 0x0040;
+	USER_MASK_FACE = 0x0080;
+	USER_MASK_ACCESS_GROUP = 0x0100;
+	USER_MASK_JOB = 0x0200;
+  USER_MASK_ALL	= 0xFFFF;
+}
+
+
+message GetPartialRequest {
+  uint32 deviceID = 1;  
+  repeated string userIDs = 2;
+  uint32 infoMask = 3;
+}
+
+message GetPartialResponse {
+  repeated UserInfo users = 1;
+}
+
+
+message EnrollRequest {
+  uint32 deviceID = 1;
+  repeated UserInfo users = 2;
+  bool overwrite = 3;
+}
+
+message EnrollResponse {
+}
+
+
+message EnrollMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserInfo users = 2;
+  bool overwrite = 3;
+}
+
+
+message EnrollMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message DeleteRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message DeleteResponse {
+}
+
+
+message DeleteMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated string userIDs = 2;
+}
+
+
+message DeleteMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message DeleteAllRequest {
+  uint32 deviceID = 1;
+}
+
+message DeleteAllResponse {
+}
+
+
+message DeleteAllMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+
+message DeleteAllMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+message UserCard {
+  string userID = 1;
+  repeated card.CSNCardData cards = 2;
+}
+
+message GetCardRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message GetCardResponse {
+  repeated UserCard userCards = 1;
+}
+
+message SetCardRequest {
+  uint32 deviceID = 1;
+  repeated UserCard userCards = 2;
+}
+
+message SetCardResponse {
+}
+
+message SetCardMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserCard userCards = 2;
+}
+
+message SetCardMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message UserFinger {
+  string userID = 1;
+  repeated finger.FingerData fingers = 2;
+}
+
+message GetFingerRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message GetFingerResponse {
+  repeated UserFinger userFingers = 1;
+}
+
+message SetFingerRequest {
+  uint32 deviceID = 1;
+  repeated UserFinger userFingers = 2;
+}
+
+message SetFingerResponse {
+}
+
+message SetFingerMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserFinger userFingers = 2;
+}
+
+message SetFingerMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+message UserFace {
+  string userID = 1;
+  repeated face.FaceData faces = 2;
+}
+
+message GetFaceRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message GetFaceResponse {
+  repeated UserFace userFaces = 1;
+}
+
+message SetFaceRequest {
+  uint32 deviceID = 1;
+  repeated UserFace userFaces = 2;
+}
+
+message SetFaceResponse {
+}
+
+message SetFaceMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserFace userFaces = 2;
+}
+
+message SetFaceMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+
+message UserAccessGroup {
+  string userID = 1;
+  repeated uint32 accessGroupIDs = 2;
+}
+
+message GetAccessGroupRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message GetAccessGroupResponse {
+  repeated UserAccessGroup userAccessGroups = 1;
+}
+
+message SetAccessGroupRequest {
+  uint32 deviceID = 1;
+  repeated UserAccessGroup userAccessGroups = 2;
+}
+
+message SetAccessGroupResponse {
+}
+
+message SetAccessGroupMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserAccessGroup userAccessGroups = 2;
+}
+
+message SetAccessGroupMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+
+message UserJobCode {
+  string userID = 1;
+  repeated tna.JobCode jobCodes = 2;
+}
+
+message GetJobCodeRequest {
+  uint32 deviceID = 1;
+  repeated string userIDs = 2;
+}
+
+message GetJobCodeResponse {
+  repeated UserJobCode userJobCodes = 1;
+}
+
+message SetJobCodeRequest {
+  uint32 deviceID = 1;
+  repeated UserJobCode userJobCodes = 2;
+}
+
+message SetJobCodeResponse {
+}
+
+message SetJobCodeMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated UserJobCode userJobCodes = 2;
+}
+
+message SetJobCodeMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;  
+}
+
+
+message GetPINHashRequest {
+  string PIN = 1;
+}
+
+message GetPINHashResponse {
+  string hashVal = 1;
+}
