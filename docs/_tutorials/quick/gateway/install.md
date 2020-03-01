@@ -5,7 +5,7 @@ title: "Installation"
 
 ## Download
 
-1. Download the latest version of the gateway from [github](https://github.com/biostar-dev/device-gateway/releases/tag/v0.9)
+1. Download the latest version of the gateway from [github](https://github.com/biostar-dev/g-sdk/releases/tag/V0.9.5)
 2. Unzip the archive file
 
 ## Create or import certificates
