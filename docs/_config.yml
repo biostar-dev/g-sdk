@@ -18,8 +18,7 @@ subtitle: New way to communicate
 email:
 description: >- # this means to ignore newlines until "baseurl:"
   G-SDK is a new way of communicating with BioStar devices. It is a lightweight, scalable, and cross-platform solution which will expedite your development. 
-  Based on gRPC, it will support most widely-used programming languages such as Java, C#, Python, node.js, etc.
-github_username: biostar-dev
+  Based on gRPC, it supports widely-used programming languages such as Java, C#, Python, Node.js, Go, etc.
 minimal_mistakes_skin: default
 search: true
 search_full_content: true
@@ -32,8 +31,15 @@ permalink: /:categories/:title/
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
 timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-repository: "biostar-dev/g-sdk"
 baseurl: /g-sdk
+
+# Configurable variables
+github_username: biostar-dev
+repository: "biostar-dev/g-sdk"
+repo_url: &repo_url_val "https://github.com/biostar-dev/g-sdk/"
+last_ver: "https://github.com/biostar-dev/g-sdk/releases/tag/V1.0.0"
+suprema_url: &suprema_url_val "https://www.supremainc.com"
+kb_url: &kb_url_val "http://kb.supremainc.com/"
 
 include:
   - _pages
@@ -67,25 +73,25 @@ author:
   links:
     - label: "Suprema Inc."
       icon: "fas fa-fw fa-link"
-      url: "https://www.supremainc.com"
+      url: *suprema_url_val
     - label: "Knowledge Base"
       icon: "fas fa-fw fa-question"
-      url: "http://kb.supremainc.com/"
+      url: *kb_url_val
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/biostar-dev/g-sdk/"
+      url: *repo_url_val
 
 footer:
   links:
     - label: "Suprema Inc."
       icon: "fas fa-fw fa-link"
-      url: "https://www.supremainc.com"
+      url: *suprema_url_val
     - label: "Knowledge Base"
       icon: "fas fa-fw fa-question"
-      url: "http://kb.supremainc.com/"
+      url: *kb_url_val
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/biostar-dev/g-sdk/"
+      url: *repo_url_val
 
 collections:
   apis:
@@ -163,6 +169,22 @@ defaults:
       permalink: /java/:title/
       sidebar:
         nav: "java"
+
+  - scope:
+      path: "_tutorials/node"
+      types: tutorials
+    values:
+      permalink: /node/:title/
+      sidebar:
+        nav: "node"
+
+  - scope:
+      path: "_tutorials/python"
+      types: tutorials
+    values:
+      permalink: /python/:title/
+      sidebar:
+        nav: "python"
 
   - scope:
       path: "_tutorials/go"

@@ -21,6 +21,7 @@ The generated classes of G-SDK will be in _build/generated/source/proto/main/jav
 In addition to the G-SDK API and tutorials, you can also refer to the following documentation. 
 
 * [gRPC Documentation](https://grpc.github.io/grpc-java/javadoc/index.html)
+* [gRPC Tutorial](https://grpc.io/docs/tutorials/basic/java/)
 * [Protobuf Tutorial](https://developers.google.com/protocol-buffers/docs/javatutorial)
 
 

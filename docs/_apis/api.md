@@ -12,6 +12,8 @@ The APIs of G-SDK are defined using [gRPC](https://grpc.io/) to maximize its com
 
 * [Java]({{ 'api/java/' | relative_url }})
 * [C#]({{ 'api/csharp/' | relative_url }})
+* [Python]({{ 'api/python/' | relative_url }})
+* [Node.js]({{ 'api/node/' | relative_url }})
 * [Go]({{ 'api/go/' | relative_url }})
 
 ### API Definition

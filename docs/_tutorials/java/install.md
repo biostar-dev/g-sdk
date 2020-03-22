@@ -9,7 +9,7 @@ title: "Java Installation"
 
 ## Download
 
-1. Download the latest version of Java library from [github](https://github.com/biostar-dev/g-sdk/releases/tag/V0.9.5)
+1. Download the latest version of Java library from [github]({{ site.last_ver }})
 2. Unzip the archive file
 
 ## Examples

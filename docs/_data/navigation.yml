@@ -8,7 +8,11 @@ main:
   - title: "Java"
     url: /java/
   - title: "C#"
-    url: /csharp/    
+    url: /csharp/  
+  - title: "Python"
+    url: /python/      
+  - title: "Node.js"
+    url: /node/
   - title: "Go"
     url: /go/
   - title: "Articles"
@@ -76,6 +80,10 @@ api:
         url: /api/java/
       - title: C#
         url: /api/csharp/
+      - title: Python
+        url: /api/python/
+      - title: Node.js
+        url: /api/node/
       - title: Go
         url: /api/go/
 
@@ -120,6 +128,38 @@ csharp:
 #        url: "/csharp/tutorials/auth/"
 #      - title: "Event"
 #        url: "/csharp/tutorials/event/"
+
+node:
+  - title: "Installation"
+    url: "/node/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/node/quick/"
+      - title: "Connect API"
+        url: "/node/connect/"
+#      - title: "User"
+#        url: "/node/tutorials/user/"
+#      - title: "Authentication"
+#        url: "/node/tutorials/auth/"
+#      - title: "Event"
+#        url: "/node/tutorials/event/"
+
+python:
+  - title: "Installation"
+    url: "/python/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/python/quick/"
+      - title: "Connect API"
+        url: "/python/connect/"
+#      - title: "User"
+#        url: "/python/tutorials/user/"
+#      - title: "Authentication"
+#        url: "/python/tutorials/auth/"
+#      - title: "Event"
+#        url: "/python/tutorials/event/"
 
 go:
   - title: "Installation"

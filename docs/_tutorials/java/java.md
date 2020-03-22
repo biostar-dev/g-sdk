@@ -7,6 +7,15 @@ title: "Java Client"
 
 To write your applications in Java, you have to install the client library first. 
 
+## API Reference
+
+### [G-SDK API]({{'/api/' | relative_url}})
+
+The common APIs defined using gRPC.
+
+### [Java API]({{'/api/java/' | relative_url}})
+
+The language specific APIs to use the gRPC APIs.
 
 ## Tutorials
 

@@ -1,20 +1,20 @@
 ---
-title: "Go Installation"
+title: "Node.js Installation"
 ---
 
 ## Prerequisites
 
-* Go version 1.6 or higher
+* Node.js 4.0.0 or higher
+* __npm__
 * Install gRPC
    ```
-   go get -u google.golang.org/grpc
+   npm install grpc
    ```
 
-## Go Library
+## Node.js Library
 
-1. Download the latest version of Go library from [github]({{ site.last_ver }})
+1. Download the latest version of Node.js library from [github]({{ site.last_ver }})
 2. Unzip the archive file
-3. Add the _src_ directory to GOPATH
 
 ## Examples
 

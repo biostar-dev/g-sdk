@@ -7,6 +7,16 @@ title: "Go Client"
 
 To write your applications in Go, you have to install the client library first. 
 
+## API Reference
+
+### [G-SDK API]({{'/api/' | relative_url}})
+
+The common APIs defined using gRPC.
+
+### [Go API]({{'/api/go/' | relative_url}})
+
+The language specific APIs to use the gRPC APIs.
+
 ## Tutorials
 
 In addition to the API reference, you can also refer to the following tutorials.

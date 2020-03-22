@@ -5,12 +5,11 @@ title: "C# Installation"
 ## Prerequisites
 
 * [.NET Core](https://dotnet.microsoft.com/learn/dotnet/hello-world-tutorial/intro)
-* The C# client library uses the [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/) implementation of gRPC.
-
+* [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/)
 
 ## Download
 
-1. Download the latest version of C# library from [github](https://github.com/biostar-dev/g-sdk/releases/tag/V0.9.5)
+1. Download the latest version of C# library from [github]({{ site.last_ver }})
 2. Unzip the archive file
 
 ## Examples

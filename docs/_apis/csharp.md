@@ -21,6 +21,7 @@ The generated classes of G-SDK will be in _obj/Debug/netcoreapp2.2_ for each pro
 In addition to the G-SDK API and tutorials, you can also refer to the following documentation. 
 
 * [gRPC Documentation](https://grpc.github.io/grpc/csharp-dotnet/api/Grpc.Core.html)
+* [gRPC Tutorial](https://grpc.io/docs/tutorials/basic/csharp/)
 * [Protobuf Tutorial](https://developers.google.com/protocol-buffers/docs/csharptutorial)
 
 

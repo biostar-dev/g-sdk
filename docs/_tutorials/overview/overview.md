@@ -4,7 +4,7 @@ title: "G-SDK"
 ---
 
   G-SDK is a new way of communicating with BioStar devices. It is a lightweight, scalable, and cross-platform solution which will expedite your development. 
-  Based on [gRPC](https://grpc.io/), it will support many widely-used programming languages such as Java, C#, Python, node.js, etc.
+  Based on [gRPC](https://grpc.io/), it supports many programming languages such as Java, C#, Python, Node.js, Go, etc.
 
 ## Why G-SDK?
 
