@@ -1,0 +1,20 @@
+{
+  "name": "node_client",
+  "version": "1.0.0",
+  "description": "Nodejs client for G-SDK",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sjlee@suprema.co.kr",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.3",
+    "google-protobuf": "^3.11.4",
+    "grpc": "^1.24.2",
+    "readline-sync": "^1.4.10"
+  }
+}

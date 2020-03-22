@@ -16,7 +16,7 @@ func init() {
 			"1", "Add devices to the filter", addDevicesToFilter, false,
 		},
 		&cli.MenuItem{
-			"2", "Delete devices from the filter", deleteDevicesToFilter, false,
+			"2", "Delete devices from the filter", deleteDevicesFromFilter, false,
 		},
 		&cli.MenuItem{
 			"3", "Allow all devices", allowAllDevices, false,
@@ -148,7 +148,7 @@ func disallowAllDevices() error {
 }
 
 
-func deleteDevicesToFilter() error {
+func deleteDevicesFromFilter() error {
 	fmt.Printf("\nEnter the device IDs to delete\n")
 
 	devIDs, err := cli.GetDeviceIDs()

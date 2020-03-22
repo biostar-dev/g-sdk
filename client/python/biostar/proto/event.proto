@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package event;
+
+option go_package = "biostar/service/event";
+option java_package = "com.supremainc.sdk.event";
+option java_multiple_files = true;
+
+import "err.proto";
+import "tna.proto";
+
+service Event {
+  rpc EnableMonitoring(EnableMonitoringRequest) returns (EnableMonitoringResponse); 
+  rpc EnableMonitoringMulti(EnableMonitoringMultiRequest) returns (EnableMonitoringMultiResponse); 
+
+  rpc DisableMonitoring(DisableMonitoringRequest) returns (DisableMonitoringResponse);
+  rpc DisableMonitoringMulti(DisableMonitoringMultiRequest) returns (DisableMonitoringMultiResponse);
+
+  rpc SubscribeRealtimeLog(SubscribeRealtimeLogRequest) returns (stream EventLog); // just close the stream to stop monitoring
+
+  rpc GetLog(GetLogRequest) returns (GetLogResponse);
+  rpc GetLogWithFilter(GetLogWithFilterRequest) returns (GetLogWithFilterResponse);
+
+  rpc GetImageLog(GetImageLogRequest) returns (GetImageLogResponse);
+
+  rpc GetImageFilter(GetImageFilterRequest) returns (GetImageFilterResponse);
+  rpc SetImageFilter(SetImageFilterRequest) returns (SetImageFilterResponse);
+  rpc SetImageFilterMulti(SetImageFilterMultiRequest) returns (SetImageFilterMultiResponse);
+
+  rpc ClearLog(ClearLogRequest) returns (ClearLogResponse);
+  rpc ClearLogMulti(ClearLogMultiRequest) returns (ClearLogMultiResponse);
+}
+
+
+message EventLog {
+  uint32 ID = 1;
+  uint32 timestamp = 2;
+  uint32 deviceID = 3;
+  string userID = 4;
+  uint32 entityID = 5;
+  uint32 eventCode = 6;
+  uint32 subCode = 7;
+  tna.Key TNAKey = 8;
+  bool   hasImage = 9;
+}
+
+
+message EventFilter {
+  string userID = 1;
+  uint32 startTime = 2;
+  uint32 endTime = 3;
+  uint32 eventCode = 4;
+  tna.Key TNAKey = 5;
+}
+
+
+message EnableMonitoringRequest {
+  uint32 deviceID = 1;
+}
+
+message EnableMonitoringResponse {
+}
+
+
+message EnableMonitoringMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message EnableMonitoringMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message DisableMonitoringRequest {
+  uint32 deviceID = 1;
+}
+
+message DisableMonitoringResponse {
+}
+
+message DisableMonitoringMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message DisableMonitoringMultiResponse {
+  repeated err.ErrorResponse deviceErrors= 1;
+}
+
+message SubscribeRealtimeLogRequest {
+  int32 queueSize = 1;
+  repeated uint32 deviceIDs = 2;
+  repeated int32 eventIDs = 3;
+}
+
+message SubscribeRealtimeLogResponse { // for gateway
+  string logChanID = 1;
+}
+
+message GetLogRequest {
+  uint32 deviceID = 1;
+  uint32 startEventID = 2;
+  uint32 maxNumOfLog = 3;
+}
+
+message GetLogResponse {
+  repeated EventLog events = 1;
+}
+
+
+message GetLogWithFilterRequest {
+  uint32 deviceID = 1;
+  uint32 startEventID = 2;
+  uint32 maxNumOfLog = 3;
+  repeated EventFilter filters = 4;
+}
+
+message GetLogWithFilterResponse {
+  repeated EventLog events = 1;
+}
+
+
+message ImageLog {
+  uint32 ID = 1;
+  uint32 timestamp = 2;
+  uint32 deviceID = 3;
+  string userID = 4;
+  uint32 eventCode = 5;
+  bytes JPGImage = 6;
+}
+
+message GetImageLogRequest {
+  uint32 deviceID = 1;
+  uint32 startEventID = 2;
+  uint32 maxNumOfLog = 3;
+}
+
+
+message GetImageLogResponse {
+  repeated ImageLog imageEvents = 1;
+}
+
+
+message ImageFilter {
+  uint32 mainEventCode = 1; // eventCode & 0xff00 >> 8
+  uint32 scheduleID = 2;
+}
+
+
+message GetImageFilterRequest {
+  uint32 deviceID = 1;
+}
+
+message GetImageFilterResponse {
+  repeated ImageFilter filters = 1;
+}
+
+
+message SetImageFilterRequest {
+  uint32 deviceID= 1;
+  repeated ImageFilter filters = 2;
+}
+
+message SetImageFilterResponse {
+}
+
+message SetImageFilterMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  repeated ImageFilter filters = 2;
+}
+
+message SetImageFilterMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message ClearLogRequest {
+  uint32 deviceID = 1;
+}
+
+message ClearLogResponse {
+}
+
+
+message ClearLogMultiRequest {
+  repeated uint32 deviceIDs = 1;
+}
+
+message ClearLogMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

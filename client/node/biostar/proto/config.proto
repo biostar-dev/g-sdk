@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package config;
+
+option go_package = "biostar/service/config";
+option java_package = "com.supremainc.sdk.config";
+option java_multiple_files = true;
+
+import "err.proto";
+import "system.proto";
+
+
+service Config {
+  rpc GetSystem(GetSystemRequest) returns (GetSystemResponse);
+  rpc SetSystem(SetSystemRequest) returns (SetSystemResponse);
+  rpc SetSystemMulti(SetSystemMultiRequest) returns (SetSystemMultiResponse);    
+}
+
+message GetSystemRequest {
+  uint32 deviceID = 1;
+}
+
+message GetSystemResponse {
+  system.SystemConfig config = 1;
+}
+
+
+message SetSystemRequest {
+  uint32 deviceID= 1;
+  system.SystemConfig config = 2;
+}
+
+message SetSystemResponse {
+}
+
+message SetSystemMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  system.SystemConfig config = 2;
+}
+
+message SetSystemMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

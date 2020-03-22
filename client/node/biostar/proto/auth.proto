@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "biostar/service/auth";
+option java_package = "com.supremainc.sdk.auth";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Auth {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+enum AuthMode {
+	AUTH_MODE_BIOMETRIC_ONLY = 0;
+	AUTH_MODE_BIOMETRIC_PIN = 1;
+
+	AUTH_MODE_CARD_ONLY = 2;
+	AUTH_MODE_CARD_BIOMETRIC = 3;
+	AUTH_MODE_CARD_PIN = 4;
+	AUTH_MODE_CARD_BIOMETRIC_OR_PIN = 5;
+	AUTH_MODE_CARD_BIOMETRIC_PIN = 6;
+
+	AUTH_MODE_ID_BIOMETRIC = 7;
+	AUTH_MODE_ID_PIN = 8;
+	AUTH_MODE_ID_BIOMETRIC_OR_PIN = 9;
+  AUTH_MODE_ID_BIOMETRIC_PIN = 10;
+}
+
+enum OperatorLevel {
+	OPERATOR_LEVEL_NONE = 0;
+	OPERATOR_LEVEL_ADMIN = 1;
+	OPERATOR_LEVEL_CONFIG = 2;
+	OPERATOR_LEVEL_USER = 3;
+}
+
+enum FaceDetectionLevel {
+	FACE_DETECTION_NONE = 0;
+	FACE_DETECTION_NORMAL = 1;
+	FACE_DETECTION_STRICT = 2;
+}
+
+enum GlobalAPBFailActionType {
+	GLOBAL_APB_FAIL_ACTION_NONE = 0;
+	GLOBAL_APB_FAIL_ACTION_SOFT = 1;
+	GLOBAL_APB_FAIL_ACTION_HARD = 2;
+}
+
+
+message Operator {
+  string userID = 1;
+  OperatorLevel level = 2;
+}
+
+
+message AuthSchedule {
+  AuthMode mode = 1;
+  uint32 scheduleID = 2;
+}
+
+
+message AuthConfig {
+  repeated AuthSchedule authSchedules = 1;
+  bool useGlobalAPB = 2;
+  GlobalAPBFailActionType globalAPBFailAction = 3;
+  bool useGroupMatching = 4;
+  bool usePrivateAuth = 5;
+  FaceDetectionLevel faceDetectionLevel = 6;
+  bool useServerMatching = 7;
+  bool useFullAccess = 8;
+  uint32 matchTimeout = 9;
+  uint32 authTimeout = 10;
+  repeated Operator operators = 11;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  AuthConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  AuthConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  AuthConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

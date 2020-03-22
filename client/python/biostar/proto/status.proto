@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package status;
+
+option go_package = "biostar/service/status";
+option java_package = "com.supremainc.sdk.status";
+option java_multiple_files = true;
+
+import "action.proto";
+import "err.proto";
+
+service Status {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+enum DeviceStatus {
+	DEVICE_STATUS_NORMAL = 0;
+	DEVICE_STATUS_LOCKED = 1;
+	DEVICE_STATUS_RTC_ERROR = 2;
+	DEVICE_STATUS_WAITING_INPUT = 3;
+	DEVICE_STATUS_WAITING_DHCP = 4;
+	DEVICE_STATUS_SCAN_FINGER = 5;
+	DEVICE_STATUS_SCAN_CARD = 6;
+	DEVICE_STATUS_SUCCESS = 7;
+	DEVICE_STATUS_FAIL = 8;
+	DEVICE_STATUS_DURESS = 9;
+	DEVICE_STATUS_PROCESS_CONFIG_CARD = 10;
+  DEVICE_STATUS_SUCCESS_CONFIG_CARD = 11;
+	DEVICE_STATUS_RESERVED2 = 12;
+	DEVICE_STATUS_RESERVED3 = 13;
+	DEVICE_STATUS_RESERVED4 = 14;
+}
+
+message LEDStatus {
+  DeviceStatus deviceStatus = 1;
+  uint32 count = 2;
+  repeated action.LEDSignal signals = 3;
+}
+
+message BuzzerStatus {
+  DeviceStatus deviceStatus = 1;
+  uint32 count = 2;
+  repeated action.BuzzerSignal signals = 3;
+}
+
+message StatusConfig {
+  repeated LEDStatus LEDState = 1;
+  repeated BuzzerStatus BuzzerState = 2;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  StatusConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  StatusConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  StatusConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package action;
+
+option go_package = "biostar/service/action";
+option java_package = "com.supremainc.sdk.action";
+option java_multiple_files = true;
+
+import "device.proto";
+
+import "err.proto";
+
+service TriggerAction {
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);    
+}
+
+
+enum TriggerType {
+  TRIGGER_NONE = 0x00;
+  TRIGGER_EVENT = 0x01;
+  TRIGGER_INPUT = 0x02;
+  TRIGGER_SCHEDULE = 0x03;
+}
+
+message EventTrigger {
+  uint32 eventCode = 1;
+}
+
+message InputTrigger {
+  uint32 port = 1;
+  device.SwitchType switchType = 2;
+  uint32 duration = 3;
+  uint32 scheduleID = 4;
+}
+
+enum ScheduleTriggerType {
+  SCHEDULE_TRIGGER_ON_START = 0x00;
+  SCHEDULE_TRIGGER_ON_END = 0x01;
+}
+
+message ScheduleTrigger {
+  ScheduleTriggerType type = 1;
+  uint32 scheduleID = 2;
+}
+
+message Trigger {
+  uint32 deviceID = 1; // if 0, it will be set to the device itself
+  TriggerType type = 2;
+  EventTrigger event = 3;
+  InputTrigger input = 4;
+  ScheduleTrigger schedule = 5;
+}
+
+enum ActionType {
+	ACTION_NONE = 0x00;
+
+	ACTION_LOCK_DEVICE = 0x01;
+	ACTION_UNLOCK_DEVICE = 0x02;
+	ACTION_REBOOT_DEVICE = 0x03;
+	ACTION_RELEASE_ALARM = 0x04;
+	ACTION_GENERAL_INPUT = 0x05;
+
+	ACTION_RELAY = 0x06;
+  ACTION_TTL = 0x07;
+  ACTION_SOUND = 0x08;
+	ACTION_DISPLAY = 0x09;
+  ACTION_BUZZER = 0x0A;
+  ACTION_LED = 0x0B;
+
+	ACTION_FIRE_ALARM_INPUT = 0x0C;
+
+	ACTION_AUTH_SUCCESS = 0x0D;
+	ACTION_AUTH_FAIL = 0x0E;
+
+	ACTION_LIFT = 0x0F;
+}
+
+message Signal {
+  uint32 signalID = 1;
+  uint32 count = 2;
+  uint32 onDuration = 3;
+  uint32 offDuration = 4;
+  uint32 delay = 5;
+}
+
+message OutputPortAction {
+  uint32 portIndex = 1;
+  Signal signal = 2;
+}
+
+message RelayAction {
+  uint32 relayIndex = 1;
+  Signal signal = 2;
+}
+
+message LEDSignal {
+  device.LEDColor color = 1;
+  uint32 duration = 2;
+  uint32 delay = 3;
+}
+
+message LEDAction {
+  repeated LEDSignal signals = 1;
+}
+
+message BuzzerSignal {
+  device.BuzzerTone tone = 1;
+  bool fadeout = 2;
+  uint32 duration = 3;
+  uint32 delay = 4;
+}
+
+message BuzzerAction {
+  repeated BuzzerSignal signals = 1;
+}
+
+message DisplayAction {
+  uint32 duration = 1;
+  uint32 displayID = 2;
+  uint32 resourceID = 3;
+}
+
+message SoundAction {
+  uint32 count = 1;
+  uint32 soundIndex = 2;
+  uint32 delay = 3;
+}
+
+enum StopFlag {
+	STOP_NONE = 0x00;
+	STOP_ON_DOOR_CLOSED = 0x01;	// When the door is closed, its alarm action should be stopped.
+  STOP_BY_CMD_RUN_ACTION = 0x02;
+}
+
+message Action {
+  uint32 deviceID = 1; // if 0, it will be set to the device itself
+  ActionType type = 2;
+  StopFlag stopFlag = 3;
+  uint32 delay = 4;
+  
+  RelayAction relay = 5;
+  OutputPortAction outputPort = 6;
+  DisplayAction display = 7;
+  SoundAction sound = 8;
+  LEDAction LED = 9;
+  BuzzerAction buzzer = 10;
+  // LiftAction
+}
+
+
+message TriggerActionConfig {
+  message TriggerAction {
+    Trigger trigger = 1;
+    Action action = 2;
+  }
+
+  repeated TriggerAction triggerActions = 1;
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  TriggerActionConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID= 1;
+  TriggerActionConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  TriggerActionConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}

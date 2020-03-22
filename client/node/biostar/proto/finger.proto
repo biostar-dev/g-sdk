@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+package finger;
+
+option go_package = "biostar/service/finger";
+option java_package = "com.supremainc.sdk.finger";
+option java_multiple_files = true;
+
+import "err.proto";
+
+service Finger {
+  rpc Scan(ScanRequest) returns (ScanResponse);
+  rpc GetImage(GetImageRequest) returns (GetImageResponse);
+  rpc Verify(VerifyRequest) returns (VerifyResponse);
+
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+  rpc SetConfig(SetConfigRequest) returns (SetConfigResponse);
+  rpc SetConfigMulti(SetConfigMultiRequest) returns (SetConfigMultiResponse);
+}
+
+enum TemplateFormat {
+  TEMPLATE_FORMAT_SUPREMA	= 0x00;
+  TEMPLATE_FORMAT_ISO	= 0x01;
+  TEMPLATE_FORMAT_ANSI = 0x02;	
+}
+
+message FingerData {
+  int32 index = 1;
+  uint32 flag = 2;
+  repeated bytes templates = 3;
+}
+
+message ScanRequest {
+  uint32 deviceID = 1;  
+  TemplateFormat templateFormat = 2;
+  uint32 qualityThreshold = 3;
+}
+
+message ScanResponse {
+  bytes templateData = 1;
+  uint32 qualityScore = 2;
+}
+
+message GetImageRequest {
+  uint32 deviceID = 1;
+}
+
+message GetImageResponse {
+  bytes BMPImage = 1;
+}
+
+message VerifyRequest {
+  uint32 deviceID = 1;
+  FingerData fingerData = 2;
+}
+
+message VerifyResponse {
+}
+
+
+message GetConfigRequest {
+  uint32 deviceID = 1;
+}
+
+message GetConfigResponse {
+  FingerConfig config = 1;
+}
+
+
+message SetConfigRequest {
+  uint32 deviceID = 1;
+  FingerConfig config = 2;
+}
+
+message SetConfigResponse {
+}
+
+message SetConfigMultiRequest {
+  repeated uint32 deviceIDs = 1;
+  FingerConfig config = 2;
+}
+
+message SetConfigMultiResponse {
+  repeated err.ErrorResponse deviceErrors = 1;
+}
+
+
+message FingerConfig {
+  SecurityLevel securityLevel = 1;
+  FastMode fastMode = 2;
+  Sensitivity sensitivity = 3;
+  SensorMode sensorMode = 4;
+  TemplateFormat templateFormat = 5;
+  int32 scanTimeout = 6;
+  bool advancedEnrollment = 7;
+  bool showImage = 8;
+  LFDLevel LFDLevel = 9;
+}
+
+
+enum SecurityLevel {
+  option allow_alias = true;
+
+  SECURE = 0x00;
+  MORE_SECURE = 0x01;
+  MOST_SECURE = 0x02;
+
+  DEFAULT_SECURITY = 0x00;
+}
+
+enum FastMode {
+  option allow_alias = true;
+
+  AUTOMATIC = 0x00;
+  FAST = 0x01;
+  FASTER = 0x02;
+  FASTEST = 0x03;
+
+  DEFAULT_FAST = 0x00;
+}
+
+enum Sensitivity {
+  option allow_alias = true;
+
+  LOWEST_SENSITIVE = 0x00;
+  LEVEL0_SENSITIVE = 0x00;
+  LEVEL1_SENSITIVE = 0x01;
+  LEVEL2_SENSITIVE = 0x02;
+  LEVEL3_SENSITIVE = 0x03;
+  LEVEL4_SENSITIVE = 0x04;
+  LEVEL5_SENSITIVE = 0x05;
+  LEVEL6_SENSITIVE = 0x06;
+  LEVEL7_SENSITIVE = 0x07;
+  HIGHEST_SENSITIVE = 0x07;
+
+  DEFAULT_SENSITITY = 0x07;
+}
+
+enum SensorMode {
+  option allow_alias = true;
+
+  ALWAYS_ON = 0;
+  ACTIVATED_BY_PROXIMITY = 1;
+
+  DEFAULT_SENSOR_MODE = 0;
+}
+
+enum LFDLevel {
+  option allow_alias = true;
+
+  NOT_USED = 0x00;
+  STRICT = 0x01;
+  MORE_STRICT = 0x02;
+  MOST_STRICT = 0x03;
+
+  DEFAULT_LFD = 0x00;
+}
+

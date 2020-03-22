@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package admin;
+
+option go_package = "biostar/service/admin";
+option java_package = "com.supremainc.sdk.admin";
+option java_multiple_files = true;
+
+service Admin {
+  rpc GetInfo(GetInfoRequest) returns (GetInfoResponse);
+}
+
+message GetInfoRequest {
+}
+
+message GetInfoResponse {
+  string version = 1;
+  string buildDate = 2;
+}
