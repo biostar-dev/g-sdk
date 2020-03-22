@@ -14,7 +14,7 @@ toc_label: "Table of Contents"
    
     ```csharp
     // the path of the root certificate
-    private const string CA_FILE = "../../../cert/ca.crt";
+    private const string CA_FILE = "../../../../cert/ca.crt";
 
     // the ip address of the gateway
     private const string SERVER_ADDR = "192.168.0.2";

@@ -15,7 +15,7 @@ title: "Python Installation"
 
 1. Download the latest version of Python library from [github]({{ site.last_ver }})
 2. Unzip the archive file
-3. Add the _biostar/service_ directory to PYTHONPATH
+3. Add the installation and _biostar/service_ directory to PYTHONPATH
 
 ## Examples
 

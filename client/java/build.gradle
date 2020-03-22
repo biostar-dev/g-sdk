@@ -83,5 +83,6 @@ task connectTest(type: CreateStartScripts) {
 
 applicationDistribution.into('bin') {
     from(quickStart)
+    from(connectTest)
     fileMode = 0755
 }
