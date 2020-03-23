@@ -37,6 +37,6 @@ G-SDK consists of the device gateway and the client libraries. The device gatewa
 
 ## Master Gateway
 
-The master gateway will make it easier to handle thousands of devices accross multiple sites. It will be supported in V1.1 or later.
+The master gateway will make it easier to handle thousands of devices across multiple sites. It will be supported in V1.1 or later.
 
   ![Master Gateway]({{'/assets/images/master.PNG' | relative_url}})  

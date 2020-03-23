@@ -46,7 +46,7 @@ usePrivateAuth
 : If it is not FACE_DETECTION_NONE, the device will try to detect a face after a user authenticates successfully. Valid only for BioStation A2.
 
 useServerMatching
-: If true, defer the authentication to the BioStar server. When user scan a fingerprint or a card, the device will send the information to the BioStar server and wait for the authentication result.
+: If true, defer the authentication to the BioStar server. When a user scans a fingerprint or a card, the device will send the information to the BioStar server and wait for the authentication result.
 
 You need BioStar V2.x for server matching.
 {: .notice--warning}
@@ -62,7 +62,7 @@ authTimeout
 : Timeout in seconds for the whole authentication process.
 
 [operators](#Operator)
-: Up to 10 administrators can be assingned to a device. 
+: Up to 10 administrators can be assigned to a device. 
 
 
 ```protobuf

@@ -104,7 +104,7 @@ message FingerConfig {
 : With more secure levels, False Acceptance Ratio(FAR) would get lower. However, False Rejection Ratio(FRR) would become higher. To understand what this level means, refer to [the article](https://support.supremainc.com/en/support/solutions/articles/24000005895--general-about-far-and-frr-rates).
 
 [fastMode](#FastMode)
-: With more faster modes, the matching speed would get faster with slight degradation of the authentication performance. For most cases, the __AUTOMATIC__ would be the best comprommise between speed and accuracy.
+: With faster modes, the matching speed would get faster with slight degradation of the authentication performance. For most cases, the __AUTOMATIC__ would be the best compromise between speed and accuracy.
 
 [sensitivity](#Sensitivity)
 : You can tune the sensitivity of the fingerprint sensor. The default is __HIGHEST_SENSITIVE__.

@@ -160,7 +160,7 @@ Read image logs from a device. You can limit the search range using __startEvent
 
 ### GetImageFilter
 
-Get the current image filters which specifies event types for recording images.
+Get the current image filters which specify event types for recording images.
 
 ```protobuf
 message ImageFilter {

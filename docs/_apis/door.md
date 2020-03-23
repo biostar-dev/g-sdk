@@ -75,7 +75,7 @@ instantLock
 : If true, the door will be locked immediately when the sensor detects it is closed.
 
 unlockFlags/lockFlags
-: A mask of [DoorFlag](#DoorFlag). Just set __NONE__ for V1.0. The other options will be availabe in the future versions of G-SDK.
+: A mask of [DoorFlag](#DoorFlag). Just set __NONE__ for V1.0. The other options will be available in the future versions of G-SDK.
 
 unconditionalLock 
 : This flag determines how to act after the [autoLockTimeout](#AutoLockTimeout). If it is true, the door will be locked even if the door sensor detects it is open. If it is false, the door will be locked only when the door sensor detects it is closed.
@@ -88,7 +88,7 @@ heldOpenActions
 : When the sensor detects that the door is open longer than the [heldOpenTimeout](#HeldOpenTimeout), the __HELD_OPEN__ alarm will be generated. You can configure which actions should be triggered by this alarm. See [Action]({{'/api/action/' | relative_url}}#action) for the available actions.
 
 dualAuthScheduleID
-: If it is not 0, the dual authentication will be enabled for the specified schedule. For the dual authentication, two users should be authenticate themselves to access the door. 
+: If it is not 0, the dual authentication will be enabled for the specified schedule. For the dual authentication, two users should authenticate themselves to access the door. 
 
 [dualAuthDevice](#DualAuthDevice)
 : Specify the devices to which the dual authentication will be applied. For example, if it is __DUAL_AUTH_ENTRY_DEVICE_ONLY__, it is applied to the entry device only.
@@ -299,7 +299,7 @@ Delete all doors configured on a device.
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the device |
 
-## Managegement
+## Management
 
 You can manually lock, unlock, or release doors.
 

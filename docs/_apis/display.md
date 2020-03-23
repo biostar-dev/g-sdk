@@ -3,7 +3,7 @@ title: "Display API"
 toc_label: "Display"  
 ---
 
-Chaning resources such as logo images and sound files are not supported for V1.0. They will be supported in later versions.
+Changing resources such as logo images and sound files are not supported for V1.0. They will be supported in later versions.
 {: .notice--warning}
 
 ## Config
@@ -58,7 +58,7 @@ menuTimeout
 : Close the menu after the timeout in seconds. The default is 20 seconds.
 
 msgTimeout
-: Close the mesage dialog after the timeout in milliseconds. The default is 2,000 milliseconds.
+: Close the message dialog after the timeout in milliseconds. The default is 2,000 milliseconds.
 
 backlightTimeout
 : Turn off the backlight after the timeout in seconds. The default is 20 seconds.

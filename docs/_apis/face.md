@@ -94,7 +94,7 @@ message FaceConfig {
 : The strictness of face enrollment. The default is __BS2_FACE_ENROLL_THRESHOLD_4__.
 
 [detectSensitivity](#FaceDetectSensitivity)
-: Face authentication starts automatically after detecting a face. This parameter specify the sensitivity of detecting faces. The default is __BS2_FACE_DETECT_SENSITIVITY_MIDDLE__.
+: Face authentication starts automatically after detecting a face. This parameter specifies the sensitivity of detecting faces. The default is __BS2_FACE_DETECT_SENSITIVITY_MIDDLE__.
 
 enrollTimeout
 : Timeout in seconds for enrolling a face. The default is 60 seconds.
@@ -175,7 +175,7 @@ Change the face configurations of multiple devices.
 The more the number of face templates, the higher the False Acceptance Ratio(FAR). To lower this error, you can divide users into several groups, and try face authentication in a specific group only. To use this feature, you have to do the followings.
 
 * Enable [AuthConfig.useGroupMatching]({{'/api/auth/' | relative_url}}#AuthConfig).
-* Create the authenticaton groups using [AddAuthGroup](#addauthgroup) or [AddAuthGroupMulti](#addauthgroupmulti).
+* Create the authentication groups using [AddAuthGroup](#addauthgroup) or [AddAuthGroupMulti](#addauthgroupmulti).
 * Set [UserHdr.authGroupID]({{'/api/user/' | relative_url}}#UserHdr).
 * Enroll or update users using [Enroll]({{'/api/user/' | relative_url}}#enroll) or [EnrollMulti]({{'/api/user/' | relative_url}}#enrollmulti).
 

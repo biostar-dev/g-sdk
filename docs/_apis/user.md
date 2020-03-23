@@ -134,7 +134,7 @@ fingers:
 : Fingers registered to the user. Refer to [FingerData]({{'/api/finger/' | relative_url }}#FingerData). You can register fingerprints using [SetFinger](#setfinger) or [SetFingerMulti](#setfingermulti).
 
 faces
-: Faces registered to the user. Refer to [FaceData]({{'/api/face/' | relative_url }}#FaceData). You can register facres using [SetFace](#setface) or [SetFaceMulti](#setfacemulti).
+: Faces registered to the user. Refer to [FaceData]({{'/api/face/' | relative_url }}#FaceData). You can register faces using [SetFace](#setface) or [SetFaceMulti](#setfacemulti).
 
 accessGroupIDs
 : Access group IDs to which the user belongs. Refer to [AccessGroup]({{'/api/access/' | relative_url }}#AccessGroup). A user can belong to maximum 16 access groups. You can assign access groups using [SetAccessGroup](#setaccessgroup) or [SetAccessGroupMulti](#setaccessgroupmulti).
@@ -352,7 +352,7 @@ message UserFinger {
 {: #UserFinger }
 
 fingers
-: You can acquire fingerprint templates using [Finger.Scan]({{'/app/finger/' | relative_url }}#scan).
+: You can acquire fingerprint templates using [Finger.Scan]({{'/api/finger/' | relative_url }}#scan).
 
 ### GetFinger
 

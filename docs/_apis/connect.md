@@ -258,7 +258,7 @@ message SearchDeviceInfo  {
 
 ## Connection mode
 
-You can change the connection mode of a device. The default is __SERVER_TO_DEVICE__. After chaning the mode, you have to do the followings to reconnect to the device.
+You can change the connection mode of a device. The default is __SERVER_TO_DEVICE__. After changing the mode, you have to do the followings to reconnect to the device.
 
 _After setting to __DEVICE_TO_SERVER___
 

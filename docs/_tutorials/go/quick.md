@@ -423,7 +423,7 @@ func (s *CardSvc) DeleteBlacklist(deviceID uint32, cardInfos []*card.BlacklistIt
 
 ## 7. User
 
-Using [the User API]({{'/api/user/' | relative_url}}), you can get/enroll/delete users. You can also set fingerpints/cards/groups to users. 
+Using [the User API]({{'/api/user/' | relative_url}}), you can get/enroll/delete users. You can also set fingerprints/cards/groups to users. 
 
 ```go
 // An example structure showing the usage of the User API
@@ -567,7 +567,7 @@ func (s *UserSvc) SetFinger(deviceID uint32, userFingers []*user.UserFinger) err
 
 ## 8. Event
 
-Using [the Event API]({{'/api/event/' | relative_url}}), you can read event logs stored in devices. You can also receiving real-time events after enabling monitoring. 
+Using [the Event API]({{'/api/event/' | relative_url}}), you can read event logs stored in devices. You can also receive real-time events after enabling monitoring. 
 
 ```go
 // An example structure showing the usage of the Event API

@@ -40,7 +40,7 @@ For brevity, when the response has no data, its definition is omitted in the ref
 
 ### XXX_Multi Command
 
-One of the design goals of G-SDK is to manage hundreds of devices easily. The more devices, the more cumbersome for developers to do same operations repetitively on multiple devices. To alleviate this overload, G-SDK provides XXX_Multi commands. For example, with [User.EnrollMulti]({{ '/api/user/' | relative_url }}#enrollmulti), you can enroll users to multiple devices with only one function call. All these operation will be executed in parallel by the gateway.
+One of the design goals of G-SDK is to manage hundreds of devices easily. The more devices, the more cumbersome for developers to do same operations repetitively on multiple devices. To alleviate this overload, G-SDK provides XXX_Multi commands. For example, with [User.EnrollMulti]({{ '/api/user/' | relative_url }}#enrollmulti), you can enroll users to multiple devices with only one function call. All these operations will be executed in parallel by the gateway.
 
 For these commands, if the operation fails on any of the target devices, the following __deviceErrors__ will be returned. 
 

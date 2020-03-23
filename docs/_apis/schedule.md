@@ -260,7 +260,7 @@ Add holiday groups to multiple devices.
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| deviceIDs | uint32[] | The IDs of the devivces |
+| deviceIDs | uint32[] | The IDs of the devices |
 | groups | [HolidayGroup[]](#HolidayGroup) | The holiday groups to be added to the devices |
 
 

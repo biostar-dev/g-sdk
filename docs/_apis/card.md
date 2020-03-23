@@ -31,7 +31,7 @@ CARD_TYPE_CSN
 : The CSN(Card Serial Number) is an ID written into a card by manufacturer. You cannot change it.
 
 CARD_TYPE_SECURE
-: With a smartcard, you can write data into it. CARD_TYPE_SECURE cards store user credential information which is used for authentication process. Since access group information is not stored in the cards, the device still need to store user information.
+: With a smartcard, you can write data into it. CARD_TYPE_SECURE cards store user credential information which is used for authentication process. Since access group information is not stored in the cards, the device still needsto store user information.
 
 CARD_TYPE_ACCESS
 : CARD_TYPE_ACCESS cards stores access group information of users in addition to their credentials. Since all the information for authentication is on a card, the device does not need to store any user information. 
