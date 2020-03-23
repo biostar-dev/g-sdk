@@ -73,6 +73,7 @@ Get the time configuration of a device.
 | Response |
 
 | Parameter | Type | Description |
+| --------- | ---- | ----------- |
 | config | [TimeConfig](#TimeConfig) | The time configuration of the device |
 
 
@@ -156,49 +157,49 @@ year
 
 ```protobuf
 enum Month {
-	MONTH_JANUARY = 0;
-	MONTH_FEBRUARY = 1;
-	MONTH_MARCH = 2;
-	MONTH_APRIL = 3;
-	MONTH_MAY = 4;
-	MONTH_JUNE = 5;
-	MONTH_JULY = 6;
-	MONTH_AUGUST = 7;
-	MONTH_SEPTEMBER = 8;
-	MONTH_OCTOBER = 9;
-	MONTH_NOVEMBER = 10;
-	MONTH_DECEMBER = 11;
+  MONTH_JANUARY = 0;
+  MONTH_FEBRUARY = 1;
+  MONTH_MARCH = 2;
+  MONTH_APRIL = 3;
+  MONTH_MAY = 4;
+  MONTH_JUNE = 5;
+  MONTH_JULY = 6;
+  MONTH_AUGUST = 7;
+  MONTH_SEPTEMBER = 8;
+  MONTH_OCTOBER = 9;
+  MONTH_NOVEMBER = 10;
+  MONTH_DECEMBER = 11;
 }
 ```
 {: #Month}
 
 ```protobuf
 enum Ordinal {
-	ORDINAL_FIRST = 0;
-	ORDINAL_SECOND = 1;
-	ORDINAL_THIRD = 2;
-	ORDINAL_FOURTH = 3;
-	ORDINAL_FIFTH = 4;
-	ORDINAL_SIXTH = 5;
-	ORDINAL_SEVENTH = 6;
-	ORDINAL_EIGHTH = 7;
-	ORDINAL_NINTH = 8;
-	ORDINAL_TENTH = 9;
+  ORDINAL_FIRST = 0;
+  ORDINAL_SECOND = 1;
+  ORDINAL_THIRD = 2;
+  ORDINAL_FOURTH = 3;
+  ORDINAL_FIFTH = 4;
+  ORDINAL_SIXTH = 5;
+  ORDINAL_SEVENTH = 6;
+  ORDINAL_EIGHTH = 7;
+  ORDINAL_NINTH = 8;
+  ORDINAL_TENTH = 9;
 
-	ORDINAL_LAST = -1;
+  ORDINAL_LAST = -1;
 }
 ```
 {: #Ordinal}
 
 ```protobuf
 enum Weekday {
-	WEEKDAY_SUNDAY = 0;
-	WEEKDAY_MONDAY = 1;
-	WEEKDAY_TUESDAY = 2;
-	WEEKDAY_WEDNESDAY = 3;
-	WEEKDAY_THURSDAY = 4;
-	WEEKDAY_FRIDAY = 5;
-	WEEKDAY_SATURDAY = 6;
+  WEEKDAY_SUNDAY = 0;
+  WEEKDAY_MONDAY = 1;
+  WEEKDAY_TUESDAY = 2;
+  WEEKDAY_WEDNESDAY = 3;
+  WEEKDAY_THURSDAY = 4;
+  WEEKDAY_FRIDAY = 5;
+  WEEKDAY_SATURDAY = 6;
 }
 ```
 {: #Weekday}
@@ -216,6 +217,7 @@ Get the DST configuration of a device.
 | Response |
 
 | Parameter | Type | Description |
+| --------- | ---- | ----------- |
 | config | [DSTConfig](#DSTConfig) | The DST configuration of the device |
 
 ### SetDSTConfig

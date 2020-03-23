@@ -60,7 +60,7 @@ LAST_CHOICE
 : The T&A key selected by the previous user will be used.
 
 FIXED
-: The T&A key, defined by [TNAConfig.key](#TNAConfig) will be used for all authentication events. 
+: The T&A key, defined by [TNAConfig.key](#TNAConfig), will be used for all authentication events. 
 
 
 ```protobuf
@@ -177,7 +177,7 @@ eventCode
 
 ### GetJobCodeLog
 
-Get the event logs with job codes from a device. You have to configure user job codes using [User.SetJobCode]({{'/api/user/' | relative_url}}#setjobcode) or [User.SetJobCodeMulti]({{'/api/user/' | relative_url}}#setjobcodemulti). And, [SystemConfig.useJobCode]({{'/api/system/' | relative_url}}#SystemConfig) should also be true. 
+Get the event logs with job codes from a device. You have to configure user job codes using [User.SetJobCode]({{'/api/user/' | relative_url}}#setjobcode) or [User.SetJobCodeMulti]({{'/api/user/' | relative_url}}#setjobcodemulti). And, [SystemConfig.useJobCode]({{'/api/system/' | relative_url}}#SystemConfig) should be true. 
 
 ```protobuf
 message JobCodeLog {

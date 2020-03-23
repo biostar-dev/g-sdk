@@ -126,8 +126,5 @@ Configure Wiegand formats which will be used for interpreting card data and inte
 ### [Admin]({{ 'api/admin/' | relative_url }})
 Get the version of G-SDK.
 
-### [Cert]({{ 'api/cert/' | relative_url }})
-Create the root CA and the server certificate for SSL/TLS communication. 
-
 ### [Err]({{ 'api/err/' | relative_url }}) 
 The error definition for [XXX_Multi commands](#xxx_multi-command). 

@@ -53,7 +53,7 @@ SSLServerPort
 : The SSL port of the device gateway. The default is 51213.
 
 useDNS
-: If it is true, the device will try to acquire the IP address of the device gateway from the DNS server. Check if the device supports DNS with [CapabilityInfo.DNSSupported]({{'/api/device/' | relative_url}}#CapabilityInfo).
+: If it is true, the device will try to acquire the IP address of the gateway from the DNS server. Check if the device supports DNS with [CapabilityInfo.DNSSupported]({{'/api/device/' | relative_url}}#CapabilityInfo).
 
 DNSServer
 : The IP address of a DNS server.

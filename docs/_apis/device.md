@@ -3,7 +3,7 @@ title: "Device API"
 toc_label: "Device"  
 ---
 
-The Device services can be classified into three categories.
+The APIs can be classified into three categories.
 
 [Information APIs](#information)
 : Provide the version and capability information of the device.

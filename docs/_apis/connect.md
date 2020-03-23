@@ -21,7 +21,7 @@ enum ConnectionMode {
   DEVICE_TO_SERVER
   : The device connects to the gateway.
 
-With the default of __SERVER_TO_DEVICE__, the gateway will connect to the devices. To change the mode, you have to call [SetConnectionMode](#setconnectionmode). 
+With the default of __SERVER_TO_DEVICE__, the gateway will connect to the device. To change the mode, you have to call [SetConnectionMode](#setconnectionmode). 
 
 ### Synchronous vs. Asynchronous
 
@@ -179,7 +179,7 @@ Get the accept filter set by [SetAcceptFilter](#SetAcceptFilter).
 
 ### GetPendingList
 
-If a device is trying to connect to the gateway but is not included in the accept filter, it is registed to the pending list. By reviewing the pending list, you can choose the new devices to be accepted.
+If a device is trying to connect to the gateway but is not included in the accept filter, it is registered to the pending list. By reviewing the pending list, you can choose the new devices to be accepted.
 
 ```protobuf
 message PendingDeviceInfo {
@@ -285,7 +285,7 @@ Change the connection mode of a device. The gateway will internally call [Networ
 
 ### SetConnectionModeMulti
 
-Change the connections modes of multiple devices.
+Change the connection modes of multiple devices.
 
 | Request |
 

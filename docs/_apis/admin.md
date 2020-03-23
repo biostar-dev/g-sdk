@@ -7,7 +7,7 @@ toc_label: "Administration"
 
 ### GetInfo
 
-Get the version information of the gateway.
+Get the version information of G-SDK.
 
 ```protobuf
 message GetInfoResponse {

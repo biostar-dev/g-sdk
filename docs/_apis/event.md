@@ -62,7 +62,7 @@ Read event logs from a device. You can limit the search range using __startEvent
 
 ### GetLogWithFilter
 
-You can filter the event logs to be read by setting [EventFilter](#EventFilter). For example, to read events with a specific user, you can set __EventFilter.userID__.
+You can filter the event logs to be read by setting [EventFilter](#EventFilter). For example, to read events of a specific user, you can set __EventFilter.userID__.
 
 ```protobuf
 message EventFilter {
@@ -85,6 +85,7 @@ message EventFilter {
 | filters | [EventFilter[]](#EventFilter) | The filters to be applied to the event logs |
 
 | Response |
+
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
 | events | [EventLog[]](#EventLog) | The filtered event logs read from the device |

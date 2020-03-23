@@ -39,8 +39,6 @@ api:
         url: /api/auth/
       - title: Card
         url: /api/card/
-      - title: Cert
-        url: /api/cert/
       - title: Connect
         url: /api/connect/
       - title: Device

@@ -38,7 +38,7 @@ TEMPLATE_FORMAT_SUPREMA
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| templateData | byte[] | The scanned template data. The size is 386 bytes |
+| templateData | byte[] | The scanned template data. The size is 384 bytes |
 | qualityScore | uint32 | The quality score of the template |
 
 ### GetImage
@@ -127,7 +127,7 @@ showImage
 [LFDLevel](#LFDLevel)
 : Specify the level of Live Finger Detection(LFD). The default is __NOT_USED__.
 
-```
+```protobuf
 enum SecurityLevel {
   SECURE = 0x00;
   MORE_SECURE = 0x01;
@@ -136,7 +136,7 @@ enum SecurityLevel {
 ```
 {: #SecurityLevel}
 
-```
+```protobuf
 enum FastMode {
   AUTOMATIC = 0x00;
   FAST = 0x01;
@@ -146,7 +146,7 @@ enum FastMode {
 ```
 {: #FastMode}
 
-```
+```protobuf
 enum Sensitivity {
   LOWEST_SENSITIVE = 0x00;
   LEVEL0_SENSITIVE = 0x00;
@@ -162,7 +162,7 @@ enum Sensitivity {
 ```
 {: #Sensitivity}
 
-```
+```protobuf
 enum SensorMode {
   ALWAYS_ON = 0;
   ACTIVATED_BY_PROXIMITY = 1;
@@ -171,7 +171,7 @@ enum SensorMode {
 {: #SensorMode}
 
 
-```
+```protobuf
 enum LFDLevel {
   NOT_USED = 0x00;
   STRICT = 0x01;

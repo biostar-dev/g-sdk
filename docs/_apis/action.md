@@ -52,7 +52,7 @@ TRIGGER_INPUT
 : The trigger is fired when the specified input signal is detected.
 
 TRIGGER_SCHEDULE
-: The trigger if fired on the specified schedule.
+: The trigger is fired on the specified schedule.
 
 
 ```protobuf

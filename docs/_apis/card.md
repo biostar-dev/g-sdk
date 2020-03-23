@@ -31,7 +31,7 @@ CARD_TYPE_CSN
 : The CSN(Card Serial Number) is an ID written into a card by manufacturer. You cannot change it.
 
 CARD_TYPE_SECURE
-: With a smartcard, you can write data into it. CARD_TYPE_SECURE cards store user credential information which is used for authentication process. Since access group information is not stored in the cards, the device still needsto store user information.
+: With a smartcard, you can write data into it. CARD_TYPE_SECURE cards store user credential information which is used for authentication process. Since access group information is not stored in the cards, the device still needs to store user information.
 
 CARD_TYPE_ACCESS
 : CARD_TYPE_ACCESS cards stores access group information of users in addition to their credentials. Since all the information for authentication is on a card, the device does not need to store any user information. 
@@ -150,9 +150,9 @@ templates
 
 ```protobuf
 message AccessOnCardData {
-  repeated uint32 accessGroupIDs = 1;
-  uint32 startTime = 2;
-  uint32 endTime = 3;
+  repeated uint32 accessGroupIDs;
+  uint32 startTime;
+  uint32 endTime;
 }
 ```
 {: #AccessOnCardData}
@@ -309,11 +309,11 @@ startBlockIndex
 
 ```protobuf
 message DESFireConfig {
-  bytes primaryKey = 1;
-  bytes secondaryKey = 2;
-  bytes appID = 3;
-  uint32 fileID = 4;
-  DESFireEncryptionType encryptionType = 5;
+  bytes primaryKey;
+  bytes secondaryKey;
+  bytes appID;
+  uint32 fileID;
+  DESFireEncryptionType encryptionType;
 }
 ```
 {: #DESFireConfig }
@@ -343,12 +343,12 @@ enum DESFireEncryptionType {
 
 ```protobuf
 message SEOSConfig {
-  bytes OIDADF = 1;
-  uint32 sizeADF = 2;
-  repeated uint32 OIDDataObjectID = 3;
-  repeated uint32 sizeDataObject = 4;
-  bytes primaryKeyAuth = 5;
-  bytes secondaryKeyAuth = 6;
+  bytes OIDADF;
+  uint32 sizeADF;
+  repeated uint32 OIDDataObjectID;
+  repeated uint32 sizeDataObject;
+  bytes primaryKeyAuth;
+  bytes secondaryKeyAuth;
 }
 ```
 {: #SEOSConfig }

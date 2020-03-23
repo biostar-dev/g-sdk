@@ -98,7 +98,7 @@ dualAuthScheduleID
 {: #DualAuthType }
 
 dualAuthTimeout
-: The maximum interval in seconds between the two user's authentications. That is, the second user should authenticate within this timeout after the first user's authentication.
+: The maximum interval in seconds between the two authentications. That is, the second user should authenticate within this timeout after the first user's authentication.
 
 dualAuthGroupIDs
 : See [dualAuthType](#DualAuthType). Maximum 16 access groups can be set as dual authentication groups.

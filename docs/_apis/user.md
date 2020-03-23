@@ -23,7 +23,7 @@ message UserHdr {
 {: #UserHdr}
 
 ID
-: Maximum 32 bytes. 0 is not allowed as an ID. For alphanumeric ID, check if it is supported by the device using [CapabilityModel.alphanumericIDSupported]({{'/api/device/' | relative_url}}#CapabilityInfo), and configure it using [SystemConfig.useAlphanumericID]({{'/api/system/' | relative_url}}#SystemConfig).
+: Maximum 32 bytes. 0 is not allowed as an ID. For alphanumeric ID, check if it is supported by the device using [CapabilityInfo.alphanumericIDSupported]({{'/api/device/' | relative_url}}#CapabilityInfo), and configure it using [SystemConfig.useAlphanumericID]({{'/api/system/' | relative_url}}#SystemConfig).
 
 numOfCard
 : Maximum 8 cards can be assigned to a user. 
@@ -455,7 +455,7 @@ message UserAccessGroup {
 {: #UserAccessGroup }
 
 accessGroupIDs
-: IDs of the access groups the user belongs. Refer to [AccessGroup]({{'/api/access/' | relative_url }}#AccessGroup).
+: IDs of the access groups the user belongs to. Refer to [AccessGroup]({{'/api/access/' | relative_url }}#AccessGroup).
 
 ### GetAccessGroup
 
@@ -499,7 +499,7 @@ Assign access groups to users on multiple devices.
 
 ## Job Code
 
-Check [CapabilityModel.jobCodeSupported]({{'/api/device/' | relative_url }}#CapabilityInfo) of the device first. You have to set the [SystemConfig.useJobCode]({{'/api/system/' | relative_url }}#SystemConfig) to true for recording job codes. 
+Check [CapabilityInfo.jobCodeSupported]({{'/api/device/' | relative_url }}#CapabilityInfo) of the device first. You have to set the [SystemConfig.useJobCode]({{'/api/system/' | relative_url }}#SystemConfig) to true for recording job codes. 
 {: .notice--warning}
 
 ```protobuf

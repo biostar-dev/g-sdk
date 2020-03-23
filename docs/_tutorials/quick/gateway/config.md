@@ -27,7 +27,7 @@ As default, the configuration file resides in the same folder as the executable.
 | dir  | The folder in which the certificates reside. It can be either an absolute or a relative path |
 | ca_cert | The root CA certificate in PEM format |
 | ca_key | The private key of the root CA in PEM format | 
-| server_cert | The servier certificate in PEM format |
+| server_cert | The serier certificate in PEM format |
 | server_key | The private key of the server certificate in PEM format |
 
 ### Device Server
@@ -135,7 +135,7 @@ As default, the gateway writes only warning and error messages. You can set the 
 | level | The logging level between 0 and 5. 5 is the most verbose level and 0 means no logging at all. The default level is 3 |
 | use_file | If true, write the logging messages into the specified log files |
 | filename | If __use_file__ is true, write the logging messages into the files starting with this filename |
-| max_size_MB | The maximum size of a log file in MB. If the size of the log file exceeds this limit, a new file is created |
+| max_size_MB | The maximum size of a log file in MB. If the size of the log file exceeds this limit, a new file will be created |
 | max_days | The maximum number of days to retain old log files based on the timestamp encoded in their filename. If it is 0, retain all the log files |
 | max_backups | The maximum number of old log files to retain. If it is 0, retain all the log files |
 
