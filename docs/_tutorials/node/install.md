@@ -18,4 +18,4 @@ title: "Node.js Installation"
 
 ## Examples
 
-You can see the examples in the _src/example_ directory. Refer to [the quick start guide]({{'/go/quick/' | relative_url}}).
+You can see the examples in the _src/example_ directory. Refer to [the quick start guide]({{'/node/quick/' | relative_url}}).
