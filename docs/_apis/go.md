@@ -9,7 +9,7 @@ The Go SDK depends on the following libraries.
 
 * [gRPC](https://github.com/grpc/grpc-go)
 
-You can install it as in the [installation]({{'/go/install/' | relative_url}}).
+You can install it as described in the [installation]({{'/go/install/' | relative_url}}).
 
 
 ## Generated Structures

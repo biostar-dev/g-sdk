@@ -27,7 +27,7 @@ toc_label: "Table of Contents"
 
 ## 1. CLI 
 
-With the Commmand-Line Interface(CLI), you can test 5 functions related to connection management. 
+With the Command-Line Interface(CLI), you can test 5 functions related to connection management. 
 
 ```
 ===== Main Menu =====

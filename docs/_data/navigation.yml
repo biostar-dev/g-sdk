@@ -15,6 +15,8 @@ main:
     url: /node/
   - title: "Go"
     url: /go/
+  - title: "C++"
+    url: /cpp/
   - title: "Articles"
     url: /categories/
 
@@ -41,6 +43,8 @@ api:
         url: /api/card/
       - title: Connect
         url: /api/connect/
+      - title: ConnectMaster
+        url: /api/connectMaster/
       - title: Device
         url: /api/device/
       - title: Display
@@ -55,14 +59,22 @@ api:
         url: /api/face/
       - title: Finger
         url: /api/finger/
+      - title: Gateway
+        url: /api/gateway/
+      - title: Login
+        url: /api/login/
       - title: Network
         url: /api/network/
+      - title: RS485
+        url: /api/rs485/
       - title: Schedule
         url: /api/schedule/
       - title: Status
         url: /api/status/
       - title: System
         url: /api/system/
+      - title: Tenant
+        url: /api/tenant/
       - title: Time
         url: /api/time/
       - title: T&A
@@ -84,14 +96,27 @@ api:
         url: /api/node/
       - title: Go
         url: /api/go/
+      - title: C++
+        url: /api/cpp/
+
 
 quick:
-  - title: Gateway
+  - title: Device Gateway
     children:
       - title: "Installation"
         url: /gateway/install/
       - title: "Configuration"
         url: /gateway/config/
+      - title: "Certificate Management"
+        url: /gateway/certificate/        
+  - title: Master Gateway
+    children:
+      - title: "Installation"
+        url: /master/install/
+      - title: "Configuration"
+        url: /master/config/
+      - title: "Certificate Management"
+        url: /master/certificate/
   - title: Client
     url: /client/
 
@@ -100,10 +125,14 @@ java:
     url: "/java/install/"
   - title: "Tutorials"
     children:
-      - title: "Quick Start"
+      - title: "Quick Start for Device Gateway"
         url: "/java/quick/"
       - title: "Connect API"
         url: "/java/connect/"
+      - title: "Quick Start for Master Gateway"        
+        url: "/java/quickMaster/"
+      - title: "Connect Master API"
+        url: "/java/connectMaster/"        
 #      - title: "User"
 #        url: "/java/tutorials/user/"
 #      - title: "Authentication"
@@ -116,10 +145,14 @@ csharp:
     url: "/csharp/install/"
   - title: "Tutorials"
     children:
-      - title: "Quick Start"
+      - title: "Quick Start for Device Gateway"
         url: "/csharp/quick/"      
       - title: "Connect API"
         url: "/csharp/connect/"
+      - title: "Quick Start for Master Gateway"        
+        url: "/csharp/quickMaster/"
+      - title: "Connect Master API"
+        url: "/csharp/connectMaster/"        
 #      - title: "User"
 #        url: "/csharp/tutorials/user/"
 #      - title: "Authentication"
@@ -164,10 +197,15 @@ go:
     url: "/go/install/"
   - title: "Tutorials"
     children:
-      - title: "Quick Start"
+      - title: "Quick Start for Device Gateway"
         url: "/go/quick/"
       - title: "Connect API"
         url: "/go/connect/"
+      - title: "Quick Start for Master Gateway"        
+        url: "/go/quickMaster/"
+      - title: "Connect Master API"
+        url: "/go/connectMaster/"
+
 #      - title: "User"
 #        url: "/go/tutorials/user/"
 #      - title: "Authentication"

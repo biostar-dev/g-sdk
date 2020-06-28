@@ -261,4 +261,22 @@ Disable monitoring on multiple devices.
 
 ### SubscribeRealtimeLog
 
+```protobuf
+message SubscribeRealtimeLogRequest {
+  int32 queueSize;
+  repeated uint32 deviceIDs;
+  repeated int32 eventIDs;
+}
+```
+{: #SubscribeRealtimeLogRequest}
+
+queueSize
+: If the queue is full, the gateway will discard the real-time events. So, it should be large enough for receiving concurrent events.
+
+deviceIDs
+: If it is not empty, receive events from the specified devices only.
+
+eventIDs
+: If it is not empty, receive the specified events only.
+
 The way of receiving real-time events will vary according to your selected language. Please refer to the quick start guide for details. 

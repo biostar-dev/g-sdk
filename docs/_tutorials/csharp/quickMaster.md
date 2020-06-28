@@ -1,35 +1,54 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide for Master Gateway"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the C# client library]({{'/csharp/install/' | relative_url}})
-3. Copy the root certificate of the device gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. The quick start example uses [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/). You can change the _example/quick/quick.csproj_ file as needed.
-5. Change the gateway and the device information in _example/quick/Program.cs_ as needed.
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the C# client library]({{'/csharp/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. The quick start example uses [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/). You can change the _example/quick/quick.csproj_ file as needed.
+6. Change the server and the device information in _example/quick/Program.cs_ as needed.
    
     ```csharp
     // the path of the root certificate
-    private const string GATEWAY_CA_FILE = "../../../cert/gateway/ca.crt";
+    private const string MASTER_CA_FILE = "../../../cert/master/ca.crt";  
 
-    // the address of the gateway
-    private const string GATEWAY_ADDR = "192.168.0.2";
-    private const int GATEWAY_PORT = 4000;
+    // the address of the master gateway
+    private const string MASTER_ADDR = "192.168.0.2";
+    private const int MASTER_PORT = 4010; 
+
+    // the paths of the administrator certificate and its key 
+    private const string ADMIN_CERT_FILE = "../../../cert/master/admin.crt";
+    private const string ADMIN_KEY_FILE = "../../../cert/master/admin_key.pem";   
+
+    // the paths of the tenant certificate and its key    
+    private const string TENANT_CERT_FILE = "../../../cert/master/tenant1.crt";
+    private const string TENANT_KEY_FILE = "../../../cert/master/tenant1_key.pem";      
+
+    // the following values should be same as the IDs in the corresponding certificates
+    private const string TENANT_ID = "tenant1";
+    private const string GATEWAY_ID = "gateway1";      
 
     // the ip address of the target device
     private const string DEVICE_ADDR = "192.168.0.110";
     private const int DEVICE_PORT = 51211;
     ```
-6. Build & Run
+7. Build & Run
 
     ```
     cd example/quick
-    dotnet run
+    dotnet run -m
     ```
+
+    To initialize the database, you have to run with __-mi__ option once. 
+    {: .notice--info}
 
 ## 1. Overview
 
@@ -38,130 +57,166 @@ You can use the services in the following steps.
 1. Create a ___Channel___ and connect to the gateway.
    
     ```csharp
-    var channelCredentials = new SslCredentials(File.ReadAllText(caFile));
+    var channelCredentials = new SslCredentials(File.ReadAllText(caFile), new KeyCertificatePair(File.ReadAllText(tenantCertFile), File.ReadAllText(tenantKeyFile)));
+    var callCredentials = CallCredentials.FromInterceptor(JwtCredential.JwtAuthInterceptor);
 
-    Channel channel = new Channel(serverAddr, serverPort, channelCredentials);  
+    Channel channel = new Channel(masterAddr, masterPort, ChannelCredentials.Create(channelCredentials, callCredentials)); 
     ```
 
-2. Create a service client such as ___Connect.Connect.ConnectClient___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
+2. Login to the master gateway and get a JWT token for further communication.
+    ```csharp
+    var loginClient = new Login.Login.LoginClient(channel);
+
+    var request = new LoginRequest{ TenantCert = File.ReadAllText(tenantCertFile) };
+    var response = loginClient.Login(request);
+
+    JwtCredential.SetToken(response.JwtToken); 
+    ```
+   
+3. Create a service client such as ___ConnectMaster.ConnectMaster.ConnectMasterClient___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
    
     ```csharp
-    Connect.Connect.ConnectClient connectClient = new Connect.Connect.ConnectClient(channel);
+    ConnectMaster.ConnectMaster.ConnectMasterClient___ connectMasterClient = new ConnectMaster.ConnectMaster.ConnectMasterClient(channel);
     ```
 
-3. Call the functions of the service using the client. 
+4. Call the functions of the service using the client. 
    
     ```csharp 
     var connectInfo = new ConnectInfo{ IPAddr = deviceAddr, Port = devicePort, UseSSL = true };
-    var request = new ConnectRequest{ ConnectInfo = connectInfo };
-    var response = connectClient.Connect(request);    
+    var request = new ConnectRequest{ GatewayID = gatewayID, ConnectInfo = connectInfo };
+    var response = connectMasterClient.Connect(request);    
     ```
 
 The classes in the __example__ namespace are written for showing the usage of the corresponding APIs. In your applications, you don't have to use these sample classes.
 {: .notice--warning}
 
 
-## 2. Connect to the device gateway
+## 2. Connect to the master gateway
 
-The first thing to do is to connect to the device gateway and get a ___Channel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+The first thing to do is to connect to the master gateway and get a ___Channel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the following certificates.
+
+* The root CA certificate of the master gateway
+* The client certificate of a tenant and its key file
+* For administrative tasks such as creating tenants, the client certificate of an administrator and its key file
+
+After connecting to the master gateway, you have to login with either a tenant certificate or an administrator certificate. When login succeeds, the master gateway will return a JWT token, which will be used as a call credential for further API calls.
 
 ```csharp
-// An example class encapsulating communication with the gateway
-class GrpcClient
-{
-  private Channel channel;
+// An example class encapsulating communication with the master gateway
+class MasterClient : GrpcClient {
+  private const string ADMIN_TENANT_ID = "administrator";
 
-  public Channel GetChannel() {
-    return channel;
-  }
+  public void ConnectAdmin(string caFile, string adminCertFile, string adminKeyFile, string masterAddr, int masterPort) {
+    var channelCredentials = new SslCredentials(File.ReadAllText(caFile), new KeyCertificatePair(File.ReadAllText(adminCertFile), File.ReadAllText(adminKeyFile)));
+    var callCredentials = CallCredentials.FromInterceptor(JwtCredential.JwtAuthInterceptor);
 
-  public void Close() {
-    channel.ShutdownAsync().Wait();
-  }
-}
+    channel = new Channel(masterAddr, masterPort, ChannelCredentials.Create(channelCredentials, callCredentials)); 
 
-class GatewayClient : GrpcClient {
-  public void Connect(string caFile, string serverAddr, int serverPort) {
-    var channelCredentials = new SslCredentials(File.ReadAllText(caFile));
+    var loginClient = new Login.Login.LoginClient(channel);
 
-    channel = new Channel(serverAddr, serverPort, channelCredentials);
+    var request = new LoginAdminRequest{ AdminTenantCert = File.ReadAllText(adminCertFile), TenantID = ADMIN_TENANT_ID };
+    var response = loginClient.LoginAdmin(request);
+
+    JwtCredential.SetToken(response.JwtToken); 
+  } 
+
+  public void ConnectTenant(string caFile, string tenantCertFile, string tenantKeyFile, string masterAddr, int masterPort) {
+    var channelCredentials = new SslCredentials(File.ReadAllText(caFile), new KeyCertificatePair(File.ReadAllText(tenantCertFile), File.ReadAllText(tenantKeyFile)));
+    var callCredentials = CallCredentials.FromInterceptor(JwtCredential.JwtAuthInterceptor);
+
+    channel = new Channel(masterAddr, masterPort, ChannelCredentials.Create(channelCredentials, callCredentials)); 
+
+    var loginClient = new Login.Login.LoginClient(channel);
+
+    var request = new LoginRequest{ TenantCert = File.ReadAllText(tenantCertFile) };
+    var response = loginClient.Login(request);
+
+    JwtCredential.SetToken(response.JwtToken); 
   } 
 }
 ```
 
-1. Create the ___GatewayClient___
+1. Create the ___MasterClient___
 
     ```csharp
-    var gatewayClient = new GatewayClient();
+    var masterClient = new MasterClient();
     ```
 
-2. Connect to the gateway
+2. Connect to the master gateway
 
     ```csharp
-    gatewayClient.Connect(GATEWAY_CA_FILE, GATEWAY_ADDR, GATEWAY_PORT); 
+    masterClient.ConnectTenant(MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE, MASTER_ADDR, MASTER_PORT);
     ```
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/csharp/connect/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/csharp/connectMaster/' | relative_url}})..
 
 ```csharp
-// An example class showing the usage of the Connect API
-class ConnectSvc
+// An example class showing the usage of the Connect Master API
+class ConnectMasterSvc
 {
-  private Connect.Connect.ConnectClient connectClient;
+  private const int SEARCH_TIMEOUT_MS = 5000;
 
-  public ConnectSvc(Channel channel) {
-    connectClient = new Connect.Connect.ConnectClient(channel);
+  private ConnectMaster.ConnectMaster.ConnectMasterClient connectMasterClient;
+
+  public ConnectMasterSvc(Channel channel) {
+    connectMasterClient = new ConnectMaster.ConnectMaster.ConnectMasterClient(channel);
   }
 
-  public RepeatedField<Connect.DeviceInfo> GetDeviceList() {
-    var request = new GetDeviceListRequest{};
-    var response = connectClient.GetDeviceList(request);
+  public RepeatedField<Connect.DeviceInfo> GetDeviceList(string gatewayID) {
+    var request = new GetDeviceListRequest{ GatewayID = gatewayID };
+    var response = connectMasterClient.GetDeviceList(request);
+
+    return response.DeviceInfos;
+  }
+  
+  public RepeatedField<Connect.SearchDeviceInfo> SearchDevice(string gatewayID) {
+    var request = new SearchDeviceRequest{ GatewayID = gatewayID, Timeout = SEARCH_TIMEOUT_MS };
+    var response = connectMasterClient.SearchDevice(request);
 
     return response.DeviceInfos;
   }
 
-  public uint Connect(String deviceAddr, int devicePort) {
-    var connectInfo = new ConnectInfo{ IPAddr = deviceAddr, Port = devicePort, UseSSL = true };
-
-    var request = new ConnectRequest{ ConnectInfo = connectInfo };
-    var response = connectClient.Connect(request);
+  public uint Connect(string gatewayID, Connect.ConnectInfo connectInfo) {
+    var request = new ConnectRequest{ GatewayID = gatewayID, ConnectInfo = connectInfo };
+    var response = connectMasterClient.Connect(request);
 
     return response.DeviceID;
   } 
 
-  public void Disconnect(uint deviceID) {
+  public void Disconnect(uint[] deviceIDs) {
     var request = new DisconnectRequest{};
-    request.DeviceIDs.Add(deviceID);
+    request.DeviceIDs.AddRange(deviceIDs);
 
-    var response = connectClient.Disconnect(request);
+    connectMasterClient.Disconnect(request);
   }     
 }
 ```
 
-1. Create the ___ConnectSvc___. It makes the ___Connect.Connect.ConnectClient___ internally.
+1. Create the ___ConnectMasterSvc___. It makes the ___ConnectMaster.ConnectMaster.ConnectMasterClient___ internally.
    
     ```csharp
-    ConnectSvc connectSvc = new ConnectSvc(grpcClient.GetChannel()); 
+    ConnectMasterSvc connectMasterSvc = new ConnectMasterSvc(masterClient.GetChannel()); 
     ```
 
-2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using  [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
+2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using  [ConnectMaster.EnableSSL]({{'/api/connectMaster/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```csharp
-    var devID = connectSvc.Connect(DEVICE_ADDR, DEVICE_PORT);
+    var connectInfo = new ConnectInfo{ IPAddr = deviceAddr, Port = port, UseSSL = useSSL };
+    var devID = connectMasterSvc.Connect(gatewayID, connectInfo);
     ```
 
 3. Get the devices, which are managed by the gateway
    
     ```csharp
-    var devList = connectSvc.GetDeviceList();
+    var devList = connectMasterSvc.GetDeviceList(gatewayID);
     ```
 
 4. Disconnect the device
    
     ```csharp  
-    connectSvc.Disconnect(devID);
+    connectMasterSvc.Disconnect(devID);
     ```
 
 ## 4. Device

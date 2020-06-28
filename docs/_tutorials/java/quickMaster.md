@@ -1,165 +1,232 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide for MasterGateway"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the Java client library]({{'/java/install/' | relative_url}})
-3. Copy the root certificate of the device gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. The quick start example uses Gradle for its project. You can change the _build.gradle_ file as needed.
-5. Change the gateway and the device information in _src/main/java/com/supremainc/sdk/example/quick/QuickStart.java_ as needed.
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the Java client library]({{'/java/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. The quick start example uses Gradle for its project. You can change the _build.gradle_ file as needed.
+6. Change the server and the device information in _src/main/java/com/supremainc/sdk/example/quick/QuickStart.java_ as needed.
    
     ```java
     // the path of the root certificate
-    private static final String GATEWAY_CA_FILE = "cert/gateway/ca.crt";
+    private static final String MASTER_CA_FILE = "cert/master/ca.crt";    
 
-    // the address of the gateway
-    private static final String GATEWAY_ADDR = "192.168.0.2";
-    private static final int GATEWAY_PORT = 4000;
+    // the address of the master gateway
+    private static final String MASTER_ADDR = "192.168.0.2";
+    private static final int MASTER_PORT = 4010;    
+
+    // the paths of the administrator certificate and its key 
+    private static final String ADMIN_CERT_FILE = "cert/master/admin.crt";
+    private static final String ADMIN_KEY_FILE = "cert/master/admin_key.pem";    
+
+    // the paths of the tenant certificate and its key    
+    private static final String TENANT_CERT_FILE = "cert/master/tenant1.crt";
+    private static final String TENANT_KEY_FILE = "cert/master/tenant1_key.pem";       
+
+    // the following values should be same as the IDs in the corresponding certificates
+    private static final String TENANT_ID = "tenant1";
+    private static final String GATEWAY_ID = "gateway1";     
 
     // the ip address of the target device
     private static final String DEVICE_ADDR = "192.168.0.110"; 
     private static final int DEVICE_PORT = 51211;
     ```
-6. Build
+7. Build
 
     ```
     ./gradlew installDist
     ```
-7. Run
+8. Run
    
     ```
-    ./build/install/java/bin/quickStart
+    ./build/install/java/bin/quickStart -m
     ```
 
+    To initialize the database, you have to run with __-mi__ option once. 
+    {: .notice--info}
 
 ## 1. Overview
 
 You can use the G-SDK services in the following steps.
 
+
 1. Connect to the gateway and get a ___ManagedChannel___.
    
     ```java
-    ManagedChannel channel = NettyChannelBuilder.forAddress(serverAddr, serverPort)
-    .sslContext(GrpcSslContexts.forClient().trustManager(new File(certFile)).build())
+    ManagedChannel channel = NettyChannelBuilder.forAddress(masterAddr, masterPort)
+    .sslContext(GrpcSslContexts.forClient().keyManager(new File(tenantCertFile), new File(tenantKeyFile), null).trustManager(new File(caCertFile)).build())
     .build();
     ```
+2. Login to the master gateway and get a JWT token for further communication.
+    ```java
+    LoginGrpc.LoginBlockingStub loginStub = LoginGrpc.newBlockingStub(channel);
 
-2. Create a service stub such as ___ConnectGrpc.ConnectBlockingStub___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
+    LoginRequest request = LoginRequest.newBuilder().setTenantCert(new String(Files.readAllBytes(Paths.get(tenantCertFile)))).build();
+    LoginResponse response;
+
+    response = loginStub.login(request);
+    credentials = new JwtCredential(response.getJwtToken());    
+    ```
+3. Create a service stub such as ___ConnectMasterGrpc.ConnectMasterBlockingStub___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
    
     ```java
-    ConnectGrpc.ConnectBlockingStub connectStub = ConnectGrpc.newBlockingStub(channel);
+    ConnectMasterGrpc.ConnectMasterBlockingStub connectMasterStub = ConnectMasterGrpc.newBlockingStub(channel);
     ```
 
-3. Call the functions of the service using the stub. 
+4. Call the functions of the service using the stub. 
    
     ```java
     ConnectInfo connInfo = ConnectInfo.newBuilder().setIPAddr(deviceIP).setPort(devicePort).setUseSSL(useSSL).build();
     ConnectRequest request = ConnectRequest.newBuilder().setConnectInfo(connInfo).build();
-    ConnectResponse response = connectStub.connect(request);
+    ConnectResponse response = connectMasterStub.connect(request);
     ```
 
 The classes of _com.supremainc.sdk.example.*_ are written for showing the usage of the corresponding APIs. In your applications, you don't have to use these sample classes.
 {: .notice--warning}
 
+## 2. Connect to the master gateway
 
-## 2. Connect to the device gateway
+The first thing to do is to connect to the master gateway and get a ___ManagedChannel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the following certificates.
 
-The first thing to do is to connect to the device gateway and get a ___ManagedChannel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+* The root CA certificate of the master gateway
+* The client certificate of a tenant and its key file
+* For administrative tasks such as creating tenants, the client certificate of an administrator and its key file
+
+After connecting to the master gateway, you have to login with either a tenant certificate or an administrator certificate. When login succeeds, the master gateway will return a JWT token, which will be used as a call credential for further API calls.
 
 ```java
-// An example class encapsulating communication with the gateway
-public class GrpcClient {
-  private ManagedChannel channel;
+// An example class encapsulating communication with the master gateway
+public class MasterClient extends GrpcClient {
+  private static final String ADMIN_TENANT_ID = "administrator";
+  private CallCredentials credentials;
 
-  public ManagedChannel getChannel() {
-    return channel;
+  public CallCredentials getCredentials() {
+    return credentials;
   }
-}
 
-public class GatewayClient extends GrpcClient {  // certFile is the pathname of the root certificate
-  public void connect(String certFile, String gatewayAddr, int gatewayPort) throws Exception {
-    channel = NettyChannelBuilder.forAddress(gatewayAddr, gatewayPort)
-    .sslContext(GrpcSslContexts.forClient().trustManager(new File(certFile)).build())
+  // When you have to do administrative tasks such as managing tenants
+  public void connectAdmin(String caCertFile, String adminCertFile, String adminKeyFile, String masterAddr, int masterPort) throws Exception {
+    channel = NettyChannelBuilder.forAddress(masterAddr, masterPort)
+    .sslContext(GrpcSslContexts.forClient().keyManager(new File(adminCertFile), new File(adminKeyFile), null).trustManager(new File(caCertFile)).build())
     .build();
-  }
-}
 
+    LoginGrpc.LoginBlockingStub loginStub = LoginGrpc.newBlockingStub(channel);
+
+    LoginAdminRequest request = LoginAdminRequest.newBuilder().setAdminTenantCert(new String(Files.readAllBytes(Paths.get(adminCertFile)))).setTenantID(ADMIN_TENANT_ID).build();
+    LoginAdminResponse response;
+
+    response = loginStub.loginAdmin(request);
+    credentials = new JwtCredential(response.getJwtToken());
+  }
+
+  // When login as a normal tenant
+  public void connectTenant(String caCertFile, String tenantCertFile, String tenantKeyFile, String masterAddr, int masterPort) throws Exception {
+    channel = NettyChannelBuilder.forAddress(masterAddr, masterPort)
+    .sslContext(GrpcSslContexts.forClient().keyManager(new File(tenantCertFile), new File(tenantKeyFile), null).trustManager(new File(caCertFile)).build())
+    .build();
+
+    LoginGrpc.LoginBlockingStub loginStub = LoginGrpc.newBlockingStub(channel);
+
+    LoginRequest request = LoginRequest.newBuilder().setTenantCert(new String(Files.readAllBytes(Paths.get(tenantCertFile)))).build();
+    LoginResponse response;
+
+    response = loginStub.login(request);
+    credentials = new JwtCredential(response.getJwtToken());
+  }  
+}
 ```
 
-1. Create the ___GrpcClient___
+1. Create the ___MasterClient___
 
     ```java
-    GatewayClient client = new GatewayClient();
+    MasterClient client = new MasterClient();
     ```
 
-2. Connect to the gateway
+2. Connect to the master gateway
 
     ```java
     try {
-      client.connect(GATEWAY_CA_FILE, GATEWAY_ADDR, GATEWAY_PORT);
+      client.connectTenant(MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE, MASTER_ADDR, MASTER_PORT);
     } catch (Exception e) {
-      System.out.printf("Cannot connect to the device gateway: %s", e); 
+      System.out.printf("Cannot connect to the server: %s", e); 
       System.exit(-1);
     }
     ```
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/java/connect/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/java/connectMaster/' | relative_url}})..
 
 ```java
 // An example class showing the usage of the Connect API
-public class ConnectSvc {
-  private final ConnectGrpc.ConnectBlockingStub connectStub;
+public class ConnectMasterSvc {
+  private final ConnectMasterGrpc.ConnectMasterBlockingStub connectMasterStub;
+  private final int SEARCH_TIMEOUT_MS = 5000;
 
-  public ConnectSvc(ConnectGrpc.ConnectBlockingStub stub) {
-    connectStub = stub;
+  private final int MONITORING_QUEUE_SIZE = 16;
+
+  public ConnectMasterSvc(ConnectMasterGrpc.ConnectMasterBlockingStub stub) {
+    connectMasterStub = stub;
   }
 
-  public List<DeviceInfo> getDeviceList() throws Exception {
-    GetDeviceListRequest request = GetDeviceListRequest.newBuilder().build();
+  public List<DeviceInfo> getDeviceList(String gatewayID) throws Exception {
+    GetDeviceListRequest request = GetDeviceListRequest.newBuilder().setGatewayID(gatewayID).build();
     GetDeviceListResponse response;
     
-    response = connectStub.getDeviceList(request);
+    response = connectMasterStub.getDeviceList(request);
     return response.getDeviceInfosList();
   } 
 
-  public int connect(ConnectInfo connInfo) throws Exception {
-    ConnectRequest request = ConnectRequest.newBuilder().setConnectInfo(connInfo).build();
-    ConnectResponse response = connectStub.connect(request);
+  public List<SearchDeviceInfo> searchDevice(String gatewayID) throws Exception {
+    SearchDeviceRequest request = SearchDeviceRequest.newBuilder().setGatewayID(gatewayID).setTimeout(SEARCH_TIMEOUT_MS).build();
+    SearchDeviceResponse response;
+    
+    response = connectMasterStub.searchDevice(request);
+    return response.getDeviceInfosList();
+  }   
+
+  public int connect(String gatewayID, ConnectInfo connInfo) throws Exception {
+    ConnectRequest request = ConnectRequest.newBuilder().setGatewayID(gatewayID).setConnectInfo(connInfo).build();
+
+    ConnectResponse response = connectMasterStub.connect(request);
 
     return response.getDeviceID();
   }
 
   public void disconnect(int deviceID) throws Exception {
     DisconnectRequest request = DisconnectRequest.newBuilder().addDeviceIDs(deviceID).build();
-    DisconnectResponse response = connectStub.disconnect(request);
+    connectMasterStub.disconnect(request);
   }
 }
 ```
 
-1. Create the ___ConnectSvc___. It makes the ___ConnectGrpc.ConnectBlockingStub___ internally.
+1. Create the ___ConnectMasterSvc___. It makes the ___ConnectMasterGrpc.ConnectMasterBlockingStub___ internally.
    
     ```java
-    ConnectSvc connectSvc = new ConnectSvc(ConnectGrpc.newBlockingStub(client.getChannel())); 
+    ConnectMasterSvc connectMasterSvc = new ConnectMasterSvc(ConnectMasterGrpc.newBlockingStub(client.getChannel())); 
     ```
 
-2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
+2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [ConnectMaster.EnableSSL]({{'/api/connectMaster/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```java
     ConnectInfo connInfo = ConnectInfo.newBuilder().setIPAddr(deviceAddr).setPort(devicePort).setUseSSL(useSSL).build();
 
-    int deviceID = connectSvc.connect(connInfo);    
+    int deviceID = connectMasterSvc.connect(gatewayID, connInfo);
     ```
 
 3. Get the devices, which are managed by the gateway
    
     ```java
-    List<DeviceInfo> devInfo = connectSvc.getDeviceList(); 
+    List<DeviceInfo> devInfo = connectMasterSvc.getDeviceList(gatewayID); 
     ```
 
 4. Disconnect the device

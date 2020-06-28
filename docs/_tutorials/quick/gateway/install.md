@@ -5,7 +5,7 @@ title: "Installation"
 
 ## Download
 
-1. Download the latest version of the gateway from [github]({{ site.last_ver }})
+1. Download the latest version of the device gateway from [github]({{ site.last_ver }})
 2. Unzip the archive file
 
 ## Create or import certificates
@@ -23,7 +23,7 @@ device-gateway -c
 >>> Country Name (2 letter code) [US]: KR
 >>> State or Province Name (full name) []: Gyeonggi
 >>> Locality Name (eg, city) []: Seongnam
->>> Organization Name (eg, company) []: Suprema inc.
+>>> Organization Name (eg, company) []: Suprema Inc.
 >>> Organizational Unit Name (eg, section) []:
 >>> CA certificate will expire after n years [10]:
 (2) Create the server certificate
@@ -34,9 +34,28 @@ device-gateway -c
 >>> Server certificate will expire after n years [2]: 5
 ```
 
+When you already created or imported the root CA certificate, you can create only the server certificate with __-cs__ option. 
+
+```
+device_gateway -cs
+
+Create the server certificate
+>>> Country Name (2 letter code) [US]: KR
+>>> State or Province Name (full name) []: Gyeonggi
+>>> Locality Name (eg, city) []: Seongnam
+>>> Organization Name (eg, company) []: Suprema Inc.
+>>> Organizational Unit Name (eg, section) []:
+>>> Common Name (e.g. server FQDN or YOUR name) []: gateway.supremainc.com
+>>> More DNS names? [y/N]:
+>>> More IPv4 address? [y/N]: y
+>>> IPv4 Address (eg, 8.8.8.8) []: 192.168.0.2
+>>> IPv4 Address (eg, 8.8.8.8) []:
+>>> Certificate will expire after n years [5]:
+```
+
 ### Import certificates
 
-You can use the certificates you already have for the gateway. You have to change the __'cert'__ section of [the configuration file]({{'/gateway/config/' | relative_url}}) accordingly. .
+You can use the certificates you already have for the device gateway. You have to change the __cert__ section of [the configuration file]({{'/gateway/config/' | relative_url}}) accordingly.
 
 ## Modify the configuration file as needed
 

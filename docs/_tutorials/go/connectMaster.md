@@ -1,28 +1,45 @@
 ---
-title: "Connect API Tutorial"
+title: "Connect Master API Tutorial"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the Go client library]({{'/go/install/' | relative_url}})
-3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. Change the server information in _src/example/connect/test/test.go_ as needed.
-   
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the Go client library]({{'/go/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. Change the gateway and certificate information in _src/example/connectMaster/test/test.go_ as needed.
+  
     ```go
     // the path of the root certificate
-	  CA_FILE = "../../../../../cert/ca.crt"
+    MASTER_CA_FILE = "../../../../../cert/master/ca.crt"
 
-    // the ip address of the gateway
-	  SERVER_IP = "192.168.0.2"
-	  SERVER_PORT = 4000
+    // the address of the master gateway
+    MASTER_IP = "192.168.0.2"
+    MASTER_PORT = 4010
+
+    // the paths of the administrator certificate and its key    
+    ADMIN_CERT_FILE = "../../../../../cert/master/admin.crt"
+    ADMIN_KEY_FILE = "../../../../../cert/master/admin_key.pem"
+
+    // the paths of the tenant certificate and its key    
+    TENANT_CERT_FILE = "../../../../../cert/master/tenant1.crt"
+    TENANT_KEY_FILE = "../../../../../cert/master/tenant1_key.pem"    
+
+    // the following values should be same as the IDs in the corresponding certificates
+    TENANT_ID = "tenant1"
+    GATEWAY_ID = "gateway1"    
     ```
+
 6. Build
 
     ```
-    cd src/example/connect/test
+    cd src/example/connectMaster/test
     go build .
     ```
 7. Run
@@ -30,6 +47,9 @@ toc_label: "Table of Contents"
     ```
     ./test
     ```
+
+    To initialize the database, you have to run with __-i__ option once. See _initMaster()_ for initializing the database.
+    {: .notice--info}
 
 
 ## 1. CLI 
@@ -53,7 +73,7 @@ $ ./test
 
 ### (1) Search devices
 
-To connect devices, you have to know their addresses and related options such as connection mode. By using [Connect.SearchDevice]({{'/api/connect/' | relative_url }}#searchdevice), you can get these information in a subnet. 
+To connect devices, you have to know their addresses and related options such as connection mode. By using [ConnectMaster.SearchDevice]({{'/api/connectMaster/' | relative_url }}#searchdevice), you can get these information in a subnet. 
 
 
 ```
@@ -73,7 +93,7 @@ deviceID:547634480 type:BIOSTATION_2 useDHCP:true IPAddr:"192.168.0.106" port:51
 
 ### (2) Connect to a device synchronously
 
-The simplest way of connecting to a device is to use [Connect.Connect]({{'/api/connect/' | relative_url }}#connect). 
+The simplest way of connecting to a device is to use [ConnectMaster.Connect]({{'/api/connectMaster/' | relative_url }}#connect). 
 
 ```
 >>>>> Select a menu: 2
@@ -87,7 +107,7 @@ Connected to 544114231
 
 ### (3) Manage asynchronous connections 
 
-When you have to manage permanent connections to multiple devices, [asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection) would be a better choice. With these APIs, the gateway will handle connections to devices in the background. For example, if some devices are disconnected, the gateway will try to reconnect them automatically. 
+When you have to manage permanent connections to multiple devices, [asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection) would be a better choice. With these APIs, the gateway will handle connections to devices in the background. For example, if some devices are disconnected, the gateway will try to reconnect them automatically. 
 
 ```
 >>>>> Select a menu: 3
@@ -122,8 +142,8 @@ deviceID:939504224 IPAddr:"192.168.0.110" port:51211 autoReconnect:true
 
 In some environments, the devices should connect to the gateway, not vice versa. For devices to connect to the gateway, you have to do the followings;
 
-1. Change the connection mode to __DEVICE_TO_SERVER__ using [Connect.SetConnectionMode]({{'/api/connect/' | relative_url }}#setconnectionmode).
-2. By default, the gateway will not accept any incoming connections. You have to add the devices to the accept filter using [Connect.SetAcceptFilter]({{'/api/connect' | relative_url}}#setacceptfilter). 
+1. Change the connection mode to __DEVICE_TO_SERVER__ using [ConnectMaster.SetConnectionMode]({{'/api/connectMaster/' | relative_url }}#setconnectionmode).
+2. By default, the gateway will not accept any incoming connections. You have to add the devices to the accept filter using [ConnectMaster.SetAcceptFilter]({{'/api/connectMaster' | relative_url}}#setacceptfilter). 
 
 ```
 >>>>> Select a menu: 4
@@ -150,7 +170,7 @@ Allowing all devices...
 
 ### (5) Configure connection-related options
 
-Apart from the IP address, there are two important options for device connections. You can change the connection mode using [Connect.SetConnectionMode]({{'/api/connect/' | relative_url }}#setconnectionmode) and enable/disable SSL using the [SSL APIs]({{'/api/connect' | relative_url}}#ssl).
+Apart from the IP address, there are two important options for device connections. You can change the connection mode using [ConnectMaster.SetConnectionMode]({{'/api/connectMaster/' | relative_url }}#setconnectionmode) and enable/disable SSL using the [SSL APIs]({{'/api/connectMaster' | relative_url}}#ssl).
 
 ```
 >>>>> Select a menu: 5
@@ -184,11 +204,12 @@ To change these options, you have to connect to the devices first using menu (2)
 
 ## 2. Synchronous connections
 
-You can use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) to manage the connections by yourself. 
+You can use the [Synchronous APIs]({{'/api/connectMaster/' | relative_url }}#synchronous-connection) to manage the connections by yourself. 
 
 ```go
-func (s *ConnectSvc) Connect(deviceIP string, devicePort int, useSSL bool) (uint32, error) {
-  req := &connect.ConnectRequest{
+func (s *ConnectMasterSvc) Connect(gatewayID string, deviceIP string, devicePort int, useSSL bool) (uint32, error) {
+  req := &connectMaster.ConnectRequest{
+    GatewayID: gatewayID,
     ConnectInfo: &connect.ConnectInfo{
       IPAddr: deviceIP,
       Port: int32(devicePort),
@@ -201,8 +222,8 @@ func (s *ConnectSvc) Connect(deviceIP string, devicePort int, useSSL bool) (uint
   return resp.GetDeviceID(), nil
 }
 
-func (s *ConnectSvc) Disconnect(deviceIDs []uint32) error {
-  req := &connect.DisconnectRequest{
+func (s *ConnectMasterSvc) Disconnect(deviceIDs []uint32) error {
+  req := &connectMaster.DisconnectRequest{
     DeviceIDs: deviceIDs,
   }
 
@@ -213,20 +234,21 @@ func (s *ConnectSvc) Disconnect(deviceIDs []uint32) error {
 ```
 
 ```go
-devID, err := connectSvc.Connect(IP_ADDR, PORT, false)
+devID, err := connectMasterSvc.Connect(gatewayID, connInfo.IPAddr, int(connInfo.Port), connInfo.UseSSL)
 
 // do something with the devID
 
-connectSvc.Disconnect([]uint32{ devID })
+connectMasterSvc.Disconnect([]uint32{ devID })
 ```
 
 ## 3. Asynchronous connections
 
-With the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection), you only have to register or deregister devices. The gateway will handle all the connection related tasks in the background. 
+With the [Asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection), you only have to register or deregister devices. The gateway will handle all the connection related tasks in the background. 
 
 ```go
-func (s *ConnectSvc) AddAsyncConnection(connInfos []*connect.AsyncConnectInfo) error {
-  req := &connect.AddAsyncConnectionRequest{
+func (s *ConnectMasterSvc) AddAsyncConnection(gatewayID string, connInfos []*connect.AsyncConnectInfo) error {
+  req := &connectMaster.AddAsyncConnectionRequest{
+    GatewayID: gatewayID,
     ConnectInfos: connInfos,
   }
 
@@ -235,9 +257,9 @@ func (s *ConnectSvc) AddAsyncConnection(connInfos []*connect.AsyncConnectInfo) e
   return nil
 }
 
-
-func (s *ConnectSvc) DeleteAsyncConnection(deviceIDs []uint32) error {
-  req := &connect.DeleteAsyncConnectionRequest{
+func (s *ConnectMasterSvc) DeleteAsyncConnection(gatewayID string, deviceIDs []uint32) error {
+  req := &connectMaster.DeleteAsyncConnectionRequest{
+    GatewayID: gatewayID,
     DeviceIDs: deviceIDs,
   }
 
@@ -247,16 +269,16 @@ func (s *ConnectSvc) DeleteAsyncConnection(deviceIDs []uint32) error {
 }
 ```
 
-You have to use [Connect.GetDeviceList]({{'/api/connect/' | relative_url }}#getdevicelist) to get the status of the registered devices. 
+You have to use [ConnectMaster.GetDeviceList]({{'/api/connectMaster/' | relative_url }}#getdevicelist) to get the status of the registered devices. 
 
 ```go
 func showAsyncConnection() error {
-  devList, _ := connectSvc.GetDeviceList()
+  devList, _ := connectMasterSvc.GetDeviceList(gatewayID)
 
   asyncList := []*connect.DeviceInfo{}
 
   for _, device := range devList {
-    if device.AutoReconnect { // AutoReconnect is true for the devices added by AddAsyncConnection
+    if device.AutoReconnect {
       asyncList = append(asyncList, device)
     }
   }
@@ -275,9 +297,10 @@ func showAsyncConnection() error {
 ## 4. Accept devices
 
 ```go
-
-func (s *ConnectSvc) GetAcceptFilter() (*connect.AcceptFilter, error) {
-  req := &connect.GetAcceptFilterRequest{}
+func (s *ConnectMasterSvc) GetAcceptFilter(gatewayID string) (*connect.AcceptFilter, error) {
+  req := &connectMaster.GetAcceptFilterRequest{
+    GatewayID: gatewayID,
+  }
 
   resp, _ := s.client.GetAcceptFilter(context.Background(), req)
 
@@ -285,8 +308,9 @@ func (s *ConnectSvc) GetAcceptFilter() (*connect.AcceptFilter, error) {
 }
 
 
-func (s *ConnectSvc) SetAcceptFilter(filter *connect.AcceptFilter) error {
-  req := &connect.SetAcceptFilterRequest{
+func (s *ConnectMasterSvc) SetAcceptFilter(gatewayID string, filter *connect.AcceptFilter) error {
+  req := &connectMaster.SetAcceptFilterRequest{
+    GatewayID: gatewayID,
     Filter: filter,
   }
 
@@ -297,11 +321,13 @@ func (s *ConnectSvc) SetAcceptFilter(filter *connect.AcceptFilter) error {
 
 ```
 
-By default, the gateway will not accept any incoming connections. [Connect.GetPendingList]({{'/api/connect/' | relative_url }}#getpendinglist) can be used to get the devices, which are trying to connect to the gateway but not in the accept filter. 
+By default, the gateway will not accept any incoming connections. [ConnectMaster.GetPendingList]({{'/api/connectMaster/' | relative_url }}#getpendinglist) can be used to get the devices, which are trying to connect to the gateway but not in the accept filter. 
 
 ```go
-func (s *ConnectSvc) GetPendingList() ([]*connect.PendingDeviceInfo, error) {
-  req := &connect.GetPendingListRequest{}
+func (s *ConnectMasterSvc) GetPendingList(gatewayID string) ([]*connect.PendingDeviceInfo, error) {
+  req := &connectMaster.GetPendingListRequest{
+    GatewayID: gatewayID,
+  }
 
   resp, _ := s.client.GetPendingList(context.Background(), req)
 
@@ -319,13 +345,15 @@ func allowAllDevices() error {
     DeviceIDs: []uint32{},
   }
 
-  connectSvc.SetAcceptFilter(filter)
+  connectMasterSvc.SetAcceptFilter(filter)
 
   return nil		
 }
 
-func (s *ConnectSvc) AddDeviceToAcceptFilter(deviceIDs []uint32) error {
-  getReq := &connect.GetAcceptFilterRequest{}
+func (s *ConnectMasterSvc) AddDeviceToAcceptFilter(gatewayID string, deviceIDs []uint32) error {
+  getReq := &connectMaster.GetAcceptFilterRequest{
+    GatewayID: gatewayID,
+  }
 
   getResp, _ := s.client.GetAcceptFilter(context.Background(), getReq)
 
@@ -347,11 +375,12 @@ func (s *ConnectSvc) AddDeviceToAcceptFilter(deviceIDs []uint32) error {
     }
   }
 
-  setReq := &connect.SetAcceptFilterRequest{
+  setReq := &connectMaster.SetAcceptFilterRequest{
+    GatewayID: gatewayID,
     Filter: filter,
   }
 
-  SetAcceptFilter(context.Background(), setReq)
+  s.client.SetAcceptFilter(context.Background(), setReq)
 
   return nil
 }
@@ -359,13 +388,13 @@ func (s *ConnectSvc) AddDeviceToAcceptFilter(deviceIDs []uint32) error {
 
 ## 5. Connection status
 
-Apart from [Connect.GetDeviceList]({{'/api/connect/' | relative_url }}#getdevicelist), you can also get the realtime update using [Connect.SubscribeStatus]({{'/api/connect/' | relative_url }}#subscribestatus).
+Apart from [ConnectMaster.GetDeviceList]({{'/api/connectMaster/' | relative_url }}#getdevicelist), you can also get the realtime update using [ConnectMaster.SubscribeStatus]({{'/api/connectMaster/' | relative_url }}#subscribestatus).
 
 ```go
-func (s *ConnectSvc) Subscribe() (connect.Connect_SubscribeStatusClient, context.CancelFunc, error) {
+func (s *ConnectMasterSvc) Subscribe() (connectMaster.ConnectMaster_SubscribeStatusClient, context.CancelFunc, error) {
   ctx, cancel := context.WithCancel(context.Background())
 
-  req := &connect.SubscribeStatusRequest{
+  req := &connectMaster.SubscribeStatusRequest{
     QueueSize: QUEUE_SIZE,
   }
 
@@ -376,10 +405,10 @@ func (s *ConnectSvc) Subscribe() (connect.Connect_SubscribeStatusClient, context
 ```
 
 ```go
-  statusStream, cancelFunc, _ := connectSvc.Subscribe()
+  statusStream, cancelFunc, _ := connectMasterSvc.Subscribe()
   defer cancelFunc()
 
-  go func(statusStream connectService.Connect_SubscribeStatusClient) {
+  go func(statusStream connectMasterService.ConnectMaster_SubscribeStatusClient) {
     for {
       statusChange, err := statusStream.Recv()
 
@@ -397,8 +426,8 @@ func (s *ConnectSvc) Subscribe() (connect.Connect_SubscribeStatusClient, context
 ## 6. Connection mode
 
 ```go
-func (s *ConnectSvc) SetConnectionModeMulti(deviceIDs []uint32, mode connect.ConnectionMode) error {
-  req := &connect.SetConnectionModeMultiRequest{
+func (s *ConnectMasterSvc) SetConnectionModeMulti(deviceIDs []uint32, mode connect.ConnectionMode) error {
+  req := &connectMaster.SetConnectionModeMultiRequest{
     DeviceIDs:      deviceIDs,
     ConnectionMode: mode,
   }
@@ -409,7 +438,7 @@ func (s *ConnectSvc) SetConnectionModeMulti(deviceIDs []uint32, mode connect.Con
 }
 ```
 
-After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#acceptfilter) should be configured correctly. 
+After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connectMaster/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#acceptfilter) should be configured correctly. 
 {: .notice--warning}
 
 ## 7. SSL
@@ -417,19 +446,19 @@ After setting the connection mode, you have to use different APIs accordingly. W
 TLS 1.2 can be used for more secure communication between the gateway and devices. Refer to [Secure Communication]({{'/api/connect/' | relative_url }}#secure-communication) for details. 
 
 ```go
-func (s *ConnectSvc) EnableSSL(deviceIDs []uint32) error {
-  req := &connect.EnableSSLMultiRequest{
+func (s *ConnectMasterSvc) EnableSSL(deviceIDs []uint32) error {
+  req := &connectMaster.EnableSSLMultiRequest{
     DeviceIDs:      deviceIDs,
   }
 
   s.client.EnableSSLMulti(context.Background(), req)
-  
+
   return nil
 }
 
 
-func (s *ConnectSvc) DisableSSL(deviceIDs []uint32) error {
-  req := &connect.DisableSSLMultiRequest{
+func (s *ConnectMasterSvc) DisableSSL(deviceIDs []uint32) error {
+  req := &connectMaster.DisableSSLMultiRequest{
     DeviceIDs:      deviceIDs,
   }
 

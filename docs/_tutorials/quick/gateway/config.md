@@ -9,6 +9,8 @@ As default, the configuration file resides in the same folder as the executable.
 
 ### Certificates
 
+See [Certificate Management]({{'/gateway/certificate/' | relative_url}}) for managing these certificates. The __master_ca_cert__, __gateway_cert__, and __gateway_key__ are needed only when __master_gateway.use__ is true. 
+
 ```json
 {
   "cert": {
@@ -17,6 +19,9 @@ As default, the configuration file resides in the same folder as the executable.
     "ca_key": "ca_key.pem",
     "server_cert": "server.crt",
     "server_key": "server_key.pem",
+    "master_ca_cert": "master_ca.crt",
+    "gateway_cert": "gateway1.crt",
+    "gateway_key": "gateway1_key.pem",
     "self_signed": true
   }
 }
@@ -27,8 +32,11 @@ As default, the configuration file resides in the same folder as the executable.
 | dir  | The folder in which the certificates reside. It can be either an absolute or a relative path |
 | ca_cert | The root CA certificate in PEM format |
 | ca_key | The private key of the root CA in PEM format | 
-| server_cert | The serier certificate in PEM format |
+| server_cert | The server certificate in PEM format |
 | server_key | The private key of the server certificate in PEM format |
+| master_ca_cert | The root CA of the master gateway in PEM format |
+| gateway_cert | The client certificate in PEM format to connect to the master gateway  |
+| gateway_key | The private key of the client certificate in PEM format |
 
 ### Device Server
 
@@ -101,17 +109,23 @@ These timeout values are for the commands between the gateway and devices. All v
 
 ### Master Gateway
 
-The master gateway will be supported in V1.1 or later.
+If you want the device gateway to connect to a master gateway, you have to configure the below options accordingly. You also have to specify the related certificates in the [cert](#certificates) section. 
 
 ```json
 {
   "master_gateway": {
     "use": false,
-    "ip": "",
-    "port": 4001
+    "ip": "192.168.11.1",
+    "port": 4010
   }
 }
 ```
+
+| Name | Description |
+| -----| ----------- |
+| use | True if the device gateway should connect to a master gateway |
+| ip | The address of the master gateway |
+| port | The port of the master gateway |
 
 ### Log
 
@@ -147,5 +161,6 @@ As default, the gateway writes only warning and error messages. You can set the 
 | -f     | specify the configuration file (default: ./config.json) |
 | -l     | specify the log level (1: error only, 5: most verbose, 3: default ) |
 | -c     | create the self-signed certificates for SSL communication | 
+| -cs    | create the server certificate using the existing root CA | 
 | -v     | show the version of the gateway |
 | -h     | show the command line options | 

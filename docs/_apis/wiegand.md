@@ -207,3 +207,73 @@ Change the Wiegand configurations of multiple devices.
 | deviceIDs | uint32[] | The IDs of the devices |
 | config | [WiegandConfig](#WiegandConfig) | The Wiegand configuration to be written to the devices |
 
+## Slave Devices
+
+You can search, add, or delete slave devices on Wiegand input.
+
+```protobuf
+message WiegandTamperInput {
+  uint32 deviceID;
+  uint32 port;
+  device.SwitchType switchType;
+}
+
+message WiegandOutput {
+  uint32 deviceID;
+  uint32 port;
+}
+
+message WiegandDeviceInfo {
+  uint32 deviceID;
+  WiegandTamperInput tamperInput;
+  WiegandOutput redLEDOutput;
+  WiegandOutput greenLEDOutput;
+  WiegandOutput buzzerOutput;
+}
+```
+{: #WiegandDeviceInfo }
+
+### SearchDevice
+
+Search slaves of a device. If the device has more than one Wiegand input, all the inputs will be probed at the same time. To access any of the devices found, you have to register them using [SetDevice](#setdevice).
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device whose slave devices will be searched |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| slaveInfos |[WiegandDeviceInfo[]](#WiegandDeviceInfo) | The slave devices connect to the Wiegand inputs |
+
+### GetDevice
+
+Get the registered slave devices.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| slaveInfos |[WiegandDeviceInfo[]](#WiegandDeviceInfo) | The slave devices registered to the device |
+
+### SetDevice
+
+Register the slave devices. You only have to register slaves once. However, since this information is not stored in the device gateway, you have to use [Connect.SetSlaveDevice]({{'/api/connect/' | relative_url}}#setslavedevice) or [ConnectMaster.SetSlaveDevice]({{'/api/connectMaster/' | relative_url}}#setslavedevice) when the device gateway is reconnected.
+{: .notice--warning}
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+| slaveInfos |[WiegandDeviceInfo[]](#WiegandDeviceInfo) | The slave devices to be registered to the device |
+

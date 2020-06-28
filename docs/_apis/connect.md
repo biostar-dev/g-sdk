@@ -3,9 +3,12 @@ title: "Connect API"
 toc_label: "Connect"  
 ---
 
+For the device gateway only. Refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) for the master gateway.
+{: .notice--info}
+
 ## Overview
 
-The Connect API is for managing the connections between the gateway and BioStar devices. There are two connection modes according to the direction of the connection. 
+The Connect API is for managing the connections between the device gateway and BioStar devices. There are two connection modes according to the direction of the connection. 
 
 ### Connection Mode
 
@@ -39,6 +42,75 @@ SSL
 
 Though SSL and TLS are not same exactly, both terms are used interchangeably in this manual. Without further description, SSL means TLS v1.2 protocol.
 {: .notice--info}
+
+## Status
+
+With [the asynchronous APIs](#asynchronous-connection) and [the device-to-server connection](#device-to-server-connection), the connections are managed by the gateway in the background. To get the current status of connections, you can use [GetDeviceList](#getdevicelist) or [SubscribeStatus](#subscribestatus).
+
+```protobuf
+message DeviceInfo {
+  uint32 deviceID;
+  ConnectionMode connectionMode;
+  string IPAddr;
+  int32 port;
+  Status status; 
+  bool autoReconnect; 
+  bool useSSL;
+}
+```
+{: #DeviceInfo }
+
+status
+: [The current status of the device](#Status).
+
+autoReconnect
+: True only if the device is connected by [AddAsyncConnection](#addasyncconnection).
+
+
+```protobuf
+enum Status {
+  // Normal Status
+  DISCONNECTED = 0x00;
+  TCP_CONNECTED	= 0x01;
+  TLS_CONNECTED = 0x02;
+  
+  // TCP Connection Error Status
+  TCP_CANNOT_CONNECT = 0x100;
+  TCP_NOT_ALLOWED = 0x101;
+
+  // TLS Connection Error Status
+  TLS_CANNOT_CONNECT = 0x200;
+  TLS_NOT_ALLOWED = 0x201;
+}
+```
+{: #Status}
+
+### GetDeviceList
+
+Get the information of the managed devices. 
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceInfos | [DeviceInfo[]](#DeviceInfo) | The information of the managed devices |
+
+### SubscribeStatus
+
+If you subscribe to the status channel, the gateway will notify you whenever the status of a device changes.
+
+```protobuf
+message StatusChange {
+  uint32 deviceID;
+  Status status;
+  uint32 timestamp; 
+}
+```
+status
+: [The new status of the device](#Status).
+
+timestamp
+: The time when the change is occurred in Unix time format.
 
 ## Synchronous Connection
 
@@ -343,71 +415,46 @@ Disable SSL on multiple devices
 | deviceIDs | uint32[] | The IDs of the devices |
 
 
-## Status
-
-With [the asynchronous APIs](#asynchronous-connection) and [the device-to-server connection](#device-to-server-connection), the connections are managed by the gateway in the background. To get the current status of connections, you can use [GetDeviceList](#getdevicelist) or [SubscribeStatus](#subscribestatus).
+## Slave
 
 ```protobuf
-message DeviceInfo {
+message SlaveDeviceInfo {
   uint32 deviceID;
-  ConnectionMode connectionMode;
-  string IPAddr;
-  int32 port;
-  Status status; 
-  bool autoReconnect; 
-  bool useSSL;
+  repeated uint32 rs485SlaveDeviceIDs;
+  repeated uint32 wiegandSlaveDeviceIDs;
 }
 ```
-{: #DeviceInfo }
+{: #SlaveDeviceInfo }
 
-status
-: [The current status of the device](#Status).
+deviceID
+: The ID of the parent device to which the slaves are registered.
 
-autoReconnect
-: True only if the device is connected by [AddAsyncConnection](#addasyncconnection).
+rs485SlaveDeviceIDs
+: The IDs of the slave devices registered on RS485 channels.
 
+wiegandSlaveDeviceIDs
+: The IDs of the slave devices registered on Wiegand input.
 
-```protobuf
-enum Status {
-  // Normal Status
-  DISCONNECTED = 0x00;
-  TCP_CONNECTED	= 0x01;
-  TLS_CONNECTED = 0x02;
-  
-  // TCP Connection Error Status
-  TCP_CANNOT_CONNECT = 0x100;
-  TCP_NOT_ALLOWED = 0x101;
+You can add slave devices on a RS485 channel or Wiegand input of a device. For searching and registering slave devices, refer to the corresponding sections in [RS485]({{'/api/rs485/' | relative_url}}#slave-devices) and [Wiegand]({{'/api/wiegand/' | relative_url}}#slave-devices).
 
-  // TLS Connection Error Status
-  TLS_CANNOT_CONNECT = 0x200;
-  TLS_NOT_ALLOWED = 0x201;
-}
-```
-{: #Status}
+The slave information is not stored in the database. So, to access the slave devices, you have to use [SetSlaveDevice](#setslavedevice) after the device gateway is reconnected.
 
-### GetDeviceList
+### GetSlaveDevice
 
-Get the information of the managed devices. 
+Get the slave device information. 
 
 | Response |
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| deviceInfos | [DeviceInfo[]](#DeviceInfo) | The information of the managed devices |
+| slaveDeviceInfos | [SlaveDeviceInfo[]](#SlaveDeviceInfo) | The slave device information |
 
-### SubscribeStatus
+### SetSlaveDevice
 
-If you subscribe to the status channel, the gateway will notify you whenever the status of a device changes.
+Set the slave device information. The slave devices should be registered first using [RS485.SetDevice]({{'/api/rs485/' | relative_url}}#setdevice) or [Wiegand.SetDevice]({{'/api/wiegand/' | relative_url}}#setdevice).
 
-```protobuf
-message StatusChange {
-  uint32 deviceID;
-  Status status;
-  uint32 timestamp; 
-}
-```
-status
-: [The new status of the device](#Status).
+| Request |
 
-timestamp
-: The time when the change is occurred in Unix time format.
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| slaveDeviceInfos | [SlaveDeviceInfo[]](#SlaveDeviceInfo) | The slave device information |

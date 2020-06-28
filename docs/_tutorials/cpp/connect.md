@@ -6,19 +6,19 @@ toc_label: "Table of Contents"
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
+1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the C# client library]({{'/csharp/install/' | relative_url}})
-3. Copy the root certificate of the device gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
+3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
 4. The example uses [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/). You can change the _example/connect/test/test.csproj_ file as needed.
 5. Change the server information in _example/connect/test/Program.cs_ as needed.
    
     ```csharp
     // the path of the root certificate
-    private const string GATEWAY_CA_FILE = "../../../../cert/gateway/ca.crt";
+    private const string CA_FILE = "../../../../cert/ca.crt";
 
     // the ip address of the gateway
-    private const string GATEWAY_ADDR = "192.168.0.2";
-    private const int GATEWAY_PORT = 4000;
+    private const string SERVER_ADDR = "192.168.0.2";
+    private const int SERVER_PORT = 4000;
     ```
 6. Build & Run
 
@@ -32,6 +32,8 @@ toc_label: "Table of Contents"
 With the Command-Line Interface(CLI), you can test 5 functions related to connection management. 
 
 ```
+$ ./build/install/java/bin/connectTest
+
 ===== Main Menu =====
 
 (1) Search devices

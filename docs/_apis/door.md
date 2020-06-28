@@ -266,6 +266,8 @@ enum AlarmFlag {
 | --------- | ---- | ----------- |
 | status | [Status[]](#Status) | The status of the doors configured on the device |  
 
+## Management
+
 ### Add
 
 Add doors to a device.
@@ -299,7 +301,7 @@ Delete all doors configured on a device.
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the device |
 
-## Management
+## Lock/Unlock
 
 You can manually lock, unlock, or release doors.
 

@@ -21,11 +21,20 @@ The language specific APIs to use the gRPC APIs.
 
 In addition to the API reference, you can also refer to the following tutorials.
 
-### [Quick Start Guide]({{'/java/quick/' | relative_url}})
+### [Quick Start Guide for Device Gateway]({{'/java/quick/' | relative_url}})
 
-The guide will show you how to use the basic APIs in Java.
+The guide will show you how to use the basic APIs for the device gateway in Java.
 
 ### [Connect API]({{'java/connect/' | relative_url}})
 
-To manage BioStar devices, you have to connect them to the gateway first. The tutorial will show you how to connect to the devices and configure the related options. 
+To manage BioStar devices, you have to connect them to the device gateway first. The tutorial will show you how to connect to the devices and configure the related options. 
+
+### [Quick Start Guide for Master gateway]({{'/java/quickMaster/' | relative_url}})
+
+The guide will show you how to use the basic APIs for the master gateway in Java. 
+
+### [Connect Master API]({{'java/connectMaster/' | relative_url}})
+
+With the master gateway, you have to connect to devices via device gateways. The tutorial will show you how to connect to the devices and configure the related options. 
+
 

@@ -4,7 +4,7 @@ title: "G-SDK"
 ---
 
   G-SDK is a new way of communicating with BioStar devices. It is a lightweight, scalable, and cross-platform solution which will expedite your development. 
-  Based on [gRPC](https://grpc.io/), it supports many programming languages such as Java, C#, Python, Node.js, Go, etc.
+  Based on [gRPC](https://grpc.io/), it supports many programming languages such as Java, C#, Python, Node.js, Go, and C++.
 
 ## Why G-SDK?
 
@@ -37,6 +37,6 @@ G-SDK consists of the device gateway and the client libraries. The device gatewa
 
 ## Master Gateway
 
-The master gateway will make it easier to handle thousands of devices across multiple sites. It will be supported in V1.1 or later.
+The master gateway makes it easier to handle thousands of devices across multiple sites. It is supported in V1.1 or later.
 
   ![Master Gateway]({{'/assets/images/master.PNG' | relative_url}})  

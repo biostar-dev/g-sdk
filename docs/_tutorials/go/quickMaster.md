@@ -1,61 +1,106 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide for Master Gateway"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the Go client library]({{'/go/install/' | relative_url}})
-3. Copy the root certificate of the device gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory.    
-4. Change the gateway and the device information in _src/example/quick/quickStart.go_ as needed.
-   
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the Go client library]({{'/go/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. Change the gateway and the device information in _src/example/quick/quickStart.go_ as needed.
+  
     ```go
     // the path of the root certificate
-    GATEWAY_CA_FILE = "../../../../cert/gateway/ca.crt"
+    MASTER_CA_FILE = "../../../../cert/master/ca.crt"
 
-    // the address of the device gateway
-    GATEWAY_IP = "192.168.0.2"
-    GATEWAY_PORT = 4000
+    // the address of the master gateway
+    MASTER_IP = "192.168.0.2"
+    MASTER_PORT = 4010
+
+    // the paths of the administrator certificate and its key    
+    ADMIN_CERT_FILE = "../../../../cert/master/admin.crt"
+    ADMIN_KEY_FILE = "../../../../cert/master/admin_key.pem"
+
+    // the paths of the tenant certificate and its key    
+    TENANT_CERT_FILE = "../../../../cert/master/tenant1.crt"
+    TENANT_KEY_FILE = "../../../../cert/master/tenant1_key.pem"    
+
+    // the following values should be same as the IDs in the corresponding certificates
+    TENANT_ID = "tenant1"
+    GATEWAY_ID = "gateway1"    
 
     // the ip address of the target device
     A2_IP = "192.168.0.110"
     A2_PORT = 51211
     ```
-5. Build
+6. Build
 
     ```
     cd src/example/quick
     go build .
     ```
-6. Run
+7. Run
    
     ```
-    ./quick
+    ./quick -m
     ```
+
+    To initialize the database, you have to run with __-mi__ option once. See _initMaster()_ for initializing the database.
+    {: .notice--info}
 
 ## 1. Overview
 
 You can use the G-SDK services in the following steps.
 
-1. Connect to the device gateway and get a ___grpc.ClientConn___.
+1. Connect to the master gateway and get a ___grpc.ClientConn___.
    
     ```go
-    creds, _ := credentials.NewClientTLSFromFile(certFile, "")
-    conn, _ := grpc.Dial(fmt.Sprintf("%v:%v", serverIP, serverPort), grpc.WithTransportCredentials(creds), grpc.WithBlock(), grpc.WithTimeout(CONN_TIMEOUT))
+    clientCert, _ := tls.LoadX509KeyPair(tenantCertFile, tenantKeyFile)
+    caCert, _ := ioutil.ReadFile(caCertFile)
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
+
+    tlsConfig := &tls.Config {
+      Certificates: []tls.Certificate{ clientCert },
+      RootCAs: caCertPool,
+    }
+
+    var tokenCreds JWTCredential
+
+    conn, _ = grpc.Dial(fmt.Sprintf("%v:%v", masterIP, masterPort), grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)), grpc.WithPerRPCCredentials(&tokenCreds))
     ```
 
-2. Create a service client such as ___connect.ConnectClient___ using the connection. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
-   
+2. Login to the master gateway and get a JWT token for further communication.
     ```go
-    connect.ConnectClient client = connect.NewConnectClient(conn)
+    tenantCertData, _ := ioutil.ReadFile(tenantCertFile)
+
+    loginClient := login.NewLoginClient(c.conn)
+
+    loginReq := &login.LoginRequest{
+      TenantCert: string(tenantCertData),
+    }
+
+    loginResp, _ := loginClient.Login(context.Background(), loginReq)
+    tokenCreds.Token = loginResp.JwtToken   
     ```
 
-3. Call the functions of the service using the client. 
+3. Create a service client such as ___connectMaster.ConnectMasterClient___ using the connection. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
    
     ```go
-    req := &connect.ConnectRequest{
+    connectMaster.ConnectMasterClient client = connectMaster.NewConnectMasterClient(conn)
+    ```
+
+4. Call the functions of the service using the client. 
+   
+    ```go
+    req := &connectMaster.ConnectRequest{
+      GatewayID: gatewayID,
       ConnectInfo: &connect.ConnectInfo{
         IPAddr: deviceIP,
         Port: int32(devicePort),
@@ -69,62 +114,122 @@ You can use the G-SDK services in the following steps.
 The structures in _example_ are written for showing the usage of the corresponding APIs. In your applications, you don't have to use these sample structures.
 {: .notice--warning}
 
+## 2. Connect to the master gateway and login
 
-## 2. Connect to the device gateway
+The first thing to do is to connect to the master gateway and get a ___grpc.ClientConn___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the following certificates.
 
-The first thing to do is to connect to the device gateway and get a ___grpc.ClientConn___, which will be used for further communication. You have to know the IP address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+* The root CA certificate of the master gateway
+* The client certificate of a tenant and its key file
+* For administrative tasks such as creating tenants, the client certificate of an administrator and its key file
+
+After connecting to the master gateway, you have to login with either a tenant certificate or an administrator certificate. When login succeeds, the master gateway will return a JWT token, which will be used as a call credential for further API calls.
 
 ```go
-// An example structure encapsulating communication with the gateway
-type GatewayClient struct {
+// An example structure encapsulating communication with the master gateway
+type MasterClient struct {
   conn *grpc.ClientConn
 }
 
-func (c *GatewayClient) GetConn() *grpc.ClientConn {
+func (c *MasterClient) GetConn() *grpc.ClientConn {
   return c.conn
 }
 
-func (c *GatewayClient) Connect(certFile string, serverIP string, serverPort int) error {
-  creds, _ := credentials.NewClientTLSFromFile(certFile, "")
+// When you have to do administrative tasks such as managing tenants
+func (c *MasterClient) ConnectAdmin(caCertFile, adminCertFile, adminKeyFile, masterIP string, masterPort int) error {
+  clientCert, _err_ := tls.LoadX509KeyPair(adminCertFile, adminKeyFile)
+  caCert, _ := ioutil.ReadFile(caCertFile)
+  caCertPool := x509.NewCertPool()
+  caCertPool.AppendCertsFromPEM(caCert)
 
-  conn, _ := grpc.Dial(fmt.Sprintf("%v:%v", serverIP, serverPort), grpc.WithTransportCredentials(creds), grpc.WithBlock(), grpc.WithTimeout(CONN_TIMEOUT))
+  tlsConfig := &tls.Config {
+    Certificates: []tls.Certificate{ clientCert },
+    RootCAs: caCertPool,
+  }
 
-  c.conn = conn
+  var tokenCreds JWTCredential
+
+  c.conn, _ = grpc.Dial(fmt.Sprintf("%v:%v", masterIP, masterPort), grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)), grpc.WithPerRPCCredentials(&tokenCreds))
+
+  adminCertData, _ := ioutil.ReadFile(adminCertFile)
+
+  loginClient := login.NewLoginClient(c.conn)
+
+  loginReq := &login.LoginAdminRequest{
+    AdminTenantCert: string(adminCertData),
+    TenantID: ADMIN_TENANT_ID,
+  }
+
+  loginResp, _ := loginClient.LoginAdmin(context.Background(), loginReq)
+
+  tokenCreds.Token = loginResp.JwtToken	
 
   return nil
 }
+
+// When login as a normal tenant
+func (c *MasterClient) ConnectTenant(caCertFile, tenantCertFile, tenantKeyFile, masterIP string, masterPort int) error {
+  clientCert, _ := tls.LoadX509KeyPair(tenantCertFile, tenantKeyFile)
+  caCert, _ := ioutil.ReadFile(caCertFile)
+  caCertPool := x509.NewCertPool()
+  caCertPool.AppendCertsFromPEM(caCert)
+
+  tlsConfig := &tls.Config {
+    Certificates: []tls.Certificate{ clientCert },
+    RootCAs: caCertPool,
+  }
+
+  var tokenCreds JWTCredential
+
+  c.conn, _ = grpc.Dial(fmt.Sprintf("%v:%v", masterIP, masterPort), grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)), grpc.WithPerRPCCredentials(&tokenCreds))
+
+  tenantCertData, _ := ioutil.ReadFile(tenantCertFile)
+
+  loginClient := login.NewLoginClient(c.conn)
+
+  loginReq := &login.LoginRequest{
+    TenantCert: string(tenantCertData),
+  }
+
+  loginResp, _ := loginClient.Login(context.Background(), loginReq)
+
+  tokenCreds.Token = loginResp.JwtToken
+
+  return nil
+}
+
 ```
 
-1. Create the ___GatewayClient___
+1. Create the ___MasterClient___
 
     ```go
-	  gatewayClient := &client.GatewayClient{}
+	  masterClient := &master.MasterClient{}
     ```
 
-2. Connect to the gateway
+2. Connect to the master gateway
 
     ```go
-	  gatewayClient.Connect(GATEWAY_CA_FILE, GATEWAY_IP, GATEWAY_PORT)
+	  masterClient.ConnectTenant(MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE, MASTER_IP, MASTER_PORT)
     ```
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/go/connect/' | relative_url}}).
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/go/connectMaster/' | relative_url}}).
 
 ```go
-// An example structure showing the usage of the Connect API
-type ConnectSvc struct {
-  client connect.ConnectClient
+// An example structure showing the usage of the Connect Master API
+type ConnectMasterSvc struct {
+  client connectMaster.ConnectMasterClient
 }
 
-func NewConnectSvc(conn *grpc.ClientConn) *ConnectSvc {
-  return &ConnectSvc{
-    client: connect.NewConnectClient(conn),
+func NewConnectMasterSvc(conn *grpc.ClientConn) *ConnectMasterSvc {
+  return &ConnectMasterSvc{
+    client: connectMaster.NewConnectMasterClient(conn),
   }
 }
 
-func (s *ConnectSvc) GetDeviceList() ([]*connect.DeviceInfo, error) {
-  req := &connect.GetDeviceListRequest{
+func (s *ConnectMasterSvc) GetDeviceList(gatewayID string) ([]*connect.DeviceInfo, error) {
+  req := &connectMaster.GetDeviceListRequest{
+    GatewayID: gatewayID,
   }
 
   resp, _ := s.client.GetDeviceList(context.Background(), req)
@@ -133,8 +238,9 @@ func (s *ConnectSvc) GetDeviceList() ([]*connect.DeviceInfo, error) {
 }
 
 
-func (s *ConnectSvc) SearchDevice(timeout uint32) ([]*connect.SearchDeviceInfo, error) {
-  req := &connect.SearchDeviceRequest{
+func (s *ConnectMasterSvc) SearchDevice(gatewayID string, timeout uint32) ([]*connect.SearchDeviceInfo, error) {
+  req := &connectMaster.SearchDeviceRequest{
+    GatewayID: gatewayID, 
     Timeout: timeout,
   }
 
@@ -143,8 +249,9 @@ func (s *ConnectSvc) SearchDevice(timeout uint32) ([]*connect.SearchDeviceInfo, 
   return resp.GetDeviceInfos(), nil
 }
 
-func (s *ConnectSvc) Connect(deviceIP string, devicePort int, useSSL bool) (uint32, error) {
-  req := &connect.ConnectRequest{
+func (s *ConnectMasterSvc) Connect(gatewayID string, deviceIP string, devicePort int, useSSL bool) (uint32, error) {
+  req := &connectMaster.ConnectRequest{
+    GatewayID: gatewayID,
     ConnectInfo: &connect.ConnectInfo{
       IPAddr: deviceIP,
       Port: int32(devicePort),
@@ -158,39 +265,39 @@ func (s *ConnectSvc) Connect(deviceIP string, devicePort int, useSSL bool) (uint
 }
 
 
-func (s *ConnectSvc) Disconnect(deviceIDs []uint32) error {
-	req := &connect.DisconnectRequest{
-		DeviceIDs: deviceIDs,
-	}
+func (s *ConnectMasterSvc) Disconnect(deviceIDs []uint32) error {
+  req := &connectMaster.DisconnectRequest{
+    DeviceIDs: deviceIDs,
+  }
 
-	s.client.Disconnect(context.Background(), req)
+  s.client.Disconnect(context.Background(), req)
 
-	return nil
+  return nil
 }
 ```
 
-1. Create the ___ConnectSvc___. It makes the ___connect.ConnectClient___ internally.
+1. Create the ___ConnectMasterSvc___. It makes the ___connectMaster.ConnectMasterClient___ internally.
    
     ```go
-    connectSvc = connect.NewConnectSvc(grpcClient.GetConn()) 
+    connectMasterSvc = connectMaster.NewConnectMasterSvc(grpcClient.GetConn()) 
     ```
 
-2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
+2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [ConnectMaster.EnableSSL]({{'/api/connectMaster/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```go
-    deviceID, _ := connectSvc.Connect(A2_IP, A2_PORT, true)
+    deviceID, _ := connectMasterSvc.Connect(gatewayID, A2_IP, A2_PORT, USE_SSL)
     ```
 
 3. Get the devices, which are managed by the gateway
    
     ```go
-    devList, _ = connectSvc.GetDeviceList()
+    devList, _ = connectMasterSvc.GetDeviceList(gatewayID)
     ```
 
 4. Disconnect the device
    
     ```go  
-    connectSvc.Disconnect([]uint32{ deviceID })
+    connectMasterSvc.Disconnect([]uint32{ deviceID })
     ```
 
 ## 4. Device

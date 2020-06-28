@@ -15,6 +15,20 @@ The APIs of G-SDK are defined using [gRPC](https://grpc.io/) to maximize its com
 * [Python]({{ 'api/python/' | relative_url }})
 * [Node.js]({{ 'api/node/' | relative_url }})
 * [Go]({{ 'api/go/' | relative_url }})
+* [C++]({{ 'api/cpp/' | relative_url }})
+
+### Device Gateway vs. Master Gateway
+
+A master gateway manages devices through one or more device gateways. Due to this difference, [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) is different from [the Connect API]({{'/api/connect/' | relative_url}}). And, since the master gateway is designed for multi-tenant systems, you have to use [the Login API]({{'/api/login/' | relative_url}}) before using other APIs. [The Tenant API]({{'/api/tenant/' | relative_url}}) and [the Gateway API]({{'/api/gateway/' | relative_url}}) are also provided for the master gateway only. Apart from these APIs, the other APIs are same both for the device gateway and the master gateway.
+
+| API | Device Gateway | Master Gateway | Note |
+| --------- | ---- | ----------- | --- |
+| [Connect]({{'/api/connectMaster/' | relative_url}}) | O | X | manages devices directly |
+| [Connect Master]({{'/api/connectMaster/' | relative_url}}) | X | O | manages devices via device gateways |
+| [Login]({{'/login/' | relative_url}}) | X | O | login as an administrator or a tenant |
+| [Tenant]({{'/tenant/' | relative_url}}) | X | O | manages tenants |
+| [Gateway]({{'/api/gateway/' | relative_url}}) | X | O | manages device gateways |
+
 
 ### API Definition
 
@@ -56,10 +70,16 @@ Since the responses of all XXX_Multi commands have same definition, they are als
 ## Core APIs
 
 ### [Connect]({{ 'api/connect/' | relative_url }})
-Manage connections between the gateway and devices.
+Manage connections between the device gateway and the devices.
+
+### [ConnectMaster]({{ 'api/connectMaster/' | relative_url }})
+Manage connections between the master gateway and the devices through device gateways. 
 
 ### [Device]({{ 'api/device/' | relative_url }}) 
 Provide the firmware and capability information of a device. Lock, reset, or upgrade devices.
+
+### [Event]({{ 'api/event/' | relative_url }})
+Read event logs from a device. Enable monitoring and receive real-time events from devices.
 
 ### [Network]({{ 'api/network/' | relative_url }}) 
 Configure the IP address of a device.
@@ -67,8 +87,16 @@ Configure the IP address of a device.
 ### [User]({{ 'api/user/' | relative_url }})
 Enroll and manage users. Set fingerprints, cards, and access groups to users.
 
-### [Event]({{ 'api/event/' | relative_url }})
-Read event logs from a device. Enable monitoring and receive real-time events from devices.
+## Master Gateway APIs
+
+### [Gateway]({{ 'api/gateway/' | relative_url }})
+Manage device gateways for the master gateway.
+
+### [Login]({{ 'api/login/' | relative_url }})
+Login to the master gateway as an administrator or a tenant.
+
+### [Tenant]({{ 'api/tenant/' | relative_url }})
+Manage tenants for the master gateway. Only an administrator can use these APIs.
 
 ## Authentication APIs
 
@@ -109,6 +137,9 @@ Configure what actions should be taken when specific triggers are fired.
 ### [Display]({{ 'api/display/' | relative_url }})
 Configure the UI of devices. You can also upgrade the language pack.
 
+### [RS485]({{ 'api/rs485/' | relative_url }})
+Configure the RS485 communication parameters and manage the slave devices.
+
 ### [Status]({{ 'api/status/' | relative_url }})
 Configure the LEDs and the buzzer for each status. 
 
@@ -119,7 +150,7 @@ Configure the miscellaneous options of a device. You can also check if the devic
 Configure the options such as Daylight Saving Time(DST) and time synchronization. You can also set the clock on the device. 
 
 ### [Wiegand]({{ 'api/wiegand/' | relative_url }})
-Configure Wiegand formats which will be used for interpreting card data and interfacing with 3rd party readers/controllers. 
+Configure Wiegand formats which will be used for interpreting card data and interfacing with 3rd party readers/controllers. It also provides APIs for managing Wiegand slave devices.
 
 ## Misc. APIs
 

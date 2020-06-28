@@ -1,24 +1,24 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
+1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the C# client library]({{'/csharp/install/' | relative_url}})
-3. Copy the root certificate of the device gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
+3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
 4. The quick start example uses [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/). You can change the _example/quick/quick.csproj_ file as needed.
-5. Change the gateway and the device information in _example/quick/Program.cs_ as needed.
+5. Change the server and the device information in _example/quick/Program.cs_ as needed.
    
     ```csharp
     // the path of the root certificate
-    private const string GATEWAY_CA_FILE = "../../../cert/gateway/ca.crt";
+    private const string CA_FILE = "../../../cert/ca.crt";
 
-    // the address of the gateway
-    private const string GATEWAY_ADDR = "192.168.0.2";
-    private const int GATEWAY_PORT = 4000;
+    // the ip address of the gateway
+    private const string SERVER_ADDR = "192.168.0.2";
+    private const int SERVER_PORT = 4000;
 
     // the ip address of the target device
     private const string DEVICE_ADDR = "192.168.0.110";
@@ -61,15 +61,21 @@ The classes in the __example__ namespace are written for showing the usage of th
 {: .notice--warning}
 
 
-## 2. Connect to the device gateway
+## 2. Connect to the gateway
 
-The first thing to do is to connect to the device gateway and get a ___Channel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+The first thing to do is to connect to the gateway and get a ___Channel___, which will be used for further communication. You have to know the IP address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
 
 ```csharp
 // An example class encapsulating communication with the gateway
 class GrpcClient
 {
   private Channel channel;
+
+  public void Connect(String caFile, String serverAddr, int serverPort) {
+    var channelCredentials = new SslCredentials(File.ReadAllText(caFile));
+
+    channel = new Channel(serverAddr, serverPort, channelCredentials);
+  } 
 
   public Channel GetChannel() {
     return channel;
@@ -79,26 +85,18 @@ class GrpcClient
     channel.ShutdownAsync().Wait();
   }
 }
-
-class GatewayClient : GrpcClient {
-  public void Connect(string caFile, string serverAddr, int serverPort) {
-    var channelCredentials = new SslCredentials(File.ReadAllText(caFile));
-
-    channel = new Channel(serverAddr, serverPort, channelCredentials);
-  } 
-}
 ```
 
-1. Create the ___GatewayClient___
+1. Create the ___GrpcClient___
 
     ```csharp
-    var gatewayClient = new GatewayClient();
+    var grpcClient = new GrpcClient();
     ```
 
 2. Connect to the gateway
 
     ```csharp
-    gatewayClient.Connect(GATEWAY_CA_FILE, GATEWAY_ADDR, GATEWAY_PORT); 
+    grpcClient.Connect(CA_FILE, SERVER_ADDR, SERVER_PORT);
     ```
 
 ## 3. Connect to BioStar devices
