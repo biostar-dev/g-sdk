@@ -3,9 +3,18 @@ title: "C++ API"
 toc: false
 ---
 
-## Build System
+## Dependencies
 
-The C++ SDK will be build using [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake).
+The C++ SDK depends on the following libraries.
+
+* [protobuf](https://github.com/protocolbuffers/protobuf)
+* [gRPC](https://github.com/grpc/grpc/tree/master/src/cpp)
+
+Since these libraries are handled by CMake, you don't have to install them manually. Refer to _CMakeLists.txt_ in the examples.
+
+## Generated source files
+
+The generated source files of G-SDK will be in _biostar/service_. For the usage of these classes, refer to the [tutorials]({{'/cpp/' | relative_url}}#tutorials).
 
 ## Resources
 

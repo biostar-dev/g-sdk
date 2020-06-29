@@ -12,7 +12,7 @@ The C# SDK depends on the following packages.
 
 Since these packages are handled by NuGet, you don't have to install them manually. Refer to XXX.csproj in the examples.
 
-## Generated Classes
+## Generated classes
 
 The generated classes of G-SDK will be in _obj/Debug/netcoreapp2.2_ for each project. For the usage of these classes, refer to the [tutorials]({{'/csharp/' | relative_url}}#tutorials).
 

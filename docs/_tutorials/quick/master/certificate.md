@@ -16,7 +16,7 @@ ca_key
 : The private key of the root CA in PEM format. Is will be created with __ca_cert__.
 
 server_cert
-: The server certificate of the device gateway in PEM format. You can create it using __-c__ or __-cs__ command line option. Your application will authenticate this certificate with the __ca_cert__.
+: The server certificate of the master gateway in PEM format. You can create it using __-c__ or __-cs__ command line option. Your application will authenticate this certificate with the __ca_cert__.
 
 server_key
 : The private key of the server certificate in PEM format. It will be created with __server_cert__.

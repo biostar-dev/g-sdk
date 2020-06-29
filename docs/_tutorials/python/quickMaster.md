@@ -1,36 +1,54 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide for Master Gateway"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the Python client library]({{'/python/install/' | relative_url}})
-3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. Change the server and the device information in example/quick/quick.py_ as needed.
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the Python client library]({{'/python/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. Change the server and the device information in example/quick/quick.py_ as needed.
    
     ```python
     # the path of the root certificate
-    GATEWAY_CA_FILE = '../../../cert/gateway/ca.crt'
+    MASTER_CA_FILE = "../../../cert/master/ca.crt"
 
-    # the ip address of the gateway
-    GATEWAY_IP = '192.168.0.2'
-    GATEWAY_PORT = 4000
+    # the address of the master gateway
+    MASTER_IP = "192.168.0.2"
+    MASTER_PORT = 4010
+
+    # the paths of the administrator certificate and its key    
+    ADMIN_CERT_FILE = "../../../cert/master/admin.crt"
+    ADMIN_KEY_FILE = "../../../cert/master/admin_key.pem"
+
+    # the paths of the tenant certificate and its key    
+    TENANT_CERT_FILE = "../../../cert/master/tenant1.crt"
+    TENANT_KEY_FILE = "../../../cert/master/tenant1_key.pem"  
+
+    # the following values should be same as the IDs in the corresponding certificates
+    TENANT_ID = "tenant1"
+    GATEWAY_ID = "gateway1"    
 
     # the ip address of the target device
     DEVICE_IP = '192.168.0.110'
     DEVICE_PORT = 51211
     USE_SSL = False
     ```
-5. Run
+6. Run
    
     ```
     cd example/quick
-    python quick.py
+    python quick.py -m
     ```
 
+    To initialize the database, you have to run with __-mi__ option once. See _initMasterGateway()_ for initializing the database.
+    {: .notice--info}    
 
 ## 1. Overview
 
@@ -39,99 +57,159 @@ You can use the G-SDK services in the following steps.
 1. Connect to the gateway and get a ___grpc.secure_channel___.
    
     ```python
-    creds = grpc.ssl_channel_credentials(f.read())
-    channel = grpc.secure_channel("{}:{}".format(ipAddr, port), creds)
+    jwtCreds = JwtCredential()
+
+    sslCreds = grpc.ssl_channel_credentials(ca.read(), key.read(), cert.read())
+    callCreds = grpc.metadata_call_credentials(jwtCreds)
+    channel = grpc.secure_channel("{}:{}".format(ipAddr, port), grpc.composite_channel_credentials(sslCreds, callCreds))
     ```
 
-2. Create a service stub such as ___connect_pb2_grpc.ConnectStub___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
-   
+2. Login to the master gateway and get a JWT token for further communication.
     ```python
-    stub = connect_pb2_grpc.ConnectStub(channel)
+    stub = login_pb2_grpc.LoginStub(channel)
+
+    cert = open(tenantCertFile, 'rb')
+    response = stub.Login(login_pb2.LoginRequest(tenantCert=cert.read()))
+    jwtCreds.setToken(response.jwtToken)
     ```
 
-3. Call the functions of the service using the stub. 
+3. Create a service stub such as ___connect_master_pb2_grpc.ConnectMasterStub___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
    
     ```python
-    response = stub.Connect(connect_pb2.ConnectRequest(connectInfo=connInfo))    
+    stub = connect_master_pb2_grpc.ConnectMasterStub(channel)
+    ```
+
+4. Call the functions of the service using the stub. 
+   
+    ```python
+    response = stub.Connect(connect_master_pb2.ConnectRequest(gatewayID=gatewayID, connectInfo=connInfo))    
     ```
 
 The classes in _example_ are written for showing the usage of the corresponding APIs. In your applications, you don't have to use these sample classes.
 {: .notice--warning}
 
 
-## 2. Connect to the device gateway
+## 2. Connect to the master gateway
 
-The first thing to do is to connect to the gateway and get a ___grpc.secure_channel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+The first thing to do is to connect to the master gateway and get a ___grpc.secure_channel___, which will be used for further communication. You have to know the address and port number of the gateway. And, you should also have the following certificates.
+
+* The root CA certificate of the master gateway
+* The client certificate of a tenant and its key file
+* For administrative tasks such as creating tenants, the client certificate of an administrator and its key file
 
 ```python
-# An example class encapsulating communication with the gateway
-class GatewayClient:
-  channel = None
+# An example class encapsulating communication with the master gateway
+JWT_TOKEN_KEY = 'token'
 
-  # caFile is the pathname of the root certificate
-  def __init__(self, ipAddr, port, caFile):
-    with open(caFile, 'rb') as f:
-      creds = grpc.ssl_channel_credentials(f.read())
-      self.channel = grpc.secure_channel("{}:{}".format(ipAddr, port), creds)
+class JwtCredential(grpc.AuthMetadataPlugin):
+  token = None
+
+  def setToken(self, jwtToken):
+    self.token = jwtToken
+
+  def __call__(self, context, callback):
+      callback(((JWT_TOKEN_KEY, self.token),), None)
+
+class MasterClient:
+  channel = None
+  jwtCreds = None
+
+  def __init__(self, ipAddr, port, caFile, certFile, keyFile):
+    with open(caFile, 'rb') as ca, open(certFile, 'rb') as cert, open(keyFile, 'rb') as key:
+      self.jwtCreds = JwtCredential()
+
+      sslCreds = grpc.ssl_channel_credentials(ca.read(), key.read(), cert.read())
+      callCreds = grpc.metadata_call_credentials(self.jwtCreds)
+      self.channel = grpc.secure_channel("{}:{}".format(ipAddr, port), grpc.composite_channel_credentials(sslCreds, callCreds))
 
   def getChannel(self):
     return self.channel
+
+  def setToken(self, jwtToken):
+    self.jwtCreds.setToken(jwtToken)
+
+ADMIN_TENANT_ID = "administrator"
+
+class LoginSvc:
+  stub = None
+
+  def __init__(self, channel): 
+    self.stub = login_pb2_grpc.LoginStub(channel)
+
+  def login(self, tenantCertFile):
+    with open(tenantCertFile, 'rb') as cert:
+      response = self.stub.Login(login_pb2.LoginRequest(tenantCert=cert.read()))
+      return response.jwtToken
+
+  def loginAdmin(self, adminCertFile):
+    with open(adminCertFile, 'rb') as cert:
+      response = self.stub.LoginAdmin(login_pb2.LoginAdminRequest(adminTenantCert=cert.read(), tenantID=ADMIN_TENANT_ID))
+      return response.jwtToken
 ```
 
-1. Create the ___GatewayClient___ and connect to the gateway
+1. Create the ___MasterClient___ and connect to the gateway
 
     ```python
-    client = GatewayClient(GATEWAY_IP, GATEWAY_PORT, GATEWAY_CA_FILE)
+    client = MasterClient(MASTER_IP, MASTER_PORT, MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE)
     channel = client.getChannel()
+    ```
+
+2. Login to the master gateway
+
+    ```python
+    loginSvc = LoginSvc(channel)
+    jwtToken = loginSvc.login(TENANT_CERT_FILE)
+
+    client.setToken(jwtToken)    
     ```
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/python/connect/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/python/connectMaster/' | relative_url}})..
 
 ```python
-# An example class showing the usage of the Connect API
-class ConnectSvc:
+# An example class showing the usage of the Connect Master API
+class ConnectMasterSvc:
   stub = None
 
   def __init__(self, channel): 
-    self.stub = connect_pb2_grpc.ConnectStub(channel)
+    self.stub = connect_master_pb2_grpc.ConnectMasterStub(channel)
 
-  def getDeviceList(self):
-    response = self.stub.GetDeviceList(connect_pb2.GetDeviceListRequest())
+  def getDeviceList(self, gatewayID):
+    response = self.stub.GetDeviceList(connect_master_pb2.GetDeviceListRequest(gatewayID=gatewayID))
     return response.deviceInfos
 
-  def connect(self, connInfo):
-    response = self.stub.Connect(connect_pb2.ConnectRequest(connectInfo=connInfo))
+  def connect(self, gatewayID, connInfo):
+    response = self.stub.Connect(connect_master_pb2.ConnectRequest(gatewayID=gatewayID, connectInfo=connInfo))
     return response.deviceID
 
   def disconnect(self, deviceIDs):
-    self.stub.Disconnect(connect_pb2.DisconnectRequest(deviceIDs=deviceIDs))
+    self.stub.Disconnect(connect_master_pb2.DisconnectRequest(deviceIDs=deviceIDs))
 ```
 
-1. Create the ___ConnectSvc___. It makes the ___connect_pb2_grpc.ConnectStub___ internally.
+1. Create the ___ConnectMasterSvc___. It makes the ___connect_master_pb2_grpc.ConnectMasterStub___ internally.
    
     ```python
-    connectSvc = ConnectSvc(channel)
+    connectMasterSvc = ConnectMasterSvc(channel)
     ```
 
-2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
+2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [ConnectMaster.EnableSSL]({{'/api/connectMaster/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```python
-    devID = connectSvc.connect(connInfo)
+    devID = connectMasterSvc.connect(gatewayID, connInfo)
     ```
 
 3. Get the devices, which are managed by the gateway
    
     ```python
-    devList = connectSvc.getDeviceList() 
+    devList = connectMasterSvc.getDeviceList(gatewayID) 
     ```
 
 4. Disconnect the device
    
     ```python  
     deviceIDs = [devID]
-    connectSvc.disconnect(deviceIDs)
+    connectMasterSvc.disconnect(deviceIDs)
     ```
 
 ## 4. Device

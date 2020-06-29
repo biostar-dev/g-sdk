@@ -1,59 +1,102 @@
 ---
-title: "Quick Start Guide for Device Gateway"
+title: "Quick Start Guide for Master Gateway"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the Node.js client library]({{'/node/install/' | relative_url}})
-3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. Change the gateway and the device information in _example/quick/quick.js_ as needed.
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the Node.js client library]({{'/node/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. Change the gateway and the device information in _example/quick/quick.js_ as needed.
    
     ```javascript
     // the path of the root certificate
-    const GATEWAY_CA_FILE = '../../../cert/gateway/ca.crt';
+    const MASTER_CA_FILE = '../../../cert/master/ca.crt'; 
 
-    // the address of the gateway
-    const GATEWAY_IP = '192.168.0.2';
-    const GATEWAY_PORT = 4000;
+    // the address of the master gateway
+    const MASTER_IP = '192.168.0.2';
+    const MASTER_PORT = 4010;
 
+    // the paths of the administrator certificate and its key 
+    const ADMIN_CERT_FILE = '../../../cert/master/admin.crt';
+    const ADMIN_KEY_FILE = '../../../cert/master/admin_key.pem';
+
+    // the paths of the tenant certificate and its key    
+    const TENANT_CERT_FILE = '../../../cert/master/tenant1.crt';
+    const TENANT_KEY_FILE = '../../../cert/master/tenant1_key.pem';    
+
+    // the following values should be same as the IDs in the corresponding certificates
+    const TENANT_ID = "tenant1";
+    const GATEWAY_ID = "gateway1";   
+    
     // the ip address of the target device
     const DEVICE_IP = '192.168.0.110';
     const DEVICE_PORT = 51211;
-    const USE_SSL = false;
+    const USE_SSL = false;    
     ```
-5. Install packages
+
+6. Install packages
 
     ```
     npm install
     ```
-6. Run
+7. Run
    
     ```
     cd example/quick
-    node quick.js
+    node quick.js -m 
     ```
+
+    To initialize the database, you have to run with __-mi__ option once. 
+    {: .notice--info}
 
 
 ## 1. Overview
 
 You can use the G-SDK services in the following steps.
 
-1. Connect to the device gateway and get a service client such as ___ConnectClient___ using the connection. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
+1. Connect to the gateway and login as a tenant or an administrator. If login succeeds, the master gateway will return a JWT token, which should be used as a call credential. You should use the credential when creating other service clients such as ConnectMasterClient.
+  
    
     ```javascript
-    const connectService = require('../../biostar/service/connect_grpc_pb');
+    const loginService = require('../../biostar/service/login_grpc_pb');
+    const loginMessage = require('../../biostar/service/login_pb');
 
-    var rootCa = fs.readFileSync(GATEWAY_CA_FILE);
-    var sslCreds = grpc.credentials.createSsl(rootCa);
-    var connClient = new connectService.ConnectClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
+    const connectMasterService = require('../../biostar/service/connect_master_grpc_pb');
+
+    var rootCa = fs.readFileSync(MASTER_CA_FILE);
+    var tenantCert = fs.readFileSync(TENANT_CERT_FILE);
+    var tenantKey = fs.readFileSync(TENANT_KEY_FILE);
+    var sslCreds = grpc.credentials.createSsl(rootCa, tenantKey, tenantCert);     
+
+    var loginClient = new loginService.LoginClient(`${MASTER_IP}:${MASTER_PORT}`, sslCreds);
+
+    var req = new loginMessage.LoginRequest();
+    req.setTenantcert(tenantCert);    
+
+    loginClient.login(req, (err, response) => {
+      var callCreds = grpc.credentials.createFromMetadataGenerator((args, callback) => {
+        const metadata = new grpc.Metadata();
+        metadata.set('token', response.toObject().jwttoken);
+        callback(null, metadata);
+      });
+
+      var creds = grpc.credentials.combineChannelCredentials(sslCreds, callCreds);
+
+      var connMasterClient = new connectMasterService.ConnectMasterClient(`${MASTER_IP}:${MASTER_PORT}`, creds); 
+    });
     ```
 
 2. Call the functions of the service using the client. 
    
     ```javascript
+    const connectMasterMessage = require('../../biostar/service/connect_master_pb');
     const connectMessage = require('../../biostar/service/connect_pb');
 
     var connInfo = new connectMessage.ConnectInfo();
@@ -61,10 +104,11 @@ You can use the G-SDK services in the following steps.
     connInfo.setPort(port);
     connInfo.setUsessl(useSSL);
 
-    var req = new connectMessage.ConnectRequest();
+    var req = new connectMasterMessage.ConnectRequest();
+    req.setGatewayid(gatewayID);
     req.setConnectinfo(connInfo);
 
-    connClient.connect(req, (err, response) => {
+    connMasterClient.connect(req, (err, response) => {
       var devID = response.getDeviceid();
 
       // do something
@@ -75,100 +119,164 @@ The functions in _example_ are written for showing the usage of the correspondin
 {: .notice--warning}
 
 
-## 2. Connect to the gateway and get service clients
+## 2. Connect to the master gateway and get service clients
 
-The first thing to do is to connect to the gateway and get service clients such as ___ConnectClient___, which will be used for further communication. You have to know the IP address and port number of the gateway. And, you should also have the root certificate of the gateway for TLS/SSL communication. 
+The first thing to do is to connect to the master gateway. You have to know the address and port number of the gateway. And, you should also have the following certificates.
+
+* The root CA certificate of the master gateway
+* The client certificate of a tenant and its key file
+* For administrative tasks such as creating tenants, the client certificate of an administrator and its key file
+
+After connecting to the master gateway, you have to login with either a tenant certificate or an administrator certificate. When login succeeds, the master gateway will return a JWT token, which will be used as a call credential for further API calls.
 
 ```javascript
-var connClient = null;
+var loginClient = null;
 
 function initClient(addr, credential) {
-  connClient = new connectService.ConnectClient(addr, credential);
+  loginClient = new loginService.LoginClient(addr, credential);
+
+  return loginClient
 }
 
 function getClient() {
-  return connClient;
+  return loginClient;
+}
+
+function login(tenantCert) {
+  var req = new loginMessage.LoginRequest();
+  req.setTenantcert(tenantCert);
+
+  return new Promise((resolve, reject) => {
+    loginClient.login(req, (err, response) => {
+      if(err) {
+        console.error('Cannot login: ', err)
+        reject(err);
+        return;
+      }
+
+      resolve(response.toObject().jwttoken);
+    });
+  });
 }
 ```
 
 1. Create the credential
 
     ```javascript
-    var rootCa = fs.readFileSync(CA_FILE);
-    var sslCreds = grpc.credentials.createSsl(rootCa);
+    var rootCa = fs.readFileSync(MASTER_CA_FILE);
+    var tenantCert = fs.readFileSync(TENANT_CERT_FILE);
+    var tenantKey = fs.readFileSync(TENANT_KEY_FILE);
+    var sslCreds = grpc.credentials.createSsl(rootCa, tenantKey, tenantCert); 
+
+    var addr = `${MASTER_IP}:${MASTER_PORT}`;
     ```
 
-2. Connect to the gateway and get the client
+2. Login to the master gateway and get a JWT token
 
     ```javascript
-    connect.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    var channelCreds = sslCreds;
+
+    login.initClient(addr, sslCreds);
+    
+    login.login(tenantCert.toString())
+    .then((jwtToken) => 
+    {
+      var callCreds = grpc.credentials.createFromMetadataGenerator((args, callback) => {
+        const metadata = new grpc.Metadata();
+        metadata.set('token', jwtToken);
+        callback(null, metadata);
+      });
+    
+      return grpc.credentials.combineChannelCredentials(sslCreds, callCreds);
+    })
+    .then((creds) => {
+      // the creds should be used for creating other clients
+      connectMaster.initClient(addr, channelCreds);
+      // ...
+    })
     ```
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/node/connect/' | relative_url}}).
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/node/connectMaster/' | relative_url}}).
 
 ```javascript
-// Example functions showing the usage of the Connect API
-function getDeviceList() {
-  var req = new connectMessage.GetDeviceListRequest();
+// Example functions showing the usage of the Connect Master API
+const connectMasterMessage = require('../../biostar/service/connect_master_pb');
+const connectMasterService = require('../../biostar/service/connect_master_grpc_pb');
+
+var connMasterClient = null;
+
+function initClient(addr, credential) {
+  connMasterClient = new connectMasterService.ConnectMasterClient(addr, credential);
+}
+
+function getClient() {
+  return connMasterClient;
+}
+
+function getDeviceList(gatewayID) {
+  var req = new connectMasterMessage.GetDeviceListRequest();
+  req.setGatewayid(gatewayID);
 
   return new Promise((resolve, reject) => {
-    connClient.getDeviceList(req, (err, response) => {
+    connMasterClient.getDeviceList(req, (err, response) => {
       resolve(response.toObject().deviceinfosList);
     });
   });
 }
 
-function searchDevice(timeout) {
-  var req = new connectMessage.SearchDeviceRequest();
+function searchDevice(gatewayID, timeout) {
+  var req = new connectMasterMessage.SearchDeviceRequest();
+  req.setGatewayid(gatewayID);
   req.setTimeout(timeout);
 
   return new Promise((resolve, reject) => {
-    connClient.searchDevice(req, (err, response) => {
+    connMasterClient.searchDevice(req, (err, response) => {
       resolve(response.toObject().deviceinfosList);
     });
   });
 }
 
-function connectToDevice(addr, port, useSSL) {
+function connectToDevice(gatewayID, addr, port, useSSL) {
   var connInfo = new connectMessage.ConnectInfo();
   connInfo.setIpaddr(addr);
   connInfo.setPort(port);
   connInfo.setUsessl(useSSL);
 
-  var req = new connectMessage.ConnectRequest();
+  var req = new connectMasterMessage.ConnectRequest();
+  req.setGatewayid(gatewayID);
   req.setConnectinfo(connInfo);
 
   return new Promise((resolve, reject) => {
-    connect.getClient().connect(req, (err, response) => {
+    connectMaster.getClient().connect(req, (err, response) => {
       resolve(response.getDeviceid());
     });
   });
 }
 
 function disconnect(deviceIDs) {
-  var req = new connectMessage.DisconnectRequest();
+  var req = new connectMasterMessage.DisconnectRequest();
   req.setDeviceidsList(deviceIDs);
 
   return new Promise((resolve, reject) => {
-    connect.getClient().disconnect(req, (err, response) => {
+    connectMaster.getClient().disconnect(req, (err, response) => {
       resolve(response);
     });
   });
 }
 ```
 
-1. Initialize the Connect client.
+1. Initialize the Connect Master client.
    
     ```javascript
-    connect.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    connectMaster.initClient(`${MASTER_IP}:${MASTER_PORT}`, channelCreds);
     ```
 
-2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
+2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [ConnectMaster.EnableSSL]({{'/api/connectMaster/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```javascript
-    connect.connectToDevice(DEVICE_IP, DEVICE_PORT, USE_SSL)
+    connectMaster.connectToDevice(gatewayID, DEVICE_IP, DEVICE_PORT, USE_SSL)
     .then((devID) => {
       // do something
     });
@@ -177,7 +285,7 @@ function disconnect(deviceIDs) {
 3. Get the devices, which are managed by the gateway
    
     ```javascript
-    connect.getDeviceList()
+    connectMaster.getDeviceList(gatewayID)
     .then((devList) => {
       // do something
     });
@@ -189,7 +297,7 @@ function disconnect(deviceIDs) {
     var deviceIDs = [];
     deviceIDs.push(deviceID);
 
-    connect.disconnect(deviceIDs);
+    connectMaster.disconnect(deviceIDs);
     ```
 
 ## 4. Device

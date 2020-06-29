@@ -1,35 +1,54 @@
 ---
-title: "Connect API Tutorial"
+title: "Connect Master API Tutorial"
 toc: true
 toc_label: "Table of Contents"
 ---
 
 ## Run the example
 
-1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
-2. [Download the C++ client library]({{'/cpp/install/' | relative_url}})
-3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. The example uses [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake). You can change the _CMakeLists.txt_ file as needed.
-5. Change the gateway and the device information in _example/connect/test/main.cpp_ as needed.
+1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
+2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
+3. [Download the C++ client library]({{'/cpp/install/' | relative_url}})
+4. Create and copy the certificates. 
+   * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
+   * Copy the administrator certificate and its private key to your working directory.    
+   * Copy the tenant certificate and copy it and its private key to your working directory.
+5. The example uses [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake). You can change the _CMakeLists.txt_ file as needed.
+6. Change the gateway and the device information in _example/connectMaster/test/main.cpp_ as needed.
    
     ```cpp
     // the path of the root certificate
-    const std::string GATEWAY_CA_FILE = "../cert/gateway/ca.crt";
+    const std::string MASTER_CA_FILE = "../cert/master/ca.crt"; 
 
-    // the address of the gateway
-    const std::string GATEWAY_ADDR = "192.168.0.2";
-    const int GATEWAY_PORT = 4000;
+    // the address of the master gateway
+    const std::string MASTER_ADDR = "192.168.0.2";
+    const int MASTER_PORT = 4010;
+
+    // the paths of the administrator certificate and its key 
+    const std::string ADMIN_CERT_FILE = "../cert/master/admin.crt";
+    const std::string ADMIN_KEY_FILE = "../cert/master/admin_key.pem";
+
+    // the paths of the tenant certificate and its key    
+    const std::string TENANT_CERT_FILE = "../cert/master/tenant1.crt";
+    const std::string TENANT_KEY_FILE = "../cert/master/tenant1_key.pem";  
+
+    // the following values should be same as the IDs in the corresponding certificates
+    const std::string TENANT_ID = "tenant1";
+    const std::string GATEWAY_ID = "gateway1";   
     ```
-6. Build
+8. Build
 
     ```
     cmake .
     ```
-    Open _testConnect.vcxproj_ in Visual Studio.
-7. Run
+    Open _testConnectMaster.vcxproj_ in Visual Studio.
+9. Run
     ```
-    ./Debug/testConnect
+    ./Debug/testConnectMaster
     ```
+
+    To initialize the database, you have to run with __-i__ option once. 
+    {: .notice--info}
 
 ## 1. CLI 
 
@@ -50,7 +69,7 @@ With the Command-Line Interface(CLI), you can test 5 functions related to connec
 
 ### (1) Search devices
 
-To connect devices, you have to know their addresses and related options such as connection mode. By using [Connect.SearchDevice]({{'/api/connect/' | relative_url }}#searchdevice), you can get these information in a subnet. 
+To connect devices, you have to know their addresses and related options such as connection mode. By using [ConnectMaster.SearchDevice]({{'/api/connectMaster/' | relative_url }}#searchdevice), you can get these information in a subnet. 
 
 
 ```
@@ -76,7 +95,7 @@ deviceID: 547634480 type: BIOSTATION_2 useDHCP: true IPAddr: "192.168.0.106" por
 
 ### (2) Connect to a device synchronously
 
-The simplest way of connecting to a device is to use [Connect.Connect]({{'/api/connect/' | relative_url }}#connect). 
+The simplest way of connecting to a device is to use [ConnectMaster.Connect]({{'/api/connectMaster/' | relative_url }}#connect). 
 
 ```
 >>>>> Select a menu: 2
@@ -91,7 +110,7 @@ Connected to 544114231
 
 ### (3) Manage asynchronous connections 
 
-When you have to manage permanent connections to multiple devices, [asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection) would be a better choice. With these APIs, the gateway will handle connections to devices in the background. For example, if some devices are disconnected, the gateway will try to reconnect them automatically. 
+When you have to manage permanent connections to multiple devices, [asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection) would be a better choice. With these APIs, the gateway will handle connections to devices in the background. For example, if some devices are disconnected, the gateway will try to reconnect them automatically. 
 
 ```
 >>>>> Select a menu: 3
@@ -130,8 +149,8 @@ deviceID: 939504224 port: 51211 autoReconnect: true
 
 In some environments, the devices should connect to the gateway, not vice versa. For devices to connect to the gateway, you have to do the followings;
 
-1. Change the connection mode to __DEVICE_TO_SERVER__ using [Connect.SetConnectionMode]({{'/api/connect/' | relative_url }}#setconnectionmode).
-2. By default, the gateway will not accept any incoming connections. You have to add the devices to the accept filter using [Connect.SetAcceptFilter]({{'/api/connect' | relative_url}}#setacceptfilter). 
+1. Change the connection mode to __DEVICE_TO_SERVER__ using [ConnectMaster.SetConnectionMode]({{'/api/connectMaster/' | relative_url }}#setconnectionmode).
+2. By default, the gateway will not accept any incoming connections. You have to add the devices to the accept filter using [ConnectMaster.SetAcceptFilter]({{'/api/connectMaster' | relative_url}}#setacceptfilter). 
 
 ```
 >>>>> Select a menu: 4
@@ -163,7 +182,7 @@ Getting the accept filter...
 
 ### (5) Configure connection-related options
 
-Apart from the IP address, there are two important options for device connections. You can change the connection mode using [Connect.SetConnectionMode]({{'/api/connect/' | relative_url }}#setconnectionmode) and enable/disable SSL using the [SSL APIs]({{'/api/connect' | relative_url}}#ssl).
+Apart from the IP address, there are two important options for device connections. You can change the connection mode using [ConnectMaster.SetConnectionMode]({{'/api/connectMaster/' | relative_url }}#setconnectionmode) and enable/disable SSL using the [SSL APIs]({{'/api/connectMaster' | relative_url}}#ssl).
 
 ```
 >>>>> Select a menu: 5
@@ -197,11 +216,12 @@ To change these options, you have to connect to the devices first using menu (2)
 
 ## 2. Synchronous connections
 
-You can use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) to manage the connections by yourself. 
+You can use the [Synchronous APIs]({{'/api/connectMaster/' | relative_url }}#synchronous-connection) to manage the connections by yourself. 
 
 ```cpp
-Status ConnectSvc::Connect(ConnectInfo& connInfo, uint32_t* deviceID) {
+Status ConnectMasterSvc::Connect(std::string gatewayID, ConnectInfo& connInfo, uint32_t* deviceID) {
   ConnectRequest request;
+  request.set_gatewayid(gatewayID);
   *request.mutable_connectinfo() = connInfo;
 
   ConnectResponse response;
@@ -214,7 +234,7 @@ Status ConnectSvc::Connect(ConnectInfo& connInfo, uint32_t* deviceID) {
   return status;
 }
 
-Status ConnectSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
+Status ConnectMasterSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
   DisconnectRequest request;
   for(int i = 0; i < deviceIDs.size(); i++) {
     request.add_deviceids(deviceIDs[i]);
@@ -237,7 +257,7 @@ Status ConnectSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
   std::cout << "Connecting to the device..." << std::endl;
 
   uint32_t deviceID;
-  Status status = menu->GetConnectSvc()->Connect(*connInfo, &deviceID);
+  Status status = menu->GetConnectMasterSvc()->Connect(menu->GetGatewayID(), *connInfo, &deviceID);
 
   if(!status.ok()) {
     std::cerr << "Cannot connect to the device" << std::endl;
@@ -249,11 +269,12 @@ Status ConnectSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
 
 ## 3. Asynchronous connections
 
-With the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection), you only have to register or deregister devices. The gateway will handle all the connection related tasks in the background. 
+With the [Asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection), you only have to register or deregister devices. The gateway will handle all the connection related tasks in the background. 
 
 ```cpp
-Status ConnectSvc::AddAsyncConnection(RepeatedPtrField<AsyncConnectInfo>& asyncInfos) {
+Status ConnectMasterSvc::AddAsyncConnection(std::string gatewayID, RepeatedPtrField<AsyncConnectInfo>& asyncInfos) {
   AddAsyncConnectionRequest request;
+  request.set_gatewayid(gatewayID);
   *request.mutable_connectinfos() = asyncInfos;
 
   AddAsyncConnectionResponse response;
@@ -264,8 +285,9 @@ Status ConnectSvc::AddAsyncConnection(RepeatedPtrField<AsyncConnectInfo>& asyncI
   return status;
 }
 
-Status ConnectSvc::DeleteAsyncConnection(std::vector<uint32_t>& deviceIDs) {
+Status ConnectMasterSvc::DeleteAsyncConnection(std::string gatewayID, std::vector<uint32_t>& deviceIDs) {
   DeleteAsyncConnectionRequest request;
+  request.set_gatewayid(gatewayID);
     for(int i = 0; i < deviceIDs.size(); i++) {
     request.add_deviceids(deviceIDs[i]);
   }
@@ -276,10 +298,10 @@ Status ConnectSvc::DeleteAsyncConnection(std::vector<uint32_t>& deviceIDs) {
   Status status = stub_->DeleteAsyncConnection(&context, request, &response);
 
   return status;
-} 
+}
 ```
 
-You have to use [Connect.GetDeviceList]({{'/api/connect/' | relative_url }}#getdevicelist) to get the status of the registered devices. 
+You have to use [ConnectMaster.GetDeviceList]({{'/api/connectMaster/' | relative_url }}#getdevicelist) to get the status of the registered devices. 
 
 ```cpp
 void AsyncMenu::RefreshAsyncList(void* arg) {
@@ -288,7 +310,7 @@ void AsyncMenu::RefreshAsyncList(void* arg) {
   std::cout << "Getting the async connections..." << std::endl;
 
   RepeatedPtrField<DeviceInfo> deviceInfos;
-  Status status = menu->GetConnectSvc()->GetDeviceList(&deviceInfos);
+  Status status = menu->GetConnectMasterSvc()->GetDeviceList(menu->GetGatewayID(), &deviceInfos);
 
   std::vector<DeviceInfo*> asyncInfos;
   for(int i = 0; i < deviceInfos.size(); i++) {
@@ -304,8 +326,10 @@ void AsyncMenu::RefreshAsyncList(void* arg) {
 ## 4. Accept devices
 
 ```cpp
-Status ConnectSvc::GetAcceptFilter(AcceptFilter* filter) {
+Status ConnectMasterSvc::GetAcceptFilter(std::string gatewayID, AcceptFilter* filter) {
   GetAcceptFilterRequest request;
+  request.set_gatewayid(gatewayID);
+
   GetAcceptFilterResponse response;
   ClientContext context;
 
@@ -316,8 +340,9 @@ Status ConnectSvc::GetAcceptFilter(AcceptFilter* filter) {
   return status;    
 }
 
-Status ConnectSvc::SetAcceptFilter(AcceptFilter& filter) {
+Status ConnectMasterSvc::SetAcceptFilter(std::string gatewayID, AcceptFilter& filter) {
   SetAcceptFilterRequest request;
+  request.set_gatewayid(gatewayID);
   *request.mutable_filter() = filter;
 
   SetAcceptFilterResponse response;
@@ -326,14 +351,16 @@ Status ConnectSvc::SetAcceptFilter(AcceptFilter& filter) {
   Status status = stub_->SetAcceptFilter(&context, request, &response);
 
   return status;    
-}  
+}
 ```
 
-By default, the gateway will not accept any incoming connections. [Connect.GetPendingList]({{'/api/connect/' | relative_url }}#getpendinglist) can be used to get the devices, which are trying to connect to the gateway but not in the accept filter. 
+By default, the gateway will not accept any incoming connections. [ConnectMaster.GetPendingList]({{'/api/connectMaster/' | relative_url }}#getpendinglist) can be used to get the devices, which are trying to connect to the gateway but not in the accept filter. 
 
 ```cpp
-Status ConnectSvc::GetPendingList(RepeatedPtrField<PendingDeviceInfo>* deviceInfos) {
+Status ConnectMasterSvc::GetPendingList(std::string gatewayID, RepeatedPtrField<PendingDeviceInfo>* deviceInfos) {
   GetPendingListRequest request;
+  request.set_gatewayid(gatewayID);
+
   GetPendingListResponse response;
   ClientContext context;
 
@@ -342,7 +369,7 @@ Status ConnectSvc::GetPendingList(RepeatedPtrField<PendingDeviceInfo>* deviceInf
   *deviceInfos = response.deviceinfos();
 
   return status;
-}  
+}   
 ```
 
 You can allow all the incoming connections by setting [AcceptFilter.allowAll]({{'/api/connect/' | relative_url }}#AcceptFilter) to true. Or, you can specify the devices to be allowed in [AcceptFilter.deviceIDs] ({{'/api/connect/' | relative_url }}#AcceptFilter).
@@ -354,8 +381,10 @@ void AcceptMenu::AllowAll(void* arg) {
   AcceptFilter filter;
   filter.set_allowall(true);
 
-  Status status = menu->GetConnectSvc()->SetAcceptFilter(filter);
-}
+  Status status = menu->GetConnectMasterSvc()->SetAcceptFilter(menu->GetGatewayID(), filter);
+
+  ShowAcceptFilter(arg);
+} 
 
 void AcceptMenu::AddDeviceToFilter(void* arg) {
   AcceptMenu* menu = static_cast<AcceptMenu*>(arg);
@@ -366,7 +395,7 @@ void AcceptMenu::AddDeviceToFilter(void* arg) {
   Menu::GetDeviceID(deviceIDs);
 
   AcceptFilter filter;
-  Status status = menu->GetConnectSvc()->GetAcceptFilter(&filter);
+  Status status = menu->GetConnectMasterSvc()->GetAcceptFilter(menu->GetGatewayID(), &filter);
 
   filter.set_allowall(false);
 
@@ -385,21 +414,21 @@ void AcceptMenu::AddDeviceToFilter(void* arg) {
     }
   }
 
-  status = menu->GetConnectSvc()->SetAcceptFilter(filter);
+  status = menu->GetConnectMasterSvc()->SetAcceptFilter(menu->GetGatewayID(), filter);
 }
 ```
 
 ## 5. Connection status
 
-Apart from [Connect.GetDeviceList]({{'/api/connect/' | relative_url }}#getdevicelist), you can also get the realtime update using [Connect.SubscribeStatus]({{'/api/connect/' | relative_url }}#subscribestatus).
+Apart from [ConnectMaster.GetDeviceList]({{'/api/connectMaster/' | relative_url }}#getdevicelist), you can also get the realtime update using [ConnectMaster.SubscribeStatus]({{'/api/connectMaster/' | relative_url }}#subscribestatus).
 
 ```cpp
-std::unique_ptr<ClientReader<StatusChange>> ConnectSvc::Subscribe(ClientContext* context, int queueSize) {
+std::unique_ptr<ClientReader<StatusChange>> ConnectMasterSvc::Subscribe(ClientContext* context, int queueSize) {
   SubscribeStatusRequest request;
   request.set_queuesize(queueSize);
 
   return stub_->SubscribeStatus(context, request);
-}  
+}   
 ```
 
 ```cpp
@@ -424,14 +453,14 @@ void subscribeStatus(std::unique_ptr<ClientReader<StatusChange>> statusReader) {
 int main(int argc, char** argv) {
   // ...
 
-  auto connectSvc = std::make_shared<ConnectSvc>(client.GetChannel());
+	auto connectMasterSvc = std::make_shared<ConnectMasterSvc>(client.GetChannel());
 
   ClientContext context;
-  auto statusReader(connectSvc->Subscribe(&context, STATUS_QUEUE_SIZE));
+  auto statusReader(connectMasterSvc->Subscribe(&context, STATUS_QUEUE_SIZE));
   std::thread subThread(subscribeStatus, std::move(statusReader));
   
   MainMenu mainMenu;
-  mainMenu.SetConnectSvc(connectSvc);
+  mainMenu.SetConnectMasterSvc(connectMasterSvc, GATEWAY_ID);
   mainMenu.Show();
 
   context.TryCancel();
@@ -443,7 +472,7 @@ int main(int argc, char** argv) {
 ## 6. Connection mode
 
 ```cpp
-Status ConnectSvc::SetConnectionMode(std::vector<uint32_t>& deviceIDs, ConnectionMode mode) {
+Status ConnectMasterSvc::SetConnectionMode(std::vector<uint32_t>& deviceIDs, ConnectionMode mode) {
   SetConnectionModeMultiRequest request;
   for(int i = 0; i < deviceIDs.size(); i++) {
     request.add_deviceids(deviceIDs[i]);
@@ -459,7 +488,7 @@ Status ConnectSvc::SetConnectionMode(std::vector<uint32_t>& deviceIDs, Connectio
 }
 ```
 
-After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#AcceptFilter) should be configured correctly. 
+After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connectMaster/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connectMaster/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#AcceptFilter) should be configured correctly. 
 {: .notice--warning}
 
 ## 7. SSL
@@ -467,7 +496,7 @@ After setting the connection mode, you have to use different APIs accordingly. W
 TLS 1.2 can be used for more secure communication between the gateway and devices. Refer to [Secure Communication]({{'/api/connect/' | relative_url }}#secure-communication) for details. 
 
 ```cpp
-Status ConnectSvc::EnableSSL(std::vector<uint32_t>& deviceIDs) {
+Status ConnectMasterSvc::EnableSSL(std::vector<uint32_t>& deviceIDs) {
   EnableSSLMultiRequest request;
   for(int i = 0; i < deviceIDs.size(); i++) {
     request.add_deviceids(deviceIDs[i]);
@@ -481,7 +510,7 @@ Status ConnectSvc::EnableSSL(std::vector<uint32_t>& deviceIDs) {
   return status;
 }
 
-Status ConnectSvc::DisableSSL(std::vector<uint32_t>& deviceIDs) {
+Status ConnectMasterSvc::DisableSSL(std::vector<uint32_t>& deviceIDs) {
   DisableSSLMultiRequest request;
   for(int i = 0; i < deviceIDs.size(); i++) {
     request.add_deviceids(deviceIDs[i]);

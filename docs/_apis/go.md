@@ -12,7 +12,7 @@ The Go SDK depends on the following libraries.
 You can install it as described in the [installation]({{'/go/install/' | relative_url}}).
 
 
-## Generated Structures
+## Generated structures
 
 The generated files, __XXX_pb.go__, will be in _src/biostar/service_. For their usage, refer to the [tutorials]({{'/go/' | relative_url}}#tutorials).
 

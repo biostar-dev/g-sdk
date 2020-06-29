@@ -6,18 +6,18 @@ toc_label: "Table of Contents"
 
 ## Run the example
 
-1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
+1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the Python client library]({{'/python/install/' | relative_url}})
 3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
 4. Change the server information in _example/connect/test/test.py_ as needed.
    
     ```python
     # the path of the root certificate
-    CA_FILE = '../../../../cert/ca.crt'
+    GATEWAY_CA_FILE = '../../../../cert/gateway/ca.crt'
 
-    # the ip address of the gateway
-    SERVER_IP = '192.168.0.2'
-    SERVER_PORT = 4000
+    # the address of the gateway
+    GATEWAY_IP = '192.168.0.2'
+    GATEWAY_PORT = 4000
     ```
 5. Run
     ```
@@ -280,7 +280,7 @@ class ConnectSvc:
 }
 ```
 
-You can allow all the incoming connections by setting [AcceptFilter.allowAll]({{'/api/connect/' | relative_url }}#AcceptFilter) to true. Or, you can specify the devices to be allowed in [AcceptFilter.deviceIDs] ({{'/api/connect/' | relative_url }}#AcceptFilter).
+You can allow all the incoming connections by setting [AcceptFilter.allowAll]({{'/api/connect/' | relative_url }}#AcceptFilter) to true. Or, you can specify the devices to be allowed in [AcceptFilter.deviceIDs]({{'/api/connect/' | relative_url }}#AcceptFilter).
 
 ```python
 # allow all devices
@@ -349,7 +349,7 @@ class ConnectSvc:
     self.stub.SetConnectionModeMulti(connect_pb2.SetConnectionModeMultiRequest(deviceIDs=deviceIDs, connectionMode=mode))
 ```
 
-After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#acceptfilter) should be configured correctly. 
+After setting the connection mode, you have to use different APIs accordingly. With __SERVER_TO_DEVICE__, you should use the [Synchronous APIs]({{'/api/connect/' | relative_url }}#synchronous-connection) or the [Asynchronous APIs]({{'/api/connect/' | relative_url }}#asynchronous-connection). to connect to the devices. With __DEVICE_TO_SERVER__, the [AcceptFilter]({{'/api/connect' | relative_url}}#AcceptFilter) should be configured correctly. 
 {: .notice--warning}
 
 ## 7. SSL

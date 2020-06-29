@@ -194,6 +194,14 @@ defaults:
       sidebar:
         nav: "go"
 
+  - scope:
+      path: "_tutorials/cpp"
+      types: tutorials
+    values:
+      permalink: /cpp/:title/
+      sidebar:
+        nav: "cpp"        
+
 category_archive:
   type: liquid
   path: /categories/
