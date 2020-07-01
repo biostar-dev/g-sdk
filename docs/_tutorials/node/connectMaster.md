@@ -9,10 +9,10 @@ toc_label: "Table of Contents"
 1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
 2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
 3. [Download the Node.js client library]({{'/node/install/' | relative_url}})
-4. Create and copy the certificates. 
+4. Copy the certificates. 
    * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
    * Copy the administrator certificate and its private key to your working directory.    
-   * Copy the tenant certificate and copy it and its private key to your working directory.
+   * Copy the tenant certificate and its private key to your working directory.
 5. Change the server information in _example/connectMaster/test/test.js_ as needed.
    
     ```javascript

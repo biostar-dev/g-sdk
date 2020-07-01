@@ -1,6 +1,6 @@
 ---
 permalink: /gateway/install/
-title: "Installation"
+title: "Device Gateway: Installation"
 ---
 
 ## Download
@@ -66,3 +66,15 @@ You can specify several options using [the configuration file]({{'/gateway/confi
 ```
 device-gateway
 ```
+
+
+### Command line options
+
+| Option | Description |
+| ------ | ----------- |
+| -f     | specify the configuration file (default: ./config.json) |
+| -l     | specify the log level (1: error only, 5: most verbose, 3: default ) |
+| -c     | create the self-signed certificates for SSL communication | 
+| -cs    | create the server certificate using the existing root CA | 
+| -v     | show the version of the gateway |
+| -h     | show the command line options | 

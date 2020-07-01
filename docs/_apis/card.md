@@ -5,7 +5,7 @@ toc_label: "Card"
 
 ## Overview
 
-### Card Type
+### Card type
 
 The supported cards can be categorized into several types.
 
@@ -40,7 +40,7 @@ CARD_TYPE_WIEGAND
 : For Wiegand cards, you have to configure the format to decode the data. See [the article](https://support.supremainc.com/en/support/solutions/articles/24000027804--biostar-2-wiegand-configuration-faq) for details. 
 
 
-### Card Data
+### Card data
 
 ```protobuf
 message CardData {
@@ -401,7 +401,7 @@ Change the card configuration of a device.
 
 ### SetConfigMulti
 
-Change the card configurations of mlutiple devices. 
+Change the card configurations of multiple devices. 
 
 | Request |
 
@@ -445,7 +445,7 @@ message Card1XConfig {
 
 ### Set1xConfig
 
-Change the V1 confugration of a device.
+Change the V1 configuration of a device.
 
 | Request |
 
@@ -518,7 +518,7 @@ Add cards to the blacklists of multiple devices.
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| deviceIDs | uint32[] | The IDs of the devicves |
+| deviceIDs | uint32[] | The IDs of the devices |
 | cardInfos | [BlacklistItem[]](#BlacklistItem) |  The cards to be added to the blacklists of the devices |
 
 ### DeleteBlacklist

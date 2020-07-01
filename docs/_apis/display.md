@@ -45,7 +45,7 @@ volume
 useVoice
 : Activate the voice instruction.
 
-[dateFormat](#DataFormat)
+[dateFormat](#DateFormat)
 : 
 
 [timeFormat](#TimeFormat)
@@ -153,7 +153,7 @@ Change the display configurations of multiple devices.
 | config | [DisplayConfig](#DisplayConfig) | The display configuration to be written to the devices  |
 
 
-## Language Pack
+## Language pack
 
 You can change the language pack used in the UI. For the available language packs, contact [us](https://www.supremainc.com/en/about/contact-us.asp).
 

@@ -8,9 +8,9 @@ For the device gateway only. Refer to [the Connect Master API]({{'/api/connectMa
 
 ## Overview
 
-The Connect API is for managing the connections between the device gateway and BioStar devices. There are two connection modes according to the direction of the connection. 
+The Connect API is for managing the connections between the device gateway and BioStar devices. There are two modes according to the direction of the connection. 
 
-### Connection Mode
+### Connection mode
 
 ```protobuf
 enum ConnectionMode {
@@ -26,11 +26,11 @@ enum ConnectionMode {
 
 With the default of __SERVER_TO_DEVICE__, the gateway will connect to the device. To change the mode, you have to call [SetConnectionMode](#setconnectionmode). 
 
-### Synchronous vs. Asynchronous
+### Synchronous vs. asynchronous
 
 When the mode is __SERVER_TO_DEVICE__, there are two ways for the gateway to connect to the devices. With [Synchronous APIs](#synchronous-connection), you can directly connect to a device. Though it is the simpler way, you have to manage the connection manually. When you have to manage many devices, [Asynchronous APIs](#asynchronous-connection) would be preferrable since most connection tasks are managed by the gateway automatically. 
 
-### Secure Communication 
+### Secure communication 
 
 All the packets between the gateway and the devices are encrypted for secure communication. You can choose one of the two options for packet encryption.
 
@@ -112,7 +112,7 @@ status
 timestamp
 : The time when the change is occurred in Unix time format.
 
-## Synchronous Connection
+## Synchronous connection
 
 ### Connect
 
@@ -151,7 +151,7 @@ To set __ConnectInfo.useSSL__ to true, you have to call [EnableSSL](#enablessl) 
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the connected device |
 
-## Asynchronous Connection
+## Asynchronous connection
 
 Synchronous connection is the easier and simpler way to connect to a device. However, if you have tens of or hundreds of devices, managing synchronous connections could become a chore. To alleviate this overload, asynchronous APIs are provided. You only have to register devices to connect. Then, the gateway will handle all the tasks in the background. When a managed device is disconnected, the gateway will try to reconnect automatically, too. 
 
@@ -437,7 +437,7 @@ wiegandSlaveDeviceIDs
 
 You can add slave devices on a RS485 channel or Wiegand input of a device. For searching and registering slave devices, refer to the corresponding sections in [RS485]({{'/api/rs485/' | relative_url}}#slave-devices) and [Wiegand]({{'/api/wiegand/' | relative_url}}#slave-devices).
 
-The slave information is not stored in the database. So, to access the slave devices, you have to use [SetSlaveDevice](#setslavedevice) after the device gateway is reconnected.
+The slave information is not stored in the database. So, to access the slave devices, you have to call [SetSlaveDevice](#setslavedevice) after the device gateway is reconnected.
 
 ### GetSlaveDevice
 

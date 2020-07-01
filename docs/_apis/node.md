@@ -9,9 +9,9 @@ The Node.js SDK depends on the following library.
 
 * [grpc](https://www.npmjs.com/package/grpc)
 
-You can install it using __npm__ as in the [installation]({{'/node/install/' | relative_url}}).
+You can install it using __npm__ as described in the [installation]({{'/node/install/' | relative_url}}).
 
-## Generated Classes
+## Generated files
 
 There are two types of generated files. All the gRPC messages are converted into __XXX\_pb.js__, while the functions of services are into __XX\_grpc\_pb.js__. There files will be in _biostar/service_. For their usage, refer to the [tutorials]({{'/node/' | relative_url}}#tutorials).
 

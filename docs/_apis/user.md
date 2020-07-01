@@ -442,7 +442,7 @@ Register face templates to users on multiple devices.
 | deviceIDs | uint32[] | The IDs of the devices |
 | userFaces | [UserFace[]](#UserFace) | The face information to be stored in the devices |
 
-## Access Group
+## Access group
 
 You can specify which doors are accessible to specific users by [AccessGroup]({{'/api/access/' | relative_url }}#AccessGroup).
 
@@ -497,7 +497,7 @@ Assign access groups to users on multiple devices.
 | deviceIDs | uint32[] | The IDs of the devices |
 | userAccessGroups | [UserAccessGroup[]](#UserAccessGroup) | The access group information to be stored in the devices |
 
-## Job Code
+## Job code
 
 Check [CapabilityInfo.jobCodeSupported]({{'/api/device/' | relative_url }}#CapabilityInfo) of the device first. You have to set the [SystemConfig.useJobCode]({{'/api/system/' | relative_url }}#SystemConfig) to true for recording job codes. 
 {: .notice--warning}

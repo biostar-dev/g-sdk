@@ -46,7 +46,7 @@ Login to the master gateway as an administrator. The certificate should be issue
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
 | adminTenantCert | string | the administrator certificate in PEM format |
-| tenantID | string | the ID of a tenant. To use [the Tenant API]({{'/master/tenant/' | relative_url}}) it should be 'administrator'. To access any other tenants, just use the ID of the tenant |
+| tenantID | string | the ID of a tenant. To use [the Tenant API]({{'/master/tenant/' | relative_url}}) it should be 'administrator'. To access any other tenants, use the ID of the tenant |
 
 | Response |
 

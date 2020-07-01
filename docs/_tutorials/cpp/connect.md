@@ -9,7 +9,7 @@ toc_label: "Table of Contents"
 1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the C++ client library]({{'/cpp/install/' | relative_url}})
 3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. The example uses [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake). You can change the _CMakeLists.txt_ file as needed.
+4. The example uses CMake. You can change the _CMakeLists.txt_ file as needed.
 5. Change the gateway and the device information in _example/connect/test/main.cpp_ as needed.
    
     ```cpp
@@ -20,16 +20,27 @@ toc_label: "Table of Contents"
     const std::string GATEWAY_ADDR = "192.168.0.2";
     const int GATEWAY_PORT = 4000;
     ```
-6. Build
+6. Build and run
+ 
+    * Windows
+    
+      ```
+      cmake .
+      ```
 
-    ```
-    cmake .
-    ```
-    Open _testConnect.vcxproj_ in Visual Studio.
-7. Run
-    ```
-    ./Debug/testConnect
-    ```
+      Open _testConnect.vcxproj_ in Visual Studio and build it.
+
+      ```
+      ./Debug/testConnect
+      ```
+
+    * Linux
+
+      ```
+      cmake .
+      make testConnect
+      ./testConnect
+      ```
 
 ## 1. CLI 
 

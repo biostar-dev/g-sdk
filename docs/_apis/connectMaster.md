@@ -48,7 +48,7 @@ timestamp
 : The time when the change is occurred in Unix time format.
 
 
-## Synchronous Connection
+## Synchronous connection
 
 ### Connect
 
@@ -67,7 +67,7 @@ Connect synchronously to a device. If successful, the device ID will be returned
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the connected device |
 
-## Asynchronous Connection
+## Asynchronous connection
 
 Synchronous connection is the easier and simpler way to connect to a device. However, if you have tens of or hundreds of devices, managing synchronous connections could become a chore. To alleviate this overload, asynchronous APIs are provided. You only have to register devices to connect. Then, the device gateways will handle all the tasks in the background. When a managed device is disconnected, the device gateway will try to reconnect automatically, too. 
 
@@ -291,7 +291,7 @@ Disable SSL on multiple devices
 
 You can add slave devices on a RS485 channel or Wiegand input of a device. For searching and registering slave devices, refer to the corresponding sections in [RS485]({{'/api/rs485/' | relative_url}}#slave-devices) and [Wiegand]({{'/api/wiegand/' | relative_url}}#slave-devices).
 
-The slave information is not stored in the database. So, to access the slave devices, you have to use [SetSlaveDevice](#setslavedevice) after the device gateway is reconnected.
+The slave information is not stored in the database. So, to access the slave devices, you have to call [SetSlaveDevice](#setslavedevice) when the device gateway is reconnected.
 
 ### GetSlaveDevice
 

@@ -9,10 +9,10 @@ toc_label: "Table of Contents"
 1. [Install and run the master gateway]({{'/master/install/' | relative_url}}). Create the needed certificates as described in [the Certificate Management]({{'/master/certificate/' | relative_url}}).
 2. [Install and run the device gateway]({{'/gateway/install/' | relative_url}}). Configure the device gateway to connect to the master gateway as described in [the Configuration]({{'/gateway/config/' | relative_url}}#master-gateway).
 3. [Download the C# client library]({{'/csharp/install/' | relative_url}})
-4. Create and copy the certificates. 
+4. Copy the certificates. 
    * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
    * Copy the administrator certificate and its private key to your working directory.    
-   * Copy the tenant certificate and copy it and its private key to your working directory.
+   * Copy the tenant certificate and its private key to your working directory.
 5. The quick start example uses [grpc-dotnet](https://grpc.io/docs/quickstart/csharp-dotnet/). You can change the _example/quick/quick.csproj_ file as needed.
 6. Change the server and the device information in _example/quick/Program.cs_ as needed.
    
@@ -76,7 +76,7 @@ You can use the services in the following steps.
 3. Create a service client such as ___ConnectMaster.ConnectMaster.ConnectMasterClient___ using the channel. For the available services and functions, please refer to [the API reference]({{'/api/' | relative_url}}).
    
     ```csharp
-    ConnectMaster.ConnectMaster.ConnectMasterClient___ connectMasterClient = new ConnectMaster.ConnectMaster.ConnectMasterClient(channel);
+    ConnectMaster.ConnectMaster.ConnectMasterClient connectMasterClient = new ConnectMaster.ConnectMaster.ConnectMasterClient(channel);
     ```
 
 4. Call the functions of the service using the client. 

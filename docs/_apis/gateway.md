@@ -111,6 +111,8 @@ Delete device gateways from the tenant.
 
 You can create gateway certificates using the command line options of the master gateway as described in [Create certificates]({{'/master/install/' | relative_url}}#create-certificates). You can also create and manage them using the following APIs. 
 
+In some cases, you have to disable issued certificates. The device gateway with a blacklisted certificate will not be able to connect to the master gateway. 
+
 ```protobuf
 message PKIName {
   string country;
@@ -161,18 +163,23 @@ message CertificateInfo {
 
 gatewayID
 : The ID of the gateway.
+
 subject
 : The subject of the certificate.
+
 serialNO
 : The unique 64 bit identifier for the certificate.
+
 issueDate
 : The issue date in Unix time format.
+
 expiryDate
 : The expiry date in Unix time format.
+
 blacklisted
 : True if the certificate is blacklisted.
 
-Get the issuing history of certificates for the specified gateways issued by the master gateway.
+Get the issuing history of certificates for the specified gateways.
 
 | Request |
 
@@ -205,7 +212,7 @@ Get the blacklisted certificates for the specified gateways.
 
 ### AddCertificateBlacklistRequest
 
-Add the certificates to the gateway's blacklist.
+Add the certificates to the blacklist.
 
 | Request |
 
@@ -216,7 +223,7 @@ Add the certificates to the gateway's blacklist.
 
 ### DeleteCertificateBlacklistRequest
 
-Delete the certificates from the tenant's blacklist.
+Delete the certificates from the blacklist.
 
 | Request |
 

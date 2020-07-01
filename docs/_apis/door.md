@@ -288,7 +288,7 @@ Delete doors from a device.
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the device |
-| doorIDss | uint32[] | The IDs of doors to be deleted from the device |
+| doorIDs | uint32[] | The IDs of doors to be deleted from the device |
 
 
 ### DeleteAll

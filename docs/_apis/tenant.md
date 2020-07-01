@@ -105,6 +105,8 @@ Delete device gateways from a tenant.
 You can create tenant certificates using the command line options of the master gateway as described in [Create certificates]({{'/master/install/' | relative_url}}#create-certificates). 
 You can also create and manage them using the following APIs. 
 
+In some cases, you have to disable issued certificates. The tenant with a blacklisted certificate will not be able to connect to the master gateway. 
+
 ### CreateCertificate
 
 Create a tenant certificate. The client application should use the tenant certificate to [login]({{'/api/login/' | relative_url}}#login) to the master gateway. 
@@ -140,14 +142,19 @@ message CertificateInfo {
 
 tenantID
 : The ID of the tenant.
+
 subject
 : The subject of the certificate.
+
 serialNO
 : The unique 64 bit identifier for the certificate.
+
 issueDate
 : The issue date in Unix time format.
+
 expiryDate
 : The expiry date in Unix time format.
+
 blacklisted
 : True if the certificate is blacklisted.
 

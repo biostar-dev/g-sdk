@@ -1,6 +1,6 @@
 ---
 permalink: /master/install/
-title: "Installation"
+title: "Master Gateway: Installation"
 ---
 
 ## Download
@@ -19,6 +19,10 @@ You can get a trial license using __-lat__ command line option. The trial versio
 ### Full license
 
 To get a full license, please contact us at sales_sys@supremainc.com. After receiving a license key, you can activate it using __-la__ option.
+
+```
+master_gateway -la FF79C9-D1BDD4-4555B9-BF55F3-xxxxxx-xxxxxx
+```
 
 ## Create certificates
 
@@ -47,7 +51,7 @@ master_gateway -c
 
 ### Tenant certificate
 
-The master gateway is designed to support multi-tenant systems. Each tenant should have its own tenant certificate to connect to the master gateway. You can create a tenant certificate using __-ct__ option as follows. For the usage of the tenant certificate, refer to the quick start guide of your language. 
+The master gateway is designed to support multi-tenant systems. Each tenant should have its own certificate to connect to the master gateway. You can create a tenant certificate using __-ct__ option as follows. For the usage of the tenant certificate, refer to the quick start guide of your language. 
 
 ```
 master_gateway -ct
@@ -89,3 +93,22 @@ You can specify several options using [the configuration file]({{'/master/config
 ```
 master-gateway
 ```
+
+### Command line options
+
+| Option | Description |
+| ------ | ----------- |
+| -f     | specify the configuration file (default: ./config.json) |
+| -l     | specify the log level (1: error only, 5: most verbose, 3: default ) |
+| -c     | create the self-signed certificates for SSL communication. It will create the root CA certificate, the server certificate, and the administrator certificate | 
+| -cs    | create the server and administrator certificates using the existing root CA | 
+| -ct    | create a tenant certificate | 
+| -cg    | create a device gateway certificate | 
+| -li    | show the license information | 
+| -la    | activate the license using a license key | 
+| -ld    | deactivate the license. After deactivation, you can use the license key on another computer |
+| -lco   | create an offline activation request using a license key. As for offline activation, contact us at sales_sys@supremainc.com |
+| -lao   | activate the license using an offline activation response file |
+| -lat   | activate a trial license | 
+| -v     | show the version of the gateway |
+| -h     | show the command line options | 

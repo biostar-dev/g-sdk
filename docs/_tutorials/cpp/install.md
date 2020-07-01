@@ -4,7 +4,7 @@ title: "C++ Installation"
 
 ## Prerequisites
 
-* [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake) V3.13 or higher
+* [CMake](https://cmake.org/) V3.13 or higher
 
 ## Download
 

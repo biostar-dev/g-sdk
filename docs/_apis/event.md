@@ -111,7 +111,7 @@ Delete all event logs stored on multiple devices.
 | deviceIDs | uint32[] | The IDs of the devices |
 
 
-## Image Log
+## Image log
 
 Some devices can record an image in addition to an event log. Please check if the device supports [CapabilityInfo.imageLogSupported]({{'/api/device/' | relative_url}}#CapabilityInfo). You have to specify the event types for which an image is recorded using [SetImageFilter](#setimagefilter).
 

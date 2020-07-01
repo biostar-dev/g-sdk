@@ -170,7 +170,7 @@ Change the face configurations of multiple devices.
 | config | [FaceConfig](#FaceConfig) | The face configuration to be written to the devices |
 
 
-## Auth Group
+## Auth group
 
 The more the number of face templates, the higher the False Acceptance Ratio(FAR). To lower this error, you can divide users into several groups, and try face authentication in a specific group only. To use this feature, you have to do the followings.
 

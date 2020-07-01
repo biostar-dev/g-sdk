@@ -207,7 +207,7 @@ Change the Wiegand configurations of multiple devices.
 | deviceIDs | uint32[] | The IDs of the devices |
 | config | [WiegandConfig](#WiegandConfig) | The Wiegand configuration to be written to the devices |
 
-## Slave Devices
+## Slave devices
 
 You can search, add, or delete slave devices on Wiegand input.
 
@@ -267,7 +267,9 @@ Get the registered slave devices.
 
 ### SetDevice
 
-Register the slave devices. You only have to register slaves once. However, since this information is not stored in the device gateway, you have to use [Connect.SetSlaveDevice]({{'/api/connect/' | relative_url}}#setslavedevice) or [ConnectMaster.SetSlaveDevice]({{'/api/connectMaster/' | relative_url}}#setslavedevice) when the device gateway is reconnected.
+Register the slave devices. 
+
+You only have to register slaves once. However, since this information is not stored in the device gateway, you have to use [Connect.SetSlaveDevice]({{'/api/connect/' | relative_url}}#setslavedevice) or [ConnectMaster.SetSlaveDevice]({{'/api/connectMaster/' | relative_url}}#setslavedevice) when the device gateway is reconnected.
 {: .notice--warning}
 
 | Request |

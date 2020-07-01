@@ -5,7 +5,7 @@ toc_label: "Network"
 
 Network is the most basic configuration for the gateway to communicate with a device. 
 
-As of the gateway V1.0, only the IPv4 configuration is supported. IPv6 will be supported in the future versions.
+As of the gateway V1.1, only the IPv4 configuration is supported. IPv6 will be supported in the future versions.
 {: .notice--info}
 
 ## IP

@@ -298,8 +298,7 @@ public class ConnectSvc {
 
   public void deleteAsyncConnection(List<Integer> deviceIDs) throws Exception {
     DeleteAsyncConnectionRequest request = DeleteAsyncConnectionRequest.newBuilder().addAllDeviceIDs(deviceIDs).build();
-    connectStub.deleteAsy
-    ncConnection(request);
+    connectStub.deleteAsyncConnection(request);
   } 
 }  
 ```

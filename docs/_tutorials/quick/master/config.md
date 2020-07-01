@@ -1,6 +1,6 @@
 ---
 permalink: /master/config/
-title: "Configuration"
+title: "Master Gateway: Configuration"
 ---
 
 ## Configuration file
@@ -44,14 +44,14 @@ As default, the configuration file resides in the same folder as the executable.
 
 | Name | Description |
 | -----| ----------- |
-| ip  | The IP address of the gRPC. If it is "", it means the same as INADDR_ANY |
+| ip  | The address of the gRPC server. If it is "", it means the same as INADDR_ANY |
 | port | The port of the gRPC server. The default is 4010. Since all communication with gRPC clients use SSL, there is no separate SSL port |
 | max_recv_size | The largest size of gRPC packet in bytes. If you are to use [the UpgradeFirmware API]({{'/api/device/' | relative_url}}#upgradefirmware), it should be larger than the size of the firmware file | 
 
 
 ### Database
 
-The master gateway stores tenant and gateway information on a database. 
+The master gateway stores the tenant and gateway information on a database. 
 
 ```json
 {
@@ -63,7 +63,7 @@ The master gateway stores tenant and gateway information on a database.
 
 | Name | Description |
 | -----| ----------- |
-| filename | The name of [Bolt](https://github.com/boltdb/bolt) database file. |
+| filename | The name of the [Bolt](https://github.com/boltdb/bolt) database file. |
 
 
 ### Log
@@ -93,20 +93,3 @@ As default, the master gateway writes only warning and error messages. You can s
 | max_backups | The maximum number of old log files to retain. If it is 0, retain all the log files |
 
 
-## Command line options
-
-| Option | Description |
-| ------ | ----------- |
-| -f     | specify the configuration file (default: ./config.json) |
-| -l     | specify the log level (1: error only, 5: most verbose, 3: default ) |
-| -c     | create the self-signed certificates for SSL communication | 
-| -cs    | create the server and administrator certificate using the existing root CA | 
-| -ct    | create a tenant certificate | 
-| -cg    | create a device gateway certificate | 
-| -li    | show the license information | 
-| -la    | activate the license using a license key | 
-| -lco   | create an offline activation request using a license key |
-| -lao   | activate the license using an offline activation response file |
-| -lat   | activate a trial license | 
-| -v     | show the version of the gateway |
-| -h     | show the command line options | 

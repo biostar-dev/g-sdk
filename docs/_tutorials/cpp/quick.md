@@ -9,7 +9,7 @@ toc_label: "Table of Contents"
 1. [Install and run the device gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the C++ client library]({{'/cpp/install/' | relative_url}})
 3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. The quick start example uses [CMake](https://github.com/grpc/grpc/tree/master/src/cpp#cmake). You can change the _CMakeLists.txt_ file as needed.
+4. The quick start example uses CMake. You can change the _CMakeLists.txt_ file as needed.
 5. Change the gateway and the device information in _example/quick/main.cpp_ as needed.
    
     ```cpp
@@ -25,17 +25,27 @@ toc_label: "Table of Contents"
     const int DEVICE_PORT = 51211;
     const bool USE_SSL = false;
     ```
-6. Build
+6. Build and run
+ 
+    * Windows
+    
+      ```
+      cmake .
+      ```
 
-    ```
-    cmake .
-    ```
-    Open _quick.vcxproj_ in Visual Studio.
+      Open _quick.vcxproj_ in Visual Studio and build it.
 
-7. Run
-    ```
-    ./Debug/quick
-    ```
+      ```
+      ./Debug/quick
+      ```
+
+    * Linux
+
+      ```
+      cmake .
+      make quick
+      ./quick
+      ```
 
 ## 1. Overview
 

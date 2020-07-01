@@ -17,20 +17,20 @@ The APIs of G-SDK are defined using [gRPC](https://grpc.io/) to maximize its com
 * [Go]({{ 'api/go/' | relative_url }})
 * [C++]({{ 'api/cpp/' | relative_url }})
 
-### Device Gateway vs. Master Gateway
+### Device gateway vs. master gateway
 
-A master gateway manages devices through one or more device gateways. Due to this difference, [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) is different from [the Connect API]({{'/api/connect/' | relative_url}}). And, since the master gateway is designed for multi-tenant systems, you have to use [the Login API]({{'/api/login/' | relative_url}}) before using other APIs. [The Tenant API]({{'/api/tenant/' | relative_url}}) and [the Gateway API]({{'/api/gateway/' | relative_url}}) are also provided for the master gateway only. Apart from these APIs, the other APIs are same both for the device gateway and the master gateway.
+A master gateway manages devices through one or more device gateways. Due to this difference, [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) is different from [the Connect API]({{'/api/connect/' | relative_url}}). And, since the master gateway is designed for multi-tenant systems, you have to use [the Login API]({{'/api/login/' | relative_url}}) before using other APIs. [The Tenant API]({{'/api/tenant/' | relative_url}}) and [the Gateway API]({{'/api/gateway/' | relative_url}}) are also provided for the master gateway only. Apart from these differences, the other APIs are same both for the device gateway and the master gateway.
 
 | API | Device Gateway | Master Gateway | Note |
 | --------- | ---- | ----------- | --- |
-| [Connect]({{'/api/connectMaster/' | relative_url}}) | O | X | manages devices directly |
-| [Connect Master]({{'/api/connectMaster/' | relative_url}}) | X | O | manages devices via device gateways |
-| [Login]({{'/login/' | relative_url}}) | X | O | login as an administrator or a tenant |
-| [Tenant]({{'/tenant/' | relative_url}}) | X | O | manages tenants |
-| [Gateway]({{'/api/gateway/' | relative_url}}) | X | O | manages device gateways |
+| [Connect]({{'/api/connect/' | relative_url}}) | O | X | manage devices directly |
+| [Connect Master]({{'/api/connectMaster/' | relative_url}}) | X | O | manage devices via device gateways |
+| [Login]({{'/api/login/' | relative_url}}) | X | O | login as an administrator or a tenant |
+| [Tenant]({{'/api/tenant/' | relative_url}}) | X | O | manage tenants |
+| [Gateway]({{'/api/gateway/' | relative_url}}) | X | O | manage device gateways |
 
 
-### API Definition
+### API definition
 
 Each API sends a single request to the gateway and gets a single response back. 
 
@@ -52,7 +52,7 @@ For brevity, when the response has no data, its definition is omitted in the ref
 {: .notice--warning}
 
 
-### XXX_Multi Command
+### XXX_Multi command
 
 One of the design goals of G-SDK is to manage hundreds of devices easily. The more devices, the more cumbersome for developers to do same operations repetitively on multiple devices. To alleviate this overload, G-SDK provides XXX_Multi commands. For example, with [User.EnrollMulti]({{ '/api/user/' | relative_url }}#enrollmulti), you can enroll users to multiple devices with only one function call. All these operations will be executed in parallel by the gateway.
 
@@ -87,7 +87,7 @@ Configure the IP address of a device.
 ### [User]({{ 'api/user/' | relative_url }})
 Enroll and manage users. Set fingerprints, cards, and access groups to users.
 
-## Master Gateway APIs
+## Master gateway APIs
 
 ### [Gateway]({{ 'api/gateway/' | relative_url }})
 Manage device gateways for the master gateway.
@@ -112,7 +112,7 @@ Scan a fingerprint. You can also configure the options related to authenticating
 ### [Face]({{ 'api/face/' | relative_url }})
 Scan face templates. You can also configure the options related to authenticating faces.
 
-## Access Control APIs
+## Access control APIs
 You can specify which users can access which doors for specific schedules. 
 
 ### [Access]({{ 'api/access/' | relative_url }})

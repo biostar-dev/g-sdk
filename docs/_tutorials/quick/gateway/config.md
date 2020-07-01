@@ -1,6 +1,6 @@
 ---
 permalink: /gateway/config/
-title: "Configuration"
+title: "Device Gateway: Configuration"
 ---
 
 ## Configuration file
@@ -9,7 +9,7 @@ As default, the configuration file resides in the same folder as the executable.
 
 ### Certificates
 
-See [Certificate Management]({{'/gateway/certificate/' | relative_url}}) for managing these certificates. The __master_ca_cert__, __gateway_cert__, and __gateway_key__ are needed only when __master_gateway.use__ is true. 
+See [Certificate Management]({{'/gateway/certificate/' | relative_url}}) for managing these certificates. The __master_ca_cert__, __gateway_cert__, and __gateway_key__ are needed only when [master_gateway.use](#master_gateway) is true. 
 
 ```json
 {
@@ -26,6 +26,7 @@ See [Certificate Management]({{'/gateway/certificate/' | relative_url}}) for man
   }
 }
 ```
+{: #cert}
 
 | Name | Description |
 | -----| ----------- |
@@ -38,7 +39,7 @@ See [Certificate Management]({{'/gateway/certificate/' | relative_url}}) for man
 | gateway_cert | The client certificate in PEM format to connect to the master gateway  |
 | gateway_key | The private key of the client certificate in PEM format |
 
-### Device Server
+### Device server
 
 The gateway consists of two servers, the device server and the gRPC server. The device server handles the connections with BioStar devices, while the gRPC server manages the RPC connections with client applications. 
 
@@ -55,13 +56,13 @@ The gateway consists of two servers, the device server and the gRPC server. The 
 
 | Name | Description |
 | -----| ----------- |
-| ip  | The IP address of the device server. If it is "", it means the same as INADDR_ANY |
+| ip  | The address of the device server. If it is "", it means the same as INADDR_ANY |
 | port | The port of the device server. The default is 51212 |
 | ssl_port | The SSL port of the device server. The default is 51213 |
 | reconnect_interval | If you use [the asynchronous API]({{'/api/connect/' | relative_url}}#asynchronous-connection), the gateway will try to reconnect to a disconnected device after this interval in milliseconds. |
 
 
-### RPC Server
+### RPC server
 
 ```json
 {
@@ -75,7 +76,7 @@ The gateway consists of two servers, the device server and the gRPC server. The 
 
 | Name | Description |
 | -----| ----------- |
-| ip  | The IP address of the gRPC. If it is "", it means the same as INADDR_ANY |
+| ip  | The address of the gRPC server. If it is "", it means the same as INADDR_ANY |
 | port | The port of the gRPC server. The default is 4000. Since all communication with gRPC clients use SSL, there is no separate SSL port |
 | max_recv_size | The largest size of gRPC packet in bytes. If you are to use [the UpgradeFirmware API]({{'/api/device/' | relative_url}}#upgradefirmware), it should be larger than the size of the firmware file | 
 
@@ -107,7 +108,7 @@ These timeout values are for the commands between the gateway and devices. All v
 | keep_alive | The heartbeat timeout for device connections. The gateway will send keep alive packets with this interval. To prevent unnecessary packets, set this value larger than 30000ms - the heartbeat timeout from the devices |
 
 
-### Master Gateway
+### Master gateway
 
 If you want the device gateway to connect to a master gateway, you have to configure the below options accordingly. You also have to specify the related certificates in the [cert](#certificates) section. 
 
@@ -120,6 +121,7 @@ If you want the device gateway to connect to a master gateway, you have to confi
   }
 }
 ```
+{: #master_gateway}
 
 | Name | Description |
 | -----| ----------- |
@@ -154,13 +156,3 @@ As default, the gateway writes only warning and error messages. You can set the 
 | max_backups | The maximum number of old log files to retain. If it is 0, retain all the log files |
 
 
-## Command line options
-
-| Option | Description |
-| ------ | ----------- |
-| -f     | specify the configuration file (default: ./config.json) |
-| -l     | specify the log level (1: error only, 5: most verbose, 3: default ) |
-| -c     | create the self-signed certificates for SSL communication | 
-| -cs    | create the server certificate using the existing root CA | 
-| -v     | show the version of the gateway |
-| -h     | show the command line options | 

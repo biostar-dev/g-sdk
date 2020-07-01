@@ -90,7 +90,7 @@ public class GatewayClient extends GrpcClient {  // certFile is the pathname of 
 
 ```
 
-1. Create the ___GrpcClient___
+1. Create the ___GatewayClient___
 
     ```java
     GatewayClient client = new GatewayClient();

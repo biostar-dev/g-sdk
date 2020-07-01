@@ -7,7 +7,7 @@ title: "Java Client"
 
 To write your applications in Java, you have to install the client library first. 
 
-## API Reference
+## API reference
 
 ### [G-SDK API]({{'/api/' | relative_url}})
 
@@ -29,7 +29,7 @@ The guide will show you how to use the basic APIs for the device gateway in Java
 
 To manage BioStar devices, you have to connect them to the device gateway first. The tutorial will show you how to connect to the devices and configure the related options. 
 
-### [Quick Start Guide for Master gateway]({{'/java/quickMaster/' | relative_url}})
+### [Quick Start Guide for Master Gateway]({{'/java/quickMaster/' | relative_url}})
 
 The guide will show you how to use the basic APIs for the master gateway in Java. 
 

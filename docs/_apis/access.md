@@ -3,7 +3,7 @@ title: "Access Group API"
 toc_label: "Access Group"  
 ---
 
-## Access Group
+## Access group
 
 An access group consists of access levels, which specify the accessible doors for specific schedules. Each user can belong to maximum 16 access groups. To assign access groups to users, you have to do the followings;
 
@@ -109,9 +109,9 @@ Delete all access groups from multiple devices.
 | --------- | ---- | ----------- |
 | deviceIDs | uint32[] | The IDs of the devices |
 
-## Access Level
+## Access level
 
-An access level specifies which doors are accessbile for specific schedules. 
+An access level specifies which doors are accessible for specific schedules. 
 
 ```protobuf
 message AccessLevel {
