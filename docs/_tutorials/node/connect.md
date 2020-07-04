@@ -19,12 +19,12 @@ toc_label: "Table of Contents"
     const GATEWAY_IP = '192.168.0.2';
     const GATEWAY_PORT = 4000;
     ```
-5. Install packages
+5. Install packages.
 
     ```
     npm install
     ```
-6. Run
+6. Run.
    
     ```
     cd example/connect/test

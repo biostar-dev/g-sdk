@@ -25,7 +25,7 @@ toc_label: "Table of Contents"
     const int DEVICE_PORT = 51211;
     const bool USE_SSL = false;
     ```
-6. Build and run
+6. Build and run.
  
     * Windows
     
@@ -462,7 +462,7 @@ Status CardSvc::DeleteBlacklist(uint32_t deviceID, RepeatedPtrField<BlacklistIte
     CardSvc cardSvc(client->GetChannel());
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```cpp
     CardData cardData;
@@ -602,7 +602,7 @@ Status UserSvc::Delete(uint32_t deviceID, std::vector<std::string> &userIDs) {
     status = userSvc.GetUser(deviceID, &userIDs, &userInfos)
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```cpp
     RepeatedPtrField<UserInfo> newUserInfos;
@@ -652,7 +652,7 @@ Status UserSvc::Delete(uint32_t deviceID, std::vector<std::string> &userIDs) {
     status = userSvc.SetFinger(deviceID, userFingers);
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```cpp
     status = userSvc.Delete(deviceID, newUserIDs);

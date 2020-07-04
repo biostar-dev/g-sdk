@@ -12,9 +12,9 @@ title: "Go Installation"
 
 ## Go Library
 
-1. Download the latest version of Go library from [github]({{ site.last_ver }})
-2. Unzip the archive file
-3. Add the installation directory to GOPATH
+1. Download the latest version of Go library from [github]({{ site.last_ver }}).
+2. Unzip the archive file.
+3. Add the installation directory to GOPATH.
 
 ## Examples
 

@@ -36,13 +36,13 @@ toc_label: "Table of Contents"
     GATEWAY_ID = "gateway1"    
     ```
 
-6. Build
+6. Build.
 
     ```
     cd src/example/connectMaster/test
     go build .
     ```
-7. Run
+7. Run.
    
     ```
     ./test

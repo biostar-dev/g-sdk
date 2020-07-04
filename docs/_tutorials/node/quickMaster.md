@@ -41,12 +41,12 @@ toc_label: "Table of Contents"
     const USE_SSL = false;    
     ```
 
-6. Install packages
+6. Install packages.
 
     ```
     npm install
     ```
-7. Run
+7. Run.
    
     ```
     cd example/quick
@@ -160,7 +160,7 @@ function login(tenantCert) {
 }
 ```
 
-1. Create the credential
+1. Create the credential.
 
     ```javascript
     var rootCa = fs.readFileSync(MASTER_CA_FILE);
@@ -171,7 +171,7 @@ function login(tenantCert) {
     var addr = `${MASTER_IP}:${MASTER_PORT}`;
     ```
 
-2. Login to the master gateway and get a JWT token
+2. Login to the master gateway and get a JWT token.
 
     ```javascript
     var channelCreds = sslCreds;
@@ -282,7 +282,7 @@ function disconnect(deviceIDs) {
     });
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```javascript
     connectMaster.getDeviceList(gatewayID)
@@ -291,7 +291,7 @@ function disconnect(deviceIDs) {
     });
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```javascript  
     var deviceIDs = [];
@@ -342,7 +342,7 @@ function getCapabilityInfo(devID) {
     ```javascript
     device.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```javascript
     device.getInfo(devID)
@@ -426,7 +426,7 @@ function getConfig(devID) {
     });
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```javascript
     finger.getImage(devID)
@@ -524,7 +524,7 @@ function getConfig(devID) {
     card.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```javascript
     card.scan(devID)
@@ -657,7 +657,7 @@ function setFinger(devID, userFingerInfos) {
     });
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```javascript
     var userInfos = [];
@@ -703,7 +703,7 @@ function setFinger(devID, userFingerInfos) {
     })
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```javascript
     user.deleteUser(devID, userIDs);

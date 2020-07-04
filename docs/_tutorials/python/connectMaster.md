@@ -35,7 +35,7 @@ toc_label: "Table of Contents"
     TENANT_ID = "tenant1"
     GATEWAY_ID = "gateway1"   
     ```
-6. Run
+6. Run.
     ```
     cd example/connectMaster/test
     python test.py    

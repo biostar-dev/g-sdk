@@ -19,7 +19,7 @@ toc_label: "Table of Contents"
     GATEWAY_IP = '192.168.0.2'
     GATEWAY_PORT = 4000
     ```
-5. Run
+5. Run.
     ```
     cd example/connect/test
     python test.py    

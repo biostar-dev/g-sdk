@@ -36,12 +36,12 @@ toc_label: "Table of Contents"
     private static final String TENANT_ID = "tenant1";
     private static final String GATEWAY_ID = "gateway1";     
     ```
-7. Build
+7. Build.
 
     ```
     ./gradlew installDist
     ```
-8. Run
+8. Run.
    
     ```
     ./build/install/java/bin/connectMasterTest

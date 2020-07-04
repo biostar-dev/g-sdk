@@ -19,13 +19,13 @@ toc_label: "Table of Contents"
 	  SERVER_IP = "192.168.0.2"
 	  SERVER_PORT = 4000
     ```
-6. Build
+5. Build.
 
     ```
     cd src/example/connect/test
     go build .
     ```
-7. Run
+6. Run.
    
     ```
     ./test

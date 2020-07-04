@@ -40,7 +40,7 @@ toc_label: "Table of Contents"
     DEVICE_PORT = 51211
     USE_SSL = False
     ```
-6. Run
+6. Run.
    
     ```
     cd example/quick
@@ -147,14 +147,14 @@ class LoginSvc:
       return response.jwtToken
 ```
 
-1. Create the ___MasterClient___ and connect to the gateway
+1. Create the ___MasterClient___ and connect to the gateway.
 
     ```python
     client = MasterClient(MASTER_IP, MASTER_PORT, MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE)
     channel = client.getChannel()
     ```
 
-2. Login to the master gateway
+2. Login to the master gateway.
 
     ```python
     loginSvc = LoginSvc(channel)
@@ -165,7 +165,7 @@ class LoginSvc:
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/python/connectMaster/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/python/connectMaster/' | relative_url}}).
 
 ```python
 # An example class showing the usage of the Connect Master API
@@ -199,13 +199,13 @@ class ConnectMasterSvc:
     devID = connectMasterSvc.connect(gatewayID, connInfo)
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```python
     devList = connectMasterSvc.getDeviceList(gatewayID) 
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```python  
     deviceIDs = [devID]
@@ -238,7 +238,7 @@ class DeviceSvc:
     ```python
     deviceSvc = DeviceSvc(channel)
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```python
     info = deviceSvc.getInfo(deviceID)
@@ -289,7 +289,7 @@ class FingerSvc:
     templateData = fingerSvc.scan(deviceID, finger_pb2.TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD)
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```python
     fingerImage = fingerSvc.getImage(deviceID)
@@ -338,7 +338,7 @@ class CardSvc:
     cardSvc = CardSvc(channel)
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```python
     cardData = cardSvc.scan(deviceID)
@@ -412,7 +412,7 @@ class UserSvc:
     userInfos = userSvc.getUser(deviceID, userIDs)
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```python
     userInfos = []
@@ -441,7 +441,7 @@ class UserSvc:
     userSvc.setFinger(deviceID, userFingers)
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```python
     userSvc.delete(deviceID, newUserIDs)

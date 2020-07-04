@@ -36,7 +36,7 @@ toc_label: "Table of Contents"
     private const string TENANT_ID = "tenant1";
     private const string GATEWAY_ID = "gateway1";     
     ```
-7. Build & Run
+7. Build and run.
 
     ```
     cd example/connectMaster/test

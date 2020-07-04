@@ -20,7 +20,7 @@ toc_label: "Table of Contents"
     const std::string GATEWAY_ADDR = "192.168.0.2";
     const int GATEWAY_PORT = 4000;
     ```
-6. Build and run
+6. Build and run.
  
     * Windows
     
@@ -356,7 +356,7 @@ Status ConnectSvc::GetPendingList(RepeatedPtrField<PendingDeviceInfo>* deviceInf
 }  
 ```
 
-You can allow all the incoming connections by setting [AcceptFilter.allowAll]({{'/api/connect/' | relative_url }}#AcceptFilter) to true. Or, you can specify the devices to be allowed in [AcceptFilter.deviceIDs] ({{'/api/connect/' | relative_url }}#AcceptFilter).
+You can allow all the incoming connections by setting [AcceptFilter.allowAll]({{'/api/connect/' | relative_url }}#AcceptFilter) to true. Or, you can specify the devices to be allowed in [AcceptFilter.deviceIDs]({{'/api/connect/' | relative_url }}#AcceptFilter).
 
 ```cpp
 void AcceptMenu::AllowAll(void* arg) {

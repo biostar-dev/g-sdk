@@ -40,12 +40,12 @@ toc_label: "Table of Contents"
     private static final String DEVICE_ADDR = "192.168.0.110"; 
     private static final int DEVICE_PORT = 51211;
     ```
-7. Build
+7. Build.
 
     ```
     ./gradlew installDist
     ```
-8. Run
+8. Run.
    
     ```
     ./build/install/java/bin/quickStart -m
@@ -145,13 +145,13 @@ public class MasterClient extends GrpcClient {
 }
 ```
 
-1. Create the ___MasterClient___
+1. Create the ___MasterClient___.
 
     ```java
     MasterClient client = new MasterClient();
     ```
 
-2. Connect to the master gateway
+2. Connect to the master gateway.
 
     ```java
     try {
@@ -164,7 +164,7 @@ public class MasterClient extends GrpcClient {
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/java/connectMaster/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/java/connectMaster/' | relative_url}}).
 
 ```java
 // An example class showing the usage of the Connect API
@@ -223,13 +223,13 @@ public class ConnectMasterSvc {
     int deviceID = connectMasterSvc.connect(gatewayID, connInfo);
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```java
     List<DeviceInfo> devInfo = connectMasterSvc.getDeviceList(gatewayID); 
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```java  
     connectSvc.disconnect(deviceID);
@@ -271,7 +271,7 @@ public class DeviceSvc {
     ```java
     DeviceSvc deviceSvc = new DeviceSvc(DeviceGrpc.newBlockingStub(client.getChannel())); 
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```java
     FactoryInfo versionInfo = deviceSvc.getInfo(deviceID);
@@ -332,7 +332,7 @@ public class FingerSvc {
     byte[] templateData = ingerSvc.scan(deviceID, TemplateFormat.TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD);
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```java
     byte[] bmpImage = fingerSvc.getImage(deviceID);
@@ -392,7 +392,7 @@ public class CardSvc {
     CardSvc cardSvc = new CardSvc(CardGrpc.newBlockingStub(client.getChannel())); 
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```java
     CardData cardData = cardSvc.scan(deviceID);
@@ -483,7 +483,7 @@ public class UserSvc {
     List<UserInfo> userInfos = userSvc.getUser(deviceID, userIDs);
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```java
     List<UserInfo> newUsers = new ArrayList<UserInfo>();
@@ -515,7 +515,7 @@ public class UserSvc {
     userSvc.setFinger(deviceID, userFingers);
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```java
     userSvc.delete(deviceID, newUserIDs);

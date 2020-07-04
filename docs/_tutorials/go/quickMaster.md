@@ -39,13 +39,13 @@ toc_label: "Table of Contents"
     A2_IP = "192.168.0.110"
     A2_PORT = 51211
     ```
-6. Build
+6. Build.
 
     ```
     cd src/example/quick
     go build .
     ```
-7. Run
+7. Run.
    
     ```
     ./quick -m
@@ -199,13 +199,13 @@ func (c *MasterClient) ConnectTenant(caCertFile, tenantCertFile, tenantKeyFile, 
 
 ```
 
-1. Create the ___MasterClient___
+1. Create the ___MasterClient___.
 
     ```go
 	  masterClient := &master.MasterClient{}
     ```
 
-2. Connect to the master gateway
+2. Connect to the master gateway.
 
     ```go
 	  masterClient.ConnectTenant(MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE, MASTER_IP, MASTER_PORT)
@@ -288,13 +288,13 @@ func (s *ConnectMasterSvc) Disconnect(deviceIDs []uint32) error {
     deviceID, _ := connectMasterSvc.Connect(gatewayID, A2_IP, A2_PORT, USE_SSL)
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```go
     devList, _ = connectMasterSvc.GetDeviceList(gatewayID)
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```go  
     connectMasterSvc.Disconnect([]uint32{ deviceID })
@@ -342,7 +342,7 @@ func (s *DeviceSvc) GetCapabilityInfo(deviceID uint32) (*device.CapabilityInfo, 
     ```go
     deviceSvc = device.NewDeviceSvc(grpcClient.GetConn())
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```go
     devInfo, _ := deviceSvc.GetInfo(deviceID)
@@ -415,7 +415,7 @@ func (s *FingerSvc) GetConfig(deviceID uint32) (*finger.FingerConfig, error) {
     templData, score, _ := fingerSvc.Scan(deviceID, finger.TemplateFormat_TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD)
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```go
     bmpImage, _ := fingerSvc.GetImage(deviceID)
@@ -495,7 +495,7 @@ func (s *CardSvc) DeleteBlacklist(deviceID uint32, cardInfos []*card.BlacklistIt
     cardSvc = card.NewCardSvc(grpcClient.GetConn())
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```go
 	  cardData, _ := cardSvc.Scan(deviceID)
@@ -618,7 +618,7 @@ func (s *UserSvc) SetFinger(deviceID uint32, userFingers []*user.UserFinger) err
     userInfos, _ := userSvc.GetUser(deviceID, userIDs)
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```go
     newUsers := make([]*user.UserInfo, NUM_OF_NEW_USER)
@@ -660,7 +660,7 @@ func (s *UserSvc) SetFinger(deviceID uint32, userFingers []*user.UserFinger) err
     userSvc.SetFinger(deviceID, []*user.UserFinger{ userFingerData })
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```go
     userSvc.Delete(deviceID, newUserIDs)

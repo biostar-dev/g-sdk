@@ -42,7 +42,7 @@ toc_label: "Table of Contents"
     const bool USE_SSL = false;
     ```
 
-7. Build and run
+7. Build and run.
  
     * Windows
     
@@ -226,13 +226,13 @@ bool MasterClient::ConnectAdmin(std::string ipAddr, int port, std::string caFile
 }  
 ```
 
-1. Create the ___MasterClient___
+1. Create the ___MasterClient___.
 
     ```cpp
     auto masterClient = std::make_shared<MasterClient>();
     ```
 
-2. Connect to the master gateway as a tenant
+2. Connect to the master gateway as a tenant.
 
     ```cpp
     masterClient->ConnectTenant(MASTER_ADDR, MASTER_PORT, MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE); 
@@ -240,7 +240,7 @@ bool MasterClient::ConnectAdmin(std::string ipAddr, int port, std::string caFile
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/cpp/connectMaster/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/cpp/connectMaster/' | relative_url}}).
 
 ```cpp
 // An example class showing the usage of the Connect Master API
@@ -316,14 +316,14 @@ Status ConnectMasterSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
     Status status = connectMasterSvc->Connect(gatewayID, connInfo, &deviceID);
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```cpp
     RepeatedPtrField<DeviceInfo> deviceInfos;
     Status status = connectMasterSvc->GetDeviceList(gatewayID, &deviceInfos);
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```cpp  
     connectMasterSvc->Disconnect(deviceIDs);
@@ -378,7 +378,7 @@ Status DeviceSvc::GetCapabilityInfo(uint32_t deviceID, CapabilityInfo* info) {
     ```cpp
     DeviceSvc deviceSvc(client->GetChannel());
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```cpp
     FactoryInfo devInfo;
@@ -466,7 +466,7 @@ Status FingerSvc::GetConfig(uint32_t deviceID, FingerConfig* config) {
     Status status = fingerSvc.Scan(deviceID, finger::TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD, templateData);
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```cpp
     std::string bmpImage;
@@ -560,7 +560,7 @@ Status CardSvc::DeleteBlacklist(uint32_t deviceID, RepeatedPtrField<BlacklistIte
     CardSvc cardSvc(client->GetChannel());
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```cpp
     CardData cardData;
@@ -700,7 +700,7 @@ Status UserSvc::Delete(uint32_t deviceID, std::vector<std::string> &userIDs) {
     status = userSvc.GetUser(deviceID, &userIDs, &userInfos)
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```cpp
     RepeatedPtrField<UserInfo> newUserInfos;
@@ -750,7 +750,7 @@ Status UserSvc::Delete(uint32_t deviceID, std::vector<std::string> &userIDs) {
     status = userSvc.SetFinger(deviceID, userFingers);
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```cpp
     status = userSvc.Delete(deviceID, newUserIDs);

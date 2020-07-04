@@ -36,12 +36,12 @@ toc_label: "Table of Contents"
     const GATEWAY_ID = "gateway1";   
     ```
 
-6. Install packages
+6. Install packages.
 
     ```
     npm install
     ```
-7. Run
+7. Run.
    
     ```
     cd example/connectMaster/test

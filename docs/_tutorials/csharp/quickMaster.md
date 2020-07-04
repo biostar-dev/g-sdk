@@ -40,7 +40,7 @@ toc_label: "Table of Contents"
     private const string DEVICE_ADDR = "192.168.0.110";
     private const int DEVICE_PORT = 51211;
     ```
-7. Build & Run
+7. Build and run.
 
     ```
     cd example/quick
@@ -136,13 +136,13 @@ class MasterClient : GrpcClient {
 }
 ```
 
-1. Create the ___MasterClient___
+1. Create the ___MasterClient___.
 
     ```csharp
     var masterClient = new MasterClient();
     ```
 
-2. Connect to the master gateway
+2. Connect to the master gateway.
 
     ```csharp
     masterClient.ConnectTenant(MASTER_CA_FILE, TENANT_CERT_FILE, TENANT_KEY_FILE, MASTER_ADDR, MASTER_PORT);
@@ -150,7 +150,7 @@ class MasterClient : GrpcClient {
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/csharp/connectMaster/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect Master API]({{'/api/connectMaster/' | relative_url}}) and [the tutorial]({{'/csharp/connectMaster/' | relative_url}}).
 
 ```csharp
 // An example class showing the usage of the Connect Master API
@@ -207,13 +207,13 @@ class ConnectMasterSvc
     var devID = connectMasterSvc.Connect(gatewayID, connectInfo);
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```csharp
     var devList = connectMasterSvc.GetDeviceList(gatewayID);
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```csharp  
     connectMasterSvc.Disconnect(devID);
@@ -254,7 +254,7 @@ class DeviceSvc
     ```csharp
     DeviceSvc deviceSvc = new DeviceSvc(grpcClient.GetChannel()); 
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```csharp
     var info = deviceSvc.GetInfo(deviceID);
@@ -318,7 +318,7 @@ class FingerSvc
     var templateData = fingerSvc.Scan(deviceID, Finger.TemplateFormat.Suprema, QUALITY_THRESHOLD);
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```csharp
     var bmpImage = fingerSvc.GetImage(deviceID);
@@ -381,7 +381,7 @@ class CardSvc
     CardSvc cardSvc = new CardSvc(grpcClient.GetChannel()); 
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```csharp
     var cardData = cardSvc.Scan(deviceID);
@@ -479,7 +479,7 @@ class UserSvc
     var users = userSvc.GetUser(deviceID, userIDs);
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```csharp
     var newUsers = new User.UserInfo[NUM_OF_NEW_USER];
@@ -516,7 +516,7 @@ class UserSvc
     userSvc.SetFinger(deviceID, userFingers);
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```csharp
     userSvc.Delete(deviceID, newUserIDs);

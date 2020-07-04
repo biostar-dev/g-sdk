@@ -36,7 +36,7 @@ toc_label: "Table of Contents"
     const std::string TENANT_ID = "tenant1";
     const std::string GATEWAY_ID = "gateway1";   
     ```
-7. Build and run
+7. Build and run.
  
     * Windows
     

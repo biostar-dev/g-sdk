@@ -19,12 +19,12 @@ toc_label: "Table of Contents"
     private static final String SERVER_ADDR = "192.168.0.2";
     private static final int SERVER_PORT = 4000;
     ```
-6. Build
+5. Build.
 
     ```
     ./gradlew installDist
     ```
-7. Run
+6. Run.
    
     ```
     ./build/install/java/bin/connectTest

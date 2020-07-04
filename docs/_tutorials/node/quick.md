@@ -24,12 +24,12 @@ toc_label: "Table of Contents"
     const DEVICE_PORT = 51211;
     const USE_SSL = false;
     ```
-5. Install packages
+5. Install packages.
 
     ```
     npm install
     ```
-6. Run
+6. Run.
    
     ```
     cd example/quick
@@ -91,14 +91,14 @@ function getClient() {
 }
 ```
 
-1. Create the credential
+1. Create the credential.
 
     ```javascript
     var rootCa = fs.readFileSync(CA_FILE);
     var sslCreds = grpc.credentials.createSsl(rootCa);
     ```
 
-2. Connect to the gateway and get the client
+2. Connect to the gateway and get the client.
 
     ```javascript
     connect.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
@@ -174,7 +174,7 @@ function disconnect(deviceIDs) {
     });
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```javascript
     connect.getDeviceList()
@@ -183,7 +183,7 @@ function disconnect(deviceIDs) {
     });
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```javascript  
     var deviceIDs = [];
@@ -234,7 +234,7 @@ function getCapabilityInfo(devID) {
     ```javascript
     device.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```javascript
     device.getInfo(devID)
@@ -318,7 +318,7 @@ function getConfig(devID) {
     });
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```javascript
     finger.getImage(devID)
@@ -416,7 +416,7 @@ function getConfig(devID) {
     card.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```javascript
     card.scan(devID)
@@ -549,7 +549,7 @@ function setFinger(devID, userFingerInfos) {
     });
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```javascript
     var userInfos = [];
@@ -595,7 +595,7 @@ function setFinger(devID, userFingerInfos) {
     })
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```javascript
     user.deleteUser(devID, userIDs);

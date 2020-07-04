@@ -20,7 +20,7 @@ toc_label: "Table of Contents"
     private const string GATEWAY_ADDR = "192.168.0.2";
     private const int GATEWAY_PORT = 4000;
     ```
-6. Build & Run
+6. Build and run.
 
     ```
     cd example/connect/test

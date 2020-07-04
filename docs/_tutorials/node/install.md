@@ -13,8 +13,8 @@ title: "Node.js Installation"
 
 ## Node.js Library
 
-1. Download the latest version of Node.js library from [github]({{ site.last_ver }})
-2. Unzip the archive file
+1. Download the latest version of Node.js library from [github]({{ site.last_ver }}).
+2. Unzip the archive file.
 
 ## Examples
 

@@ -24,7 +24,7 @@ toc_label: "Table of Contents"
     DEVICE_PORT = 51211
     USE_SSL = False
     ```
-5. Run
+5. Run.
    
     ```
     cd example/quick
@@ -78,7 +78,7 @@ class GatewayClient:
     return self.channel
 ```
 
-1. Create the ___GatewayClient___ and connect to the gateway
+1. Create the ___GatewayClient___ and connect to the gateway.
 
     ```python
     client = GatewayClient(GATEWAY_IP, GATEWAY_PORT, GATEWAY_CA_FILE)
@@ -121,13 +121,13 @@ class ConnectSvc:
     devID = connectSvc.connect(connInfo)
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```python
     devList = connectSvc.getDeviceList() 
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```python  
     deviceIDs = [devID]
@@ -160,7 +160,7 @@ class DeviceSvc:
     ```python
     deviceSvc = DeviceSvc(channel)
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```python
     info = deviceSvc.getInfo(deviceID)
@@ -211,7 +211,7 @@ class FingerSvc:
     templateData = fingerSvc.scan(deviceID, finger_pb2.TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD)
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```python
     fingerImage = fingerSvc.getImage(deviceID)
@@ -260,7 +260,7 @@ class CardSvc:
     cardSvc = CardSvc(channel)
     ```
 
-2. Scan a card
+2. Scan a card.
 
     ```python
     cardData = cardSvc.scan(deviceID)
@@ -334,7 +334,7 @@ class UserSvc:
     userInfos = userSvc.getUser(deviceID, userIDs)
     ```
 
-3. Enroll new users
+3. Enroll new users.
 
     ```python
     userInfos = []
@@ -363,7 +363,7 @@ class UserSvc:
     userSvc.setFinger(deviceID, userFingers)
     ```
 
-5. Delete new users
+5. Delete new users.
 
     ```python
     userSvc.delete(deviceID, newUserIDs)
