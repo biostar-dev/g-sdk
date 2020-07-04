@@ -132,13 +132,13 @@ bool GatewayClient::Connect(std::string ipAddr, int port, std::string caFile) {
 }
 ```
 
-1. Create the ___GatewayClient___
+1. Create the ___GatewayClient___.
 
     ```cpp
     auto gatewayClient = std::make_shared<GatewayClient>();
     ```
 
-2. Connect to the gateway
+2. Connect to the gateway.
 
     ```cpp
     gatewayClient->Connect(GATEWAY_ADDR, GATEWAY_PORT, GATEWAY_CA_FILE);
@@ -218,14 +218,14 @@ Status ConnectSvc::Disconnect(std::vector<uint32_t>& deviceIDs) {
     Status status = connectSvc->Connect(connInfo, &deviceID);
     ```
 
-3. Get the devices, which are managed by the gateway
+3. Get the devices, which are managed by the gateway.
    
     ```cpp
     RepeatedPtrField<DeviceInfo> deviceInfos;
     Status status = connectSvc->GetDeviceList(&deviceInfos);
     ```
 
-4. Disconnect the device
+4. Disconnect the device.
    
     ```cpp  
     connectSvc->Disconnect(deviceIDs);
@@ -280,7 +280,7 @@ Status DeviceSvc::GetCapabilityInfo(uint32_t deviceID, CapabilityInfo* info) {
     ```cpp
     DeviceSvc deviceSvc(client->GetChannel());
     ```
-2. Get the version information of the device
+2. Get the version information of the device.
 
     ```cpp
     FactoryInfo devInfo;
@@ -368,7 +368,7 @@ Status FingerSvc::GetConfig(uint32_t deviceID, FingerConfig* config) {
     Status status = fingerSvc.Scan(deviceID, finger::TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD, templateData);
     ```
 
-3. Get the scanned fingerprint image and save it to a BMP file
+3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```cpp
     std::string bmpImage;
