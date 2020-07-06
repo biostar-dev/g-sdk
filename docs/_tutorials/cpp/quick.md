@@ -146,7 +146,7 @@ bool GatewayClient::Connect(std::string ipAddr, int port, std::string caFile) {
 
 ## 3. Connect to BioStar devices
 
-There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/cpp/connect/' | relative_url}})..
+There are three ways to manage the connections with BioStar devices. This example shows only the synchronous API. For the other APIs, refer to [the Connect API]({{'/api/connect/' | relative_url}}) and [the tutorial]({{'/cpp/connect/' | relative_url}}).
 
 ```cpp
 // An example class showing the usage of the Connect API
