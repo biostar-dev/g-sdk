@@ -121,6 +121,9 @@ Configure access levels and access groups.
 ### [Door]({{ 'api/door/' | relative_url }})
 Configure doors and manage them.
 
+### [Lift]({{ 'api/lift/' | relative_url }})
+Configure lifts and manage them.
+
 ### [Schedule]({{ 'api/schedule/' | relative_url }})
 Make schedules, which will be used for access control and other configurations. 
 
@@ -146,11 +149,33 @@ Configure the LEDs and the buzzer for each status.
 ### [System]({{ 'api/system/' | relative_url }})
 Configure the miscellaneous options of a device. You can also check if the device is locked. 
 
+### [Thermal]({{ 'api/thermal/' | relative_url }})
+Configure the options related to thermal cameras.
+
 ### [Time]({{ 'api/time/' | relative_url }})
 Configure the options such as Daylight Saving Time(DST) and time synchronization. You can also set the clock on the device. 
 
+### [VoIP]({{ 'api/voip/' | relative_url }})
+Configure the options related to VoIP(Voice over IP).
+
 ### [Wiegand]({{ 'api/wiegand/' | relative_url }})
 Configure Wiegand formats which will be used for interpreting card data and interfacing with 3rd party readers/controllers. It also provides APIs for managing Wiegand slave devices.
+
+## [Zone APIs]({{ 'api/zone/' | relative_url }})
+
+You can configure several types of zones for high-level functions such as anti passback and intrusion alarm. G-SDK supports only local zones, where all devices should be within a RS485 network. 
+
+### [Anti passback zone]({{ 'api/zone/apb/' | relative_url }})
+
+### [Timed anti passback zone]({{ 'api/zone/timed' | relative_url }})
+
+### [Intrusion alarm zone]({{ 'api/zone/intrusion' | relative_url }})
+
+### [Fire alarm zone]({{ 'api/zone/fire' | relative_url }})
+
+### [Scheduled lock zone]({{ 'api/zone/lock' | relative_url }})
+
+### [Interlock zone]({{ 'api/zone/interlock' | relative_url }})
 
 ## Misc. APIs
 
@@ -159,3 +184,5 @@ Get the version of G-SDK.
 
 ### [Err]({{ 'api/err/' | relative_url }}) 
 The error definition for [XXX_Multi commands](#xxx_multi-command). 
+
+

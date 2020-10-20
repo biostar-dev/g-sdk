@@ -13,7 +13,7 @@ toc_label: "Table of Contents"
    * Copy the root certificate of the master gateway to your working directory.  As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory of the master gateway.
    * Copy the administrator certificate and its private key to your working directory.    
    * Copy the tenant certificate and its private key to your working directory.
-5. Change the server and the device information in example/quick/quick.py_ as needed.
+5. Change the server and the device information in _example/quick/quick.py_ as needed.
    
     ```python
     # the path of the root certificate

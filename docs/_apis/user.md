@@ -35,11 +35,11 @@ numOfFace
 : Maximum 5 faces can be registered to a user.
 
 authGroupID
-: Used only for group matching of face. Refer to [Face.AuthGroup]({{'/api/face/' | relative_url }}#auth-group).
+: Used only for group matching of face. Refer to [Face.AuthGroup]({{'/api/face/' | relative_url}}#auth-group).
 
 ### User Setting
 
-You can specify the effective and expiry time of a user using __startTime__ and __endTime__. You can also specify the private authentication modes of the user using __fingerAuthMode__, __cardAuthMode__, and __IDAuthMode__.
+You can specify the effective and expiry time of a user using __startTime__ and __endTime__. You can also specify the private authentication modes of the user using __fingerAuthMode__, __cardAuthMode__, and __IDAuthMode__. For the available modes, refer to [authentication modes]({{'/api/auth/' | relative_url}}#AuthMode). Since FaceStation F2 provides [different authentication modes]({{'/api/auth/' | relative_url}}#authentication-mode-for-facestation-f2), you have to use __faceAuthExtMode__, __fingerAuthExtMode__, __cardAuthExtMode__, and __IDAuthExtMode__ for it.
 
 The private authentication modes will be applied only when [AuthConfig.usePrivateAuth]({{'/api/auth/' | relative_url }}#AuthConfig) is true.
 {: .notice--warning}
@@ -50,10 +50,16 @@ message UserSetting {
   uint32 startTime;
   uint32 endTime;
 
-  uint32 fingerAuthMode;
+  uint32 biometricAuthMode;
   uint32 cardAuthMode;
   uint32 IDAuthMode;
   uint32 securityLevel;
+
+  // Only for FaceStation F2
+  uint32 faceAuthExtMode;
+  uint32 fingerAuthExtMode;
+  uint32 cardAuthExtMode;
+  uint32 IDAuthExtMode;  
 }
 ```
 {: #UserSetting}
@@ -64,29 +70,29 @@ startTime
 endTime
 : The user will be valid only until this time. If 0, no restriction. In Unix format.
 
-fingerAuthMode
+biometricAuthMode
 : 
-  | 0 | Fingerprint only |  
-  | 1 | Fingerprint + PIN | 
+  | AUTH_MODE_BIOMETRIC_ONLY | Fingerprint or Face |  
+  | AUTH_MODE_BIOMETRIC_PIN | (Fingerprint or Face) + PIN | 
   | 0xFE | Not permitted |
   | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
 
 cardAuthMode
 : 
-  | 2 | Card only |  
-  | 3 | Card + Fingerprint | 
-  | 4 | Card + PIN |
-  | 5 | Card + (Fingerprint or PIN) | 
-  | 6 | Card + Fingerprint + PIN |
+  | AUTH_MODE_CARD_ONLY | Card |  
+  | AUTH_MODE_CARD_BIOMETRIC | Card + (Fingerprint or Face) | 
+  | AUTH_MODE_CARD_PIN | Card + PIN |
+  | AUTH_MODE_CARD_BIOMETRIC_OR_PIN | Card + (Fingerprint or Face or PIN) | 
+  | AUTH_MODE_CARD_BIOMETRIC_PIN | Card + (Fingerprint or Face) + PIN |
   | 0xFE | Not permitted |
   | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
 
 idAuthMode
 : 
-  | 7 | ID + Fingerprint |  
-  | 8 | ID + PIN | 
-  | 9 | ID + (Fingerprint or PIN) | 
-  | 10 | ID + Fingerprint + PIN |
+  | AUTH_MODE_ID_BIOMETRIC | ID + (Fingerprint or Face) |  
+  | AUTH_MODE_ID_PIN | ID + PIN | 
+  | AUTH_MODE_ID_BIOMETRIC_OR_PIN | ID + (Fingerprint or Face or PIN) | 
+  | AUTH_MODE_ID_BIOMETRIC_PIN | ID + (Fingerprint or Face) + PIN |
   | 0xFE | Not permitted |
   | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
 
@@ -99,6 +105,69 @@ securityLevel
   | 3 | Normal |
   | 4 | More secure |
   | 5 | Most secure | 
+
+faceAuthExtMode
+: FaceStation F2 only
+
+  | AUTH_EXT_MODE_FACE_ONLY | Face |  
+  | AUTH_EXT_MODE_FACE_FINGERPRINT | Face + Fingerprint | 
+  | AUTH_EXT_MODE_FACE_PIN | Face + PIN  | 
+  | AUTH_EXT_MODE_FACE_FINGERPRINT_OR_PIN | Face + (Fingerprint or PIN) | 
+  | AUTH_EXT_MODE_FACE_FINGERPRINT_PIN | Face + Fingerprint + PIN | 
+  | 0xFE | Not permitted |
+  | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
+
+fingerAuthExtMode
+: FaceStation F2 only
+
+  | AUTH_EXT_MODE_FINGERPRINT_ONLY | Fingerprint |  
+  | AUTH_EXT_MODE_FINGERPRINT_FACE | Fingerprint + Face | 
+  | AUTH_EXT_MODE_FINGERPRINT_PIN | Fingerprint + PIN  | 
+  | AUTH_EXT_MODE_FINGERPRINT_FACE_OR_PIN | Fingerprint + (Face or PIN) | 
+  | AUTH_EXT_MODE_FINGERPRINT_FACE_PIN | Fingerprint + Face + PIN | 
+  | 0xFE | Not permitted |
+  | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
+
+cardAuthExtMode
+: FaceStation F2 only
+
+  | AUTH_EXT_MODE_CARD_ONLY | Card |  
+  | AUTH_EXT_MODE_CARD_FACE | Card + Face | 
+  | AUTH_EXT_MODE_CARD_FINGERPRINT | Card + Fingerprint  | 
+  | AUTH_EXT_MODE_CARD_PIN | Card + PIN | 
+  | AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT | Card + (Face or Fingerprint) | 
+  | AUTH_EXT_MODE_CARD_FACE_OR_PIN | Card + (Face or PIN)e |  
+  | AUTH_EXT_MODE_CARD_FINGERPRINT_OR_PIN | Card + (Fingerprint or PIN) | 
+  | AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_OR_PIN | Card + (Face or Fingerprint or PIN)  | 
+  | AUTH_EXT_MODE_CARD_FACE_FINGERPRINT | Card + Face + Fingerprint | 
+  | AUTH_EXT_MODE_CARD_FACE_PIN | Card + Face + PIN | 
+  | AUTH_EXT_MODE_CARD_FINGERPRINT_FACE | Card + Fingerprint + Face |  
+  | AUTH_EXT_MODE_CARD_FINGERPRINT_PIN | Card + Fingerprint + PIN | 
+  | AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_PIN | Card + (Face or Fingerprint) + PIN  | 
+  | AUTH_EXT_MODE_CARD_FACE_FINGERPRINT_OR_PIN | Card + Face + (Fingerprint or PIN) | 
+  | AUTH_EXT_MODE_CARD_FINGERPRINT_FACE_OR_PIN | Card + Fingerprint + (Face or PIN) | 
+  | 0xFE | Not permitted |
+  | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) | 
+
+IDAuthExtMode
+: FaceStation F2 only
+
+  | AUTH_EXT_MODE_ID_FACE | ID + Face | 
+  | AUTH_EXT_MODE_ID_FINGERPRINT | ID + Fingerprint  | 
+  | AUTH_EXT_MODE_ID_PIN | ID + PIN | 
+  | AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT | ID + (Face or Fingerprint) | 
+  | AUTH_EXT_MODE_ID_FACE_OR_PIN | ID + (Face or PIN)e |  
+  | AUTH_EXT_MODE_ID_FINGERPRINT_OR_PIN | ID + (Fingerprint or PIN) | 
+  | AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_OR_PIN | ID + (Face or Fingerprint or PIN)  | 
+  | AUTH_EXT_MODE_ID_FACE_FINGERPRINT | ID + Face + Fingerprint | 
+  | AUTH_EXT_MODE_ID_FACE_PIN | ID + Face + PIN | 
+  | AUTH_EXT_MODE_ID_FINGERPRINT_FACE | ID + Fingerprint + Face |  
+  | AUTH_EXT_MODE_ID_FINGERPRINT_PIN | ID + Fingerprint + PIN | 
+  | AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_PIN | ID + (Face or Fingerprint) + PIN  | 
+  | AUTH_EXT_MODE_ID_FACE_FINGERPRINT_OR_PIN | ID + Face + (Fingerprint or PIN) | 
+  | AUTH_EXT_MODE_ID_FINGERPRINT_FACE_OR_PIN | ID + Fingerprint + (Face or PIN) | 
+  | 0xFE | Not permitted |
+  | 0xFF | Undefined. Use the settings of [AuthConfig]({{'/api/auth/' | relative_url }}#AuthConfig) |   
 
 ### User Information
 
@@ -570,4 +639,4 @@ For security, PIN is stored as a hash value. __GetPINHash__ converts a pin to 32
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| hashVal | string | 32 bytes hash value of the PIN |
+| hashVal | byte[] | 32 bytes hash value of the PIN |

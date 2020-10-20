@@ -37,7 +37,7 @@ baseurl: /g-sdk
 github_username: biostar-dev
 repository: "biostar-dev/g-sdk"
 repo_url: &repo_url_val "https://github.com/biostar-dev/g-sdk/"
-last_ver: "https://github.com/biostar-dev/g-sdk/releases/tag/V1.1.0"
+last_ver: "https://github.com/biostar-dev/g-sdk/releases/tag/V1.2.0"
 suprema_url: &suprema_url_val "https://www.supremainc.com"
 kb_url: &kb_url_val "http://kb.supremainc.com/"
 
@@ -50,7 +50,7 @@ analytics:
   google:
     tracking_id: "UA-172333127-1"
     anonymize_ip: false # default
-
+    
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
 # to override the default setting.

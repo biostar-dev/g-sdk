@@ -142,6 +142,7 @@ message TNALog {
   uint32 deviceID;
   string userID;
   uint32 eventCode;
+  uint32 subCode;
   Key TNAKey;
 }
 ```
@@ -153,8 +154,11 @@ ID
 timestamp
 : In Unix time format. The number of seconds elapsed since January 1, 1970.
 
-eventCode
-: Refer to [BS2Event.code](http://kb.supremainc.com/bs2sdk/doku.php?id=en:log_management_api).
+[eventCode]({{'/api/event/' | relative_url}}#EventCode)
+: 16 bit code identifying the event type.
+
+[subCode]({{'/api/event/' | relative_url}}#SubCode)
+: Some event types have an additional 8 bit code providing auxiliary information.
 
 [TNAKey](#Key)
 : The selected T&A key for the authentication event. 
@@ -186,6 +190,7 @@ message JobCodeLog {
   uint32 deviceID;
   string userID;
   uint32 eventCode;
+  uint32 subCode;
   uint32 jobCode;
 }
 ```
@@ -197,8 +202,11 @@ ID
 timestamp
 : In Unix time format. The number of seconds elapsed since January 1, 1970.
 
-eventCode
-: The authentication event code such as ...
+[eventCode]({{'/api/event/' | relative_url}}#EventCode)
+: 16 bit code identifying the event type.
+
+[subCode]({{'/api/event/' | relative_url}}#SubCode)
+: Some event types have an additional 8 bit code providing auxiliary information.
 
 [jobCode](#JobCode)
 : The job code selected for the authentication event by the user. 

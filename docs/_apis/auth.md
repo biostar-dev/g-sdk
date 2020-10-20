@@ -80,7 +80,7 @@ mode
 
 scheduleID
 : The ID of the schedule during which the mode is applied. Refer to [Schedule]({{'/api/schedule/' | relative_url}}#Schedule).
- 
+
 ```protobuf
 enum AuthMode {
   AUTH_MODE_BIOMETRIC_ONLY = 0;
@@ -96,9 +96,55 @@ enum AuthMode {
   AUTH_MODE_ID_PIN = 8;
   AUTH_MODE_ID_BIOMETRIC_OR_PIN = 9;
   AUTH_MODE_ID_BIOMETRIC_PIN = 10;
+
+  // The below modes are only for FaceStation F2
+  AUTH_EXT_MODE_FACE_ONLY	= 11;
+  AUTH_EXT_MODE_FACE_FINGERPRINT = 12;
+  AUTH_EXT_MODE_FACE_PIN = 13;
+  AUTH_EXT_MODE_FACE_FINGERPRINT_OR_PIN = 14;
+  AUTH_EXT_MODE_FACE_FINGERPRINT_PIN = 15;
+
+  AUTH_EXT_MODE_FINGERPRINT_ONLY = 16;
+  AUTH_EXT_MODE_FINGERPRINT_FACE = 17;
+  AUTH_EXT_MODE_FINGERPRINT_PIN = 18;
+  AUTH_EXT_MODE_FINGERPRINT_FACE_OR_PIN = 19;
+  AUTH_EXT_MODE_FINGERPRINT_FACE_PIN = 20;
+
+  AUTH_EXT_MODE_CARD_ONLY = 21;
+  AUTH_EXT_MODE_CARD_FACE = 22;
+  AUTH_EXT_MODE_CARD_FINGERPRINT = 23;
+  AUTH_EXT_MODE_CARD_PIN = 24;
+  AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT = 25;
+  AUTH_EXT_MODE_CARD_FACE_OR_PIN = 26;
+  AUTH_EXT_MODE_CARD_FINGERPRINT_OR_PIN = 27;
+  AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_OR_PIN = 28;
+  AUTH_EXT_MODE_CARD_FACE_FINGERPRINT = 29;
+  AUTH_EXT_MODE_CARD_FACE_PIN = 30;
+  AUTH_EXT_MODE_CARD_FINGERPRINT_FACE = 31;
+  AUTH_EXT_MODE_CARD_FINGERPRINT_PIN = 32;
+  AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_PIN = 33;
+  AUTH_EXT_MODE_CARD_FACE_FINGERPRINT_OR_PIN = 34;
+  AUTH_EXT_MODE_CARD_FINGERPRINT_FACE_OR_PIN = 35;
+
+  AUTH_EXT_MODE_ID_FACE = 36;
+  AUTH_EXT_MODE_ID_FINGERPRINT = 37;
+  AUTH_EXT_MODE_ID_PIN = 38;
+  AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT = 39;
+  AUTH_EXT_MODE_ID_FACE_OR_PIN = 40;
+  AUTH_EXT_MODE_ID_FINGERPRINT_OR_PIN = 41;
+  AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_OR_PIN = 42;
+  AUTH_EXT_MODE_ID_FACE_FINGERPRINT = 43;
+  AUTH_EXT_MODE_ID_FACE_PIN = 44;
+  AUTH_EXT_MODE_ID_FINGERPRINT_FACE = 45;
+  AUTH_EXT_MODE_ID_FINGERPRINT_PIN = 46;
+  AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_PIN = 47;
+  AUTH_EXT_MODE_ID_FACE_FINGERPRINT_OR_PIN = 48;
+  AUTH_EXT_MODE_ID_FINGERPRINT_FACE_OR_PIN = 49;  
 }
 ```
 {: #AuthMode}
+
+### Authentication mode
 
 AUTH_MODE_BIOMETRIC_ONLY
 : Fingerprint or Face
@@ -136,6 +182,126 @@ AUTH_MODE_ID_BIOMETRIC_PIN
 Some authentication modes are available only for specific devices. For example, __AUTH_MODE_ID_XXX__ modes are available only for the devices with key pads such as BioStation N2 and BioStation 2. 
 {: .notice--warning}
 
+### Authentication mode for FaceStation F2
+
+Some models of FaceStation F2 provide both face and fingerprint authentication. To make full use of this multimodal function, a new set of authentication modes, __AUTH_EXT_MODE_XXX__, are adopted for FaceStation F2. Please note that there is no backward compatibility. You have to use these modes only for FaceStation F2. 
+
+AUTH_EXT_MODE_FACE_ONLY
+: Face 
+
+AUTH_EXT_MODE_FACE_FINGERPRINT
+: Face + Fingerprint
+
+AUTH_EXT_MODE_FACE_PIN
+: Face + PIN 
+
+AUTH_EXT_MODE_FACE_FINGERPRINT_OR_PIN
+: Face + (Fingerprint or PIN)
+
+AUTH_EXT_MODE_FACE_FINGERPRINT_PIN
+: Face + Fingerprint + PIN
+
+AUTH_EXT_MODE_FINGERPRINT_ONLY
+: Fingerprint 
+
+AUTH_EXT_MODE_FINGERPRINT_FACE
+: Fingerprint + Face
+
+AUTH_EXT_MODE_FINGERPRINT_PIN
+: Fingerprint + PIN
+
+AUTH_EXT_MODE_FINGERPRINT_FACE_OR_PIN
+: Fingerprint + (Face or PIN)
+
+AUTH_EXT_MODE_FINGERPRINT_FACE_PIN
+: Fingerprint + FACE + PIN
+
+AUTH_EXT_MODE_CARD_ONLY
+: Card
+
+AUTH_EXT_MODE_CARD_FACE
+: Card + Face
+
+AUTH_EXT_MODE_CARD_FINGERPRINT
+: Card + Fingerprint
+
+AUTH_EXT_MODE_CARD_PIN
+: Card + PIN
+
+AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT
+: Card + (Face or Fingerprint)
+
+AUTH_EXT_MODE_CARD_FACE_OR_PIN
+: Card + (Face or PIN)
+
+AUTH_EXT_MODE_CARD_FINGERPRINT_OR_PIN
+: Card + (Fingerprint or PIN)
+
+AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_OR_PIN
+: Card + (Face or Fingerprint or PIN)
+
+AUTH_EXT_MODE_CARD_FACE_FINGERPRINT
+: Card + Face + Fingerprint
+
+AUTH_EXT_MODE_CARD_FACE_PIN
+: Card + Face + PIN
+
+AUTH_EXT_MODE_CARD_FINGERPRINT_FACE
+: Card + Fingerprint + Face
+
+AUTH_EXT_MODE_CARD_FINGERPRINT_PIN
+: Card + Fingerprint + PIN
+
+AUTH_EXT_MODE_CARD_FACE_OR_FINGERPRINT_PIN
+: Card + (Face or Fingerprint) + PIN
+
+AUTH_EXT_MODE_CARD_FACE_FINGERPRINT_OR_PIN
+: Card + Face + (Fingerprint or PIN)
+
+AUTH_EXT_MODE_CARD_FINGERPRINT_FACE_OR_PIN
+: Card + Fingerprint + (Face or PIN)
+
+AUTH_EXT_MODE_ID_FACE
+: ID + Face
+
+AUTH_EXT_MODE_ID_FINGERPRINT
+: ID + Fingerprint
+
+AUTH_EXT_MODE_ID_PIN
+: ID + PIN
+
+AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT
+: ID + (Face or Fingerprint)
+
+AUTH_EXT_MODE_ID_FACE_OR_PIN
+: ID + (Face or PIN)
+
+AUTH_EXT_MODE_ID_FINGERPRINT_OR_PIN
+: ID + (Fingerprint or PIN)
+
+AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_OR_PIN
+: ID + (Face or Fingerprint or PIN)
+
+AUTH_EXT_MODE_ID_FACE_FINGERPRINT
+: ID + Face + Fingerprint
+
+AUTH_EXT_MODE_ID_FACE_PIN
+: ID + Face + PIN
+
+AUTH_EXT_MODE_ID_FINGERPRINT_FACE
+: ID + Fingerprint + Face
+
+AUTH_EXT_MODE_ID_FINGERPRINT_PIN
+: ID + Fingerprint + PIN
+
+AUTH_EXT_MODE_ID_FACE_OR_FINGERPRINT_PIN
+: ID + (Face or Fingerprint) + PIN
+
+AUTH_EXT_MODE_ID_FACE_FINGERPRINT_OR_PIN
+: ID + Face + (Fingerprint or PIN)
+
+AUTH_EXT_MODE_ID_FINGERPRINT_FACE_OR_PIN
+: ID + Fingerprint + (Face or PIN)
 
 ```protobuf
 enum FaceDetectionLevel {
@@ -241,6 +407,9 @@ Set the configuration of a device.
 ### SetConfigMulti
 
 Set the configurations of multiple devices.
+
+Since FaceStation F2 has its own authentication modes, you can not mix them with other models. 
+{: .notice--warning}
 
 | Request |
 

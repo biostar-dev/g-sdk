@@ -3,28 +3,57 @@ title: "Face API"
 toc_label: "Face"  
 ---
 
+Face authentication is provided by FaceStation 2, FaceLite, and FaceStation F2. The newest model, FaceStation F2, uses a fusion matching algorithm to improve its authentication performance. Due to this, there are a couple of differences between them.
+
+|      |       | FaceStation 2 & FaceLite | FaceStation F2 |
+| ---- | ----- | ------------------------ | -----------    |
+| FaceData | flag  | BS2_FACE_FLAG_NONE  |  BS2_FACE_FLAG_F2 |
+|          | templates  | Maximum 30  | Maximum 10 |
+|          | imageData  | Visual Image  | Visual Image |
+|          | irTemplates | Not Used | Maximum 10 |
+|          | irImageData | Not Used | IR Image |
+| Auth Group |  | Supported  | Not Supported  |
+
+{: #F2Differences}
+
 ## Scan
 
 ```protobuf
+enum FaceFlag {
+  BS2_FACE_FLAG_NONE = 0x00;
+  BS2_FACE_FLAG_F2 = 0x100;
+}
+
 message FaceData {
   int32 index;
   uint32 flag;
   repeated bytes templates;
-
   bytes imageData;
+
+  // Only for FaceStation F2
+  repeated bytes irTemplates;
+  bytes irImageData;
 }
 ```
 {: #FaceData}
 
-index/flag
+index
 : Can be used for managing face data in your applications. Not used by the device.
 
+flag
+: If BS2_FACE_FLAG_F2 is set, it means that the face data is acquired by FaceStation F2. And, the data will include __irTemplates__ and __irImageData__. Otherwise, it is from FaceStation 2 or FaceLite, and there will be neither __irTemplates__ nor __irImageData__. 
+
 templates
-: Maximum 30 face templates can be returned.
+: Maximum 30 face templates can be returned from FaceStation 2 or FaceLite. For FaceStation F2, the maximum number is 10.
 
 imageData
 : A BMP image of the face will be returned.
 
+irTemplates
+: Maximum 10 IR templates can be returned from FaceStation F2.
+
+irImageData
+: An IR image of the face will be returned.
 
 ```protobuf
 enum FaceEnrollThreshold {
@@ -67,7 +96,7 @@ Scan a face and get its template data. With higher __enrollThreshold__, you can 
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| faceData | [FaceData](#FaceData) | The scanned face templates |
+| faceData | [FaceData](#FaceData) | The scanned face data |
 
 ## Config
 
@@ -178,6 +207,9 @@ The more the number of face templates, the higher the False Acceptance Ratio(FAR
 * Create the authentication groups using [AddAuthGroup](#addauthgroup) or [AddAuthGroupMulti](#addauthgroupmulti).
 * Set [UserHdr.authGroupID]({{'/api/user/' | relative_url}}#UserHdr).
 * Enroll or update users using [Enroll]({{'/api/user/' | relative_url}}#enroll) or [EnrollMulti]({{'/api/user/' | relative_url}}#enrollmulti).
+
+Authentication groups are not supported by FaceStation F2. 
+{: .notice--warning}
 
 ```protobuf
 message AuthGroup {

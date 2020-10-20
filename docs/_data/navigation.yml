@@ -61,6 +61,8 @@ api:
         url: /api/finger/
       - title: Gateway
         url: /api/gateway/
+      - title: Lift
+        url: /api/lift/
       - title: Login
         url: /api/login/
       - title: Network
@@ -75,14 +77,20 @@ api:
         url: /api/system/
       - title: Tenant
         url: /api/tenant/
+      - title: Thermal
+        url: /api/thermal/
       - title: Time
         url: /api/time/
       - title: T&A
         url: /api/tna/
       - title: User
         url: /api/user/
+      - title: VoIP
+        url: /api/voip/
       - title: Wiegand
         url: /api/wiegand/
+      - title: Zone
+        url: /api/zone/
 
   - title: "Languages"
     children:
@@ -133,12 +141,12 @@ java:
         url: "/java/quickMaster/"
       - title: "Connect Master API"
         url: "/java/connectMaster/"        
-#      - title: "User"
-#        url: "/java/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/java/tutorials/auth/"
-#      - title: "Event"
-#        url: "/java/tutorials/event/"
+      - title: "User API"
+        url: "/java/user/"
+      - title: "T&A API"
+        url: "/java/tna/"
+      - title: "Thermal API"
+        url: "/java/thermal/"
 
 csharp:
   - title: "Installation"
@@ -153,12 +161,12 @@ csharp:
         url: "/csharp/quickMaster/"
       - title: "Connect Master API"
         url: "/csharp/connectMaster/"        
-#      - title: "User"
-#        url: "/csharp/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/csharp/tutorials/auth/"
-#      - title: "Event"
-#        url: "/csharp/tutorials/event/"
+      - title: "User API"
+        url: "/csharp/user/"
+      - title: "T&A API"
+        url: "/csharp/tna/"
+      - title: "Thermal API"
+        url: "/csharp/thermal/"
 
 node:
   - title: "Installation"
@@ -173,12 +181,12 @@ node:
         url: "/node/quickMaster/"
       - title: "Connect Master API"
         url: "/node/connectMaster/"          
-#      - title: "User"
-#        url: "/node/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/node/tutorials/auth/"
-#      - title: "Event"
-#        url: "/node/tutorials/event/"
+      - title: "User API"
+        url: "/node/user/"
+      - title: "T&A API"
+        url: "/node/tna/"
+      - title: "Thermal API"
+        url: "/node/thermal/"
 
 python:
   - title: "Installation"
@@ -193,12 +201,12 @@ python:
         url: "/python/quickMaster/"
       - title: "Connect Master API"
         url: "/python/connectMaster/"           
-#      - title: "User"
-#        url: "/python/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/python/tutorials/auth/"
-#      - title: "Event"
-#        url: "/python/tutorials/event/"
+      - title: "User API"
+        url: "/python/user/"
+      - title: "T&A API"
+        url: "/python/tna/"
+      - title: "Thermal API"
+        url: "/python/thermal/"
 
 go:
   - title: "Installation"
@@ -213,13 +221,12 @@ go:
         url: "/go/quickMaster/"
       - title: "Connect Master API"
         url: "/go/connectMaster/"
-
-#      - title: "User"
-#        url: "/go/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/go/tutorials/auth/"
-#      - title: "Event"
-#        url: "/go/tutorials/event/"
+      - title: "User API"
+        url: "/go/user/"
+      - title: "T&A API"
+        url: "/go/tna/"
+      - title: "Thermal API"
+        url: "/go/thermal/"
 
 cpp:
   - title: "Installation"
@@ -234,9 +241,9 @@ cpp:
         url: "/cpp/quickMaster/"
       - title: "Connect Master API"
         url: "/cpp/connectMaster/"        
-#      - title: "User"
-#        url: "/cpp/tutorials/user/"
-#      - title: "Authentication"
-#        url: "/cpp/tutorials/auth/"
-#      - title: "Event"
-#        url: "/cpp/tutorials/event/"
+      - title: "User API"
+        url: "/cpp/user/"
+      - title: "T&A API"
+        url: "/cpp/tna/"
+      - title: "Thermal API"
+        url: "/cpp/thermal/"

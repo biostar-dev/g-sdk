@@ -96,7 +96,7 @@ message TimePeriod {
 {: #TimePeriod}
 
 startTime/endTime
-: Indicate the time in a day in seconds. For example, 5400 means 1:30 AM, and 45000 means 12:30 PM.
+: Indicate the time in a day in minutes. For example, 90 means 1:30 AM, and 750 means 12:30 PM.
 
 
 ### GetList

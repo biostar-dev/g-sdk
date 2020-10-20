@@ -13,6 +13,8 @@ An access group consists of access levels, which specify the accessible doors fo
 4. Make [access groups](#access-group) using the access levels.
 5. Assign access groups to users using [User.SetAccessGroup]({{'/api/user/' | relative_url}}#setaccessgroup) or [User.SetAccessGroupMulti]({{'/api/user/' | relative_url}}#setaccessgroupmulti).
 
+In addition to doors, you can use access groups to limit access to specific floors in a lift. In this case, floor levels, which specify the accessible floors for specific schedules, should be defined.
+
 ```protobuf
 message AccessGroup {
   uint32 ID;
@@ -31,7 +33,7 @@ name
 : Maximum 48 characters in UTF-8 encoding.
 
 levelIDs
-: The IDs of access levels. Each access group can have up to 128 access levels.
+: The IDs of access levels or floor levels. The ID of an access level should be less than 32768, while it should be 32768 or more for a floor level. Each access group can have up to 128 levels.
 
 ### GetList
 Get access groups stored on a device.
@@ -123,7 +125,7 @@ message AccessLevel {
 {: #AccessLevel }
 
 ID
-: The ID of the access level.
+: The ID of the access level. It should be less than 32768.
 
 name
 : Maximum 48 characters in UTF-8 encoding.
@@ -219,6 +221,128 @@ Delete all access levels from a device.
 ### DeleteAllLevelMulti
 
 Delete all access levels from multiple devices.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceIDs | uint32[] | The IDs of the devices |
+
+
+## Floor level
+
+A floor level specifies which floors are accessible for specific schedules. 
+
+```protobuf
+message FloorLevel {
+  uint32 ID;
+  string name;
+  repeated FloorSchedule floorSchedules;
+}
+```
+{: #FloorLevel }
+
+ID
+: The ID of the floor level. It should be equal to or greater than 32768.
+
+name
+: Maximum 48 characters in UTF-8 encoding.
+
+[floorSchedules](#FloorSchedule)
+: A floor schedule specifies when a floor of a lift is accessible. A floor level can have up to 128 floor schedules.
+
+```protobuf
+message FloorSchedule {
+  uint32 liftID;
+  uint32 floorIndex;
+  uint32 scheduleID;
+}
+```
+{: #FloorSchedule }
+
+liftID
+: The ID of a [lift]({{'/api/lift/' | relative_url}}#LiftInfo).
+
+floorIndex
+: The index of a floor in the lift.
+
+scheduleID
+: The ID of a [schedule]({{'/api/schedule/' | relative_url}}#ScheduleInfo).
+
+
+### GetFloorLevelList
+
+Get floor levels stored on a device.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| levels | [FloorLevel[]](#FloorLevel) | The floor levels stored on the device  |
+
+### AddFloorLevel
+
+Add floor levels to a device.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+| levels | [FloorLevel[]](#FloorLevel) | The floor levels to be added to the device |
+
+### AddFloorLevelMulti
+
+Add floor levels to multiple devices.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceIDs | uint32[] | The IDs of the devices |
+| levels | [FloorLevel[]](#FloorLevel) | The floor levels to be added to the devices |
+
+### DeleteFloorLevel
+
+Delete floor levels from a device.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+| levelIDs | uint32[] | The IDs of the levels to be deleted from the device |
+
+### DeleteFloorLevelMulti
+
+Delete floor levels from multiple devices.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceIDs | uint32[] | The IDs of the devices |
+| levelIDs | uint32[] | The IDs of the levels to be deleted from the devices |
+
+### DeleteAllFloorLevel
+
+Delete all floor levels from a device.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+
+### DeleteAllFloorLevelMulti
+
+Delete all floor levels from multiple devices.
 
 | Request |
 

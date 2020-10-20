@@ -37,4 +37,16 @@ The guide will show you how to use the basic APIs for the master gateway in Java
 
 With the master gateway, you have to connect to devices via device gateways. The tutorial will show you how to connect to the devices and configure the related options. 
 
+### [User API]({{'java/user/' | relative_url}})
+
+The tutorial shows how to enroll users and add credentials to them. It also illustrates how to get the event logs with filters. 
+
+### [T&A API]({{'java/tna/' | relative_url}})
+
+The tutorial shows how to configure and get the T&A events. 
+
+### [Thermal API]({{'java/thermal/' | relative_url}})
+
+The tutorial shows how to configure the options related to the thermal camera.
+
 
