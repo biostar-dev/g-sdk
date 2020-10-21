@@ -71,10 +71,7 @@ Connect synchronously to a device. If successful, the device ID will be returned
 
 Synchronous connection is the easier and simpler way to connect to a device. However, if you have tens of or hundreds of devices, managing synchronous connections could become a chore. To alleviate this overload, asynchronous APIs are provided. You only have to register devices to connect. Then, the device gateways will handle all the tasks in the background. When a managed device is disconnected, the device gateway will try to reconnect automatically, too. 
 
-To get the current status of the managed devices, you should use [GetDeviceList](#getdevicelist) or [SubscribeStatus](#subscribestatus).
-
-The asynchronous connection information is not stored in the database. So, you have to reassign them when a device gateway is reconnected to the master gateway. 
-{: .notice--warning}
+There are two kinds of APIs for asynchronous connection. Firstly, you can assign the connection information manually whenever a device gateway is connected to the master gateway. [AddAsyncConnection](#addasyncconnection) and [DeleteAsyncConnection](#deleteasyncconnection) are used for these kinds of scenarios. Secondly, you can store the connection information in the master gateway database. In this case, the master gateway will assign the connection information automatically whenever a device gateway is connected to it. [AddAsyncConnectionDB](#addasyncconnectiondb), [DeleteAsyncConnectionDB](#deleteasyncconnectiondb), and [GetAsyncConnectionDB](#getasyncconnectiondb) are provided for this.
 
 ### AddAsyncConnection
 
@@ -82,6 +79,9 @@ Add the target devices to a device gateway. The device gateway will manage the c
 
 You can use [SearchDevice](#searchdevice) to find out devices in a subnet. 
 {: .notice--info}
+
+The asynchronous connection information is not stored in the database. So, you have to reassign them when a device gateway is reconnected to the master gateway. If you want the master gateway to handle this automatically, please use [AddAsyncConnectionDB](#addasyncconnectiondb) instead. 
+{: .notice--warning}
 
 | Request |
 
@@ -101,6 +101,45 @@ Delete the specified devices from a device gateway. If these device are connecte
 | gatewayID | string | The ID of the gateway from which the devices are deleted |
 | deviceIDs | uint32[] | The IDs of the devices to be deleted |
 
+### AddAsyncConnectionDB
+
+Add the target devices of a device gateway to the database. The master gateway will assign them to the device gateway whenever it is reconnected. 
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the gateway to which the devices are added |
+| connectInfos | [AsyncConnectInfo[]]({{'/api/connect/' | relative_url}}#AsyncConnectInfo) | The connection information of the devices |
+
+### DeleteAsyncConnectionDB
+
+Delete the specified devices from the database. If these device are connected, they will be disconnected first. 
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the gateway from which the devices are deleted |
+| deviceIDs | uint32[] | The IDs of the devices to be deleted |
+
+### GetAsyncConnectionDB
+
+Get the target devices of a device gateway from the database. 
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the gateway |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| connectInfos | [AsyncConnectInfo[]]({{'/api/connect/' | relative_url}}#AsyncConnectInfo) | The connection information of the gateway stored in the database |
+
+
 ## Device-to-server connection
 
 To make a device connect to a device gateway, you have to do the followings;
@@ -108,12 +147,12 @@ To make a device connect to a device gateway, you have to do the followings;
 1. Set [IPConfig.connectionMode]({{'/api/network/' | relative_url}}#IPConfig) to __DEVICE_TO_SERVER__.
 2. Modify the [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter) to include the device ID.
 
-The filter is not stored in the database. So, you have to reconfigure it when a device gateway is reconnected to the master gateway. 
-{: .notice--warning}
-
 ### SetAcceptFilter
 
 You can select the devices to be accepted using the [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter).
+
+The filter is not stored in the database. So, you have to reconfigure it when a device gateway is reconnected to the master gateway. If you want the master gateway to handle it automatically, please use [SetAcceptFilterDB](#setacceptfilterdb) instead. 
+{: .notice--warning}
 
 | Request |
 
@@ -131,7 +170,30 @@ Get the accept filter of a device gateway.
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
 | gatewayID | string | The ID of the gateway |
-| filter | [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter) | The filter set by [SetAcceptFilter](#SetAcceptFilter) |
+| filter | [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter) | The filter set by [SetAcceptFilter](#setacceptfilter) |
+
+
+### SetAcceptFilterDB
+
+Store the accept filter of a device gateway in the database. The master gateway will reconfigure it whenever the device gateway is reconnected.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the gateway to which the filter is assigned |
+| filter | [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter) | The filter specifying the accept list |
+
+### GetAcceptFilterDB
+
+Get the accept filter of a device gateway from the database.
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the gateway |
+| filter | [AcceptFilter]({{'/api/connect/' | relative_url}}#AcceptFilter) | The filter set by [SetAcceptFilterDB](#setacceptfilterdb) |
 
 ### GetPendingList
 

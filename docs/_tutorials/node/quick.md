@@ -101,7 +101,7 @@ function getClient() {
 2. Connect to the gateway and get the client.
 
     ```javascript
-    connect.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    connect.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 ## 3. Connect to BioStar devices
@@ -162,34 +162,25 @@ function disconnect(deviceIDs) {
 1. Initialize the Connect client.
    
     ```javascript
-    connect.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    connect.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 2. Connect to the specified device. As default, the device is not set to use SSL. To use SSL, you have to enable it first using [Connect.EnableSSL]({{'/api/connect/' | relative_url}}#enablessl). The returned device ID will be used for other APIs.
   
     ```javascript
-    connect.connectToDevice(DEVICE_IP, DEVICE_PORT, USE_SSL)
-    .then((devID) => {
-      // do something
-    });
+    const devID = await connect.connectToDevice(deviceIP, devicePort, useSSL);
     ```
 
 3. Get the devices, which are managed by the gateway.
    
     ```javascript
-    connect.getDeviceList()
-    .then((devList) => {
-      // do something
-    });
+    const devList = await connect.getDeviceList();
     ```
 
 4. Disconnect the device.
    
     ```javascript  
-    var deviceIDs = [];
-    deviceIDs.push(deviceID);
-
-    connect.disconnect(deviceIDs);
+    await connect.disconnect([deviceID]);
     ```
 
 ## 4. Device
@@ -232,24 +223,18 @@ function getCapabilityInfo(devID) {
 1. Initialize the Device client.
 
     ```javascript
-    device.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    device.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 2. Get the version information of the device.
 
     ```javascript
-    device.getInfo(devID)
-    .then((info) => {
-      // do something
-    });
+    const info = await device.getInfo(devID);
     ```
 
 3. Get the capability information of the device. Each device type has its own capability. For example, [CapabilityInfo.faceSupported]({{'/api/device/' | relative_url }}#CapabilityInfo) will be true only for FaceStation 2 and FaceLite.
 
     ```javascript
-    device.getCapabilityInfo(devID)
-    .then((capInfo) => {
-      // do something
-    });
+    const capInfo = await device.getCapabilityInfo(devID);
     ```
 
 ## 5. Fingerprint
@@ -306,34 +291,26 @@ function getConfig(devID) {
 1. Initialize the Finger client.
  
     ```javascript
-    finger.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    finger.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 2. Scan a fingerprint on the device and get the template data. You can assign this template to a user using [User.SetFinger]({{'/api/user/' | relative_url }}#setfinger).
    
     ```javascript
-    finger.scan(devID, TEMPLATE_FORMAT, 50)
-    .then((templateData) => {
-      // do something
-    });
+    const templateData = await finger.scan(devID, TEMPLATE_FORMAT, 50);
     ```
 
 3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```javascript
-    finger.getImage(devID)
-    .then((bmpImage) => {
-      fs.writeFileSync(IMAGE_FILENAME, bmpImage);
-    });
+    const bmpImage = await finger.getImage(devID);
+    fs.writeFileSync(IMAGE_FILENAME, bmpImage);
     ```    
 
 4. Get the fingerprint configuration. To change some of its options, call [Finger.SetConfig]({{'/api/finger/' | relative_url }}#setconfig).
 
     ```javascript
-    finger.getConfig(devID)
-    .then((config) => {
-      // do something
-    });
+    const config = await finger.getConfig(devID);
     ```
 
 ## 6. Card
@@ -413,26 +390,20 @@ function getConfig(devID) {
 1. Initialize the Card client.
 
     ```javascript
-    card.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    card.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 2. Scan a card.
 
     ```javascript
-    card.scan(devID)
-    .then((cardData) => {
-      // do something
-    });
+    const cardData = await card.scan(devID);
     ```
 
 3. BioStar devices manage a blacklist to disable disqualified cards. You can get/add/delete blacklisted cards.
 
     ```javascript
     // Get the current blacklist
-    card.getBlacklist(devID)
-    .then((blacklist) => {
-      // do something
-    });
+    var blacklist = await card.getBlacklist(devID);
 
     // Add new items into the blacklist
     var cardInfos = [];
@@ -445,7 +416,7 @@ function getConfig(devID) {
       cardInfos.push(item);
     }
 
-    card.AddBlacklist(devID, cardInfos)
+    await card.addBlacklist(devID, cardInfos);
     ```
 
 ## 7. User
@@ -528,25 +499,20 @@ function setFinger(devID, userFingerInfos) {
 1. Initialize the User client.
 
     ```javascript
-    user.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    user.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 2. Get the user list and detailed information.
 
     ```javascript
-    return user.getList(devID)
-    .then((hdrs) => {
-      var userIDs = [];
+    var hdrs = await user.getList(devID);
+    var userIDs = [];
 
-      for(i = 0; i < hdrs.length; i++) {
-        userIDs.push(hdrs[i].id);
-      }
-    
-      return user.getUser(devID, userIDs);
-    })
-    .then((userInfos) => {
-      // do something
-    });
+    for(i = 0; i < hdrs.length; i++) {
+      userIDs.push(hdrs[i].id);
+    }
+
+    const userInfos = await user.getUser(devID, userIDs);
     ```
 
 3. Enroll new users.
@@ -563,7 +529,7 @@ function setFinger(devID, userFingerInfos) {
       userInfos.push(userInfo);
     }
 
-    user.enroll(devID, userInfos());
+    await user.enroll(devID, userInfos);
     ```
 
 4. Set fingerprints to users. You can also set cards, access groups, and job codes in similar fashion. 
@@ -573,32 +539,28 @@ function setFinger(devID, userFingerInfos) {
 
     var userIDs = []
     userIDs.push(userID);
-    
-    return user.getUser(devID, userIDs)
-    .then((userInfos) => {
-      return finger.scan(devID, TEMPLATE_FORMAT, 50);
-    })
-    .then((templateData) => {
-      fingerData.addTemplates(templateData, 0);
-      return finger.scan(devID, TEMPLATE_FORMAT, 50);
-    })
-    .then((templateData) => {
-      fingerData.addTemplates(templateData, 1);
 
-      var userFingers = [];
-      var userFinger = new user.userMessage.UserFinger();
-      userFinger.setUserid(userID);
-      userFinger.addFingers(fingerData, 0);
-      userFingers.push(userFinger);
+    var userInfos = await user.getUser(devID, userIDs);
 
-      return user.setFinger(devID, userFingers);
-    })
+    var templateData = await finger.scan(devID, TEMPLATE_FORMAT, 50);
+    fingerData.addTemplates(templateData, 0);
+
+    templateData = await finger.scan(devID, TEMPLATE_FORMAT, 50);
+    fingerData.addTemplates(templateData, 1);    
+
+    var userFingers = [];
+    var userFinger = new user.userMessage.UserFinger();
+    userFinger.setUserid(userID);
+    userFinger.addFingers(fingerData, 0);
+    userFingers.push(userFinger);
+
+    await user.setFinger(devID, userFingers);
     ```
 
 5. Delete new users.
 
     ```javascript
-    user.deleteUser(devID, userIDs);
+    await user.deleteUser(devID, userIDs);
     ```
 
 ## 8. Event
@@ -672,50 +634,48 @@ function disableMonitoring(devID) {
 1. Initialize the Event client.
 
     ```javascript
-    event.initClient(`${SERVER_IP}:${SERVER_PORT}`, sslCreds);
+    event.initClient(`${GATEWAY_IP}:${GATEWAY_PORT}`, sslCreds);
     ```
 
 2. Get event logs. You can specify the first ID and the maximum number of events to be returned. 
 
     ```javascript
-    event.getLog(devID, 0, MAX_NUM_OF_LOG)
-    .then((events) => {
-      // do something
-    });
+    const events = await event.getLog(devID, 0, MAX_NUM_OF_LOG);
     ```
 
 3. Get image logs in JPG format. Only the devices with the [CapabilityInfo.imageLogSupported]({{'/api/device/' | relative_url }}#CapabilityInfo) can store image logs. You can also specify the event types to save image logs using [Event.SetImageFilter]({{'/api/event/' | relative_url }}#setimagefilter).
 
     ```javascript
-    event.getImageLog(devID, 0, MAX_NUM_OF_IMAGE_LOG)
-    .then((imageEvents) => {
-      if(imageEvents.length > 0) {
-        let buf = new Buffer(imageEvents[0].jpgimage, 'base64');
+    const imageEvents = await event.getImageLog(devID, 0, MAX_NUM_OF_IMAGE_LOG);
+    if(imageEvents.length > 0) {
+      let buf = new Buffer(imageEvents[0].jpgimage, 'base64');
 
-        fs.writeFileSync(LOG_IMAGE_NAME, buf);
-      }   
-    });
+      fs.writeFileSync(LOG_IMAGE_NAME, buf);
+    }  
     ```
 
 4. Enable event monitoring of the device and receive real-time events asynchronously. 
 
     ```javascript
-    event.enableMonitoring(devID)
-    .then(() => {
-      sub = event.subscribe(EVENT_QUEUE_SIZE);
+    await event.enableMonitoring(devID);
 
-      sub.on('data', (event) => {
-        console.log('Event: ', event.toObject());
-      });
+    const sub = event.subscribe(EVENT_QUEUE_SIZE);
 
-      sub.on('end', () => {
-        console.log('Subscription is finished');
-      });
-
-      sub.on('error', (err) => {
-        console.log('Subscription error: ', err);
-      })
+    sub.on('data', (event) => {
+      console.log('Event: ', event.toObject());
     });
+
+    sub.on('end', () => {
+      console.log('Subscription is finished');
+    });
+
+    sub.on('error', (err) => {
+      if(err.details === 'Cancelled') {
+        console.log("Subscription is cancelled");
+      } else {
+        console.log('Subscription error: ', err);
+      }
+    })
     ```
 
 5. Stop monitoring.
@@ -723,7 +683,7 @@ function disableMonitoring(devID) {
     ```javascript
     sub.cancel();
     
-    event.disableMonitoring(devID);
+    await event.disableMonitoring(devID);
     ```
 
 

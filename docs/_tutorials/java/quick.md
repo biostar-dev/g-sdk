@@ -230,19 +230,19 @@ public class FingerSvc {
     fingerStub = stub;
   }
 
-  public byte[] scan(int deviceID, TemplateFormat templateFormat, int qualityThreshold) throws Exception {
+  public ByteString scan(int deviceID, TemplateFormat templateFormat, int qualityThreshold) throws Exception {
     ScanRequest request = ScanRequest.newBuilder().setDeviceID(deviceID).setTemplateFormat(templateFormat).setQualityThreshold(qualityThreshold).build();
     ScanResponse response = fingerStub.scan(request);
 
-    return response.getTemplateData().toByteArray();
+    return response.getTemplateData();
   } 
 
-  public byte[] getImage(int deviceID) throws Exception {
+  public ByteString getImage(int deviceID) throws Exception {
     GetImageRequest request = GetImageRequest.newBuilder().setDeviceID(deviceID).build();
     GetImageResponse response = fingerStub.getImage(request);
 
-    return response.getBMPImage().toByteArray();
-  } 
+    return response.getBMPImage();
+  }  
 
   public FingerConfig getConfig(int deviceID) throws Exception {
     GetConfigRequest request = GetConfigRequest.newBuilder().setDeviceID(deviceID).build();
@@ -262,13 +262,13 @@ public class FingerSvc {
 2. Scan a fingerprint on the device and get the template data. You can assign this template to a user using [User.SetFinger]({{'/api/user/' | relative_url }}#setfinger).
    
     ```java
-    byte[] templateData = ingerSvc.scan(deviceID, TemplateFormat.TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD);
+    ByteString templateData = ingerSvc.scan(deviceID, TemplateFormat.TEMPLATE_FORMAT_SUPREMA, QUALITY_THRESHOLD);
     ```
 
 3. Get the scanned fingerprint image and save it to a BMP file.
 
     ```java
-    byte[] bmpImage = fingerSvc.getImage(deviceID);
+    byte[] bmpImage = fingerSvc.getImage(deviceID).toByteArray();;
     FileOutputStream bmpFile = new FileOutputStream(FINGERPRINT_IMAGE_FILE);
     bmpFile.write(bmpImage);
     bmpFile.close();

@@ -27,7 +27,7 @@ The guide will show you how to use the basic APIs for the device gateway in Go.
 
 ### [Connect API]({{'go/connect/' | relative_url}})
 
-To manage BioStar devices, you have to connect them to the device gateway first. The tutorial will show you how to connect to the devices and configure the related options. 
+To manage BioStar devices, you have to connect them to the device gateway first. The tutorial shows how to connect to the devices and configure the related options. 
 
 ### [Quick Start Guide for Master Gateway]({{'/go/quickMaster/' | relative_url}})
 
@@ -35,5 +35,16 @@ The guide will show you how to use the basic APIs for the master gateway in Go.
 
 ### [Connect Master API]({{'go/connectMaster/' | relative_url}})
 
-With the master gateway, you have to connect to devices via device gateways. The tutorial will show you how to connect to the devices and configure the related options. 
+With the master gateway, you have to connect to devices via device gateways. The tutorial shows how to connect to the devices and configure the related options. 
 
+### [User API]({{'go/user/' | relative_url}})
+
+The tutorial shows how to enroll users and add credentials to them. It also illustrates how to get the event logs with filters. 
+
+### [T&A API]({{'go/tna/' | relative_url}})
+
+The tutorial shows how to configure and get the T&A events. 
+
+### [Thermal API]({{'go/thermal/' | relative_url}})
+
+The tutorial shows how to configure the options related to the thermal camera.

@@ -53,6 +53,9 @@ Create the server certificate
 >>> Certificate will expire after n years [5]:
 ```
 
+If you want to connect to the gateway at the same machine with __localhost__, you have to add __localhost__ to the DNS names.
+{: .notice--warning}
+
 ### Import certificates
 
 You can use the certificates you already have for the device gateway. You have to change the __cert__ section of [the configuration file]({{'/gateway/config/' | relative_url}}) accordingly.

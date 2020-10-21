@@ -94,15 +94,14 @@ dualAuthScheduleID
 : Specify the devices to which the dual authentication will be applied. For example, if it is __DUAL_AUTH_ENTRY_DEVICE_ONLY__, it is applied to the entry device only.
 
 [dualAuthType](#DualAuthType)
-: If it is __DUAL_AUTH_LAST__, the second user should belong to [dualAuthGroupIDs](#DualAuthGroupIDs). If it is __DUAL_AUTH_NONE__, the [dualAuthGroupIDs](#DualAuthGroupIDs) will be ignored.
-{: #DualAuthType }
+: If it is __DUAL_AUTH_LAST__, the second user belonging to [dualAuthGroupIDs](#DualAuthGroupIDs) should authenticate after the first user within __dualAuthTimeout__. If it is __DUAL_AUTH_NONE__, dual authentication is not needed.
+{: #DualAuth }
 
 dualAuthTimeout
 : The maximum interval in seconds between the two authentications. That is, the second user should authenticate within this timeout after the first user's authentication.
 
 dualAuthGroupIDs
-: See [dualAuthType](#DualAuthType). Maximum 16 access groups can be set as dual authentication groups.
-{: #DualAuthGroupIDs }
+: See [dualAuthType](#DualAuth). Maximum 16 access groups can be set as dual authentication groups.
 
 
 ```protobuf

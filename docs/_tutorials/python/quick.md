@@ -9,7 +9,7 @@ toc_label: "Table of Contents"
 1. [Install and run the gateway]({{'/gateway/install/' | relative_url}})
 2. [Download the Python client library]({{'/python/install/' | relative_url}})
 3. Copy the root certificate of the gateway to your working directory. As default, the certificate(_ca.crt_) resides in _cert_ of the installation directory. 
-4. Change the server and the device information in example/quick/quick.py_ as needed.
+4. Change the server and the device information in _example/quick/quick.py_ as needed.
    
     ```python
     # the path of the root certificate

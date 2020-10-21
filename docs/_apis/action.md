@@ -62,8 +62,8 @@ message EventTrigger {
 ```
 {: #EventTrigger }
 
-eventCode
-: Refer to [BS2Event.code](http://kb.supremainc.com/bs2sdk/doku.php?id=en:log_management_api).
+[eventCode]({{'/api/event/' | relative_url}}#EventCode)
+: The event type which will trigger the action. 
 
 ```protobuf
 message InputTrigger {
@@ -79,7 +79,7 @@ port
 : The index of the port.
 
 [switchType]({{'/api/device/' | relative_url}}#SwitchType)
-: 
+: The type of the input port.
 
 duration
 : The minimum duration for which the signal should be detected in milliseconds. 

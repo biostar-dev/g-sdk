@@ -49,6 +49,10 @@ master_gateway -c
 >>> Certificate will expire after n years [5]:
 ```
 
+If you want to connect to the gateway at the same machine with __localhost__, you have to add __localhost__ to the DNS names.
+{: .notice--warning}
+
+
 ### Tenant certificate
 
 The master gateway is designed to support multi-tenant systems. Each tenant should have its own certificate to connect to the master gateway. You can create a tenant certificate using __-ct__ option as follows. For the usage of the tenant certificate, refer to the quick start guide of your language. 
