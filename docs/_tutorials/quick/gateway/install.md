@@ -30,7 +30,9 @@ device-gateway -c
 >>> Do you want to use the same information as root CA? [Y/n]:
 >>> Common Name (e.g. server FQDN or YOUR name) []: gateway.supremainc.com
 >>> More DNS names? [y/N]:
->>> More IPv4 address? [y/N]:
+>>> More IPv4 address? [y/N]: y
+>>> IPv4 Address (eg, 8.8.8.8) []: 192.168.0.2
+>>> IPv4 Address (eg, 8.8.8.8) []:
 >>> Server certificate will expire after n years [2]: 5
 ```
 
