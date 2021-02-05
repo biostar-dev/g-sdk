@@ -11,7 +11,9 @@ The Node.js SDK depends on the following library.
 
 You can install it using __npm__ as described in the [installation]({{'/node/install/' | relative_url}}).
 
-## Generated files
+## Language mapping
+
+As for mapping messages into JavaScript classes, see the [reference](https://developers.google.com/protocol-buffers/docs/reference/javascript-generated#message).
 
 There are two types of generated files. All the gRPC messages are converted into __XXX\_pb.js__, while the functions of services are into __XX\_grpc\_pb.js__. There files will be in _biostar/service_. For their usage, refer to the [tutorials]({{'/node/' | relative_url}}#tutorials).
 

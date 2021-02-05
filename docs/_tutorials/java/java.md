@@ -21,6 +21,12 @@ The language specific APIs to use the gRPC APIs.
 
 In addition to the API reference, you can also refer to the following tutorials.
 
+In some environments, you might fail to connect to the gateway while running the examples. To narrow down the connection issues, enable the gRPC debugging as below.
+{: .notice--info}
+  ```
+  $ env JAVA_OPTS=-Djava.util.logging.config.file=logging.properties ./build/install/java/bin/quickStart
+  ```
+
 ### [Quick Start Guide for Device Gateway]({{'/java/quick/' | relative_url}})
 
 The guide will show you how to use the basic APIs for the device gateway in Java.
@@ -41,12 +47,42 @@ With the master gateway, you have to connect to devices via device gateways. The
 
 The tutorial shows how to enroll users and add credentials to them. It also illustrates how to get the event logs with filters. 
 
+### [Event API]({{'java/event/' | relative_url}})
+
+The tutorial shows how to get event logs from the devices. 
+
 ### [T&A API]({{'java/tna/' | relative_url}})
 
 The tutorial shows how to configure and get the T&A events. 
+
+### [Door API]({{'java/door/' | relative_url}})
+
+Door is the basic unit of access control. The tutorial shows how to configure doors and access groups.
+
+### [Schedule API]({{'java/schedule/' | relative_url}})
+
+Schedule is used for configuring access groups, actions, zones, etc. The tutorial shows how to configure weekly and daily schedules.
+
+### [Trigger & Action API]({{'java/action/' | relative_url}})
+
+The tutorial shows how to configure triggers and actions.
 
 ### [Thermal API]({{'java/thermal/' | relative_url}})
 
 The tutorial shows how to configure the options related to the thermal camera.
 
+### [Wiegand API]({{'java/wiegand/' | relative_url}})
 
+You have to configure Wiegand formats to interface with 3rd party readers or controllers. The tutorial shows how to configure two widely used formats.
+
+### [Anti Passback API]({{'java/apb/' | relative_url}})
+
+The tutorial shows how to configure an anti passback zone consisting of devices connected by RS485.
+
+### [Server API]({{'java/server/' | relative_url}})
+
+The tutorial shows how to implement server matching.
+
+### [Status API]({{'java/status/' | relative_url}})
+
+With headless devices such as BioEntry W2, you can configure the LED and buzzer signals for specified status.

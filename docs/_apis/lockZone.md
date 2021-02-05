@@ -10,21 +10,21 @@ You can keep doors locked or unlocked according to the specified schedules.
 
 ```protobuf
 message ZoneInfo {
-  uint32 zoneID = 1;
-  string name = 2;
+  uint32 zoneID;
+  string name;
 
-  uint32 lockScheduleID = 3;
-  uint32 unlockScheduleID = 4;
-  
-  bool bidirectionalLock = 5;
-  
-  bool disabled = 6;
-  bool alarmed = 7;
+  uint32 lockScheduleID;
+  uint32 unlockScheduleID;
 
-  repeated uint32 doorIDs = 8;
-  repeated action.Action actions = 9;
-  repeated uint32 bypassGroupIDs = 10;
-  repeated uint32 unlockGroupIDs = 11;
+  bool bidirectionalLock;
+
+  bool disabled;
+  bool alarmed;
+
+  repeated uint32 doorIDs;
+  repeated action.Action actions;
+  repeated uint32 bypassGroupIDs;
+  repeated uint32 unlockGroupIDs;
 }
 ```
 {: #ZoneInfo }

@@ -12,7 +12,9 @@ The C++ SDK depends on the following libraries.
 
 Since these libraries are handled by CMake, you don't have to install them manually. Refer to _CMakeLists.txt_ in the examples.
 
-## Generated source files
+## Language mapping
+
+As for mapping messages into C++ classes, see the [reference](https://developers.google.com/protocol-buffers/docs/reference/cpp-generated#message).
 
 The generated source files of G-SDK will be in _biostar/service_. For the usage of these classes, refer to the [tutorials]({{'/cpp/' | relative_url}}#tutorials).
 

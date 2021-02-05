@@ -12,7 +12,9 @@ The Java SDK depends on the following libraries.
 
 Since these libraries are handled by Gradle, you don't have to install them manually. Refer to _build.gradle_ for details.
 
-## Generated classes
+## Language mapping
+
+As for mapping messages into Java classes, see the [reference](https://developers.google.com/protocol-buffers/docs/reference/java-generated#message).
 
 The generated classes of G-SDK will be in _build/generated/source/proto/main/java/com/supremainc/sdk_ and _build/generated/source/proto/main/grpc/com/supremainc/sdk_. For the usage of these classes, refer to the [tutorials]({{'/java/' | relative_url}}#tutorials).
 

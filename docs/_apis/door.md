@@ -46,10 +46,10 @@ name
 : Maximum 48 characters in UTF-8 encoding.
 
 entryDeviceID
-: The ID of the entry device. 
+: The ID of the entry device. If the door has only one device, you should set it as the entry device.
 
 exitDeviceID
-: The ID of the exit device. 
+: The ID of the exit device. You have to set it only if the door consists of two devices connected by RS485. 
 
 [relay](#Relay)
 : The port information of the relay.

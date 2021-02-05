@@ -98,6 +98,28 @@ Scan a face and get its template data. With higher __enrollThreshold__, you can 
 | --------- | ---- | ----------- |
 | faceData | [FaceData](#FaceData) | The scanned face data |
 
+### Extract
+
+Extract face templates from image files. 
+
+Only supported by FaceStation F2. If the image file is not acquired by a FaceStation F2, the image data should be in JPG file format. 
+{: .notice--warning}
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+| imageData | byte[] | If the image file is acquired by a FaceStation F2, it will be in BMP file format. Otherwise, only JPG file format is supported. |
+| isWarped | bool  | If the image file is acquired by a FaceStation F2, it should be true. Otherwise, it should be false. |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| templateData | byte[] | The template data extracted from the image |
+
+
 ## Config
 
 The default values would be good for most cases. Since some of these parameters could have a bad effect on the authentication performance, read the descriptions carefully before changing them. 

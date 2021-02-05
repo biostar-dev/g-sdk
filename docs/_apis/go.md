@@ -11,8 +11,9 @@ The Go SDK depends on the following libraries.
 
 You can install it as described in the [installation]({{'/go/install/' | relative_url}}).
 
+## Language mapping
 
-## Generated structures
+As for mapping messages into go structures, see the [reference](https://developers.google.com/protocol-buffers/docs/reference/go-generated#message).
 
 The generated files, __XXX_pb.go__, will be in _src/biostar/service_. For their usage, refer to the [tutorials]({{'/go/' | relative_url}}#tutorials).
 

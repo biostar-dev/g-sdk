@@ -33,6 +33,9 @@ enum Status {
   LOCKED = 0x02;
   UNLOCKED = 0x04;
 
+  LIFT_LOCKED = 0x02;
+  LIFT_UNLOCKED = 0x04;
+
   ARMED = 0x08;
   DISARMED = 0x00;
 }
@@ -49,6 +52,12 @@ LOCKED
 
 UNLOCKED
 : The zone is unlocked by schedule. Only for [the scheduled lock zone]({{ 'api/zone/lock' | relative_url }}).
+
+LIFT_LOCKED
+: The lifts are deactivated by schedule. Only for [the lift zone]({{ 'api/zone/lift' | relative_url }}).
+
+LIFT_UNLOCKED
+: The lifts are activated by schedule. Only for [the lift zone]({{ 'api/zone/lift' | relative_url }}).
 
 ARMED
 : [The intrusion alarm zone]({{ 'api/zone/intrusion' | relative_url }}) is armed. 
@@ -79,3 +88,7 @@ You can keep doors locked or unlocked according to the specified schedules.
 # [Interlock zone]({{ 'api/zone/interlock' | relative_url }})
 
 Interlock zone monitors the status of two or more doors to control that one door cannot be opened or closed if other doors are open or unlocked. You can also disable access if a user stays within the zone.
+
+# [Lift zone]({{ 'api/zone/lift' | relative_url }})
+
+You can keep floors of a lift activated or deactivated according to the specified schedules. 

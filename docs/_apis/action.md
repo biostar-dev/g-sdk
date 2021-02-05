@@ -132,6 +132,7 @@ message Action {
   SoundAction sound;
   LEDAction LED;
   BuzzerAction buzzer;
+  LiftAction lift;
 }
 ```
 {: #Action }
@@ -165,6 +166,9 @@ delay
 
 [buzzer](#BuzzerAction)
 : Valid only if the __type__ is __ACTION_BUZZER__.
+
+[lift](#LiftAction)
+: Valid only if the __type__ is __ACTION_LIFT__.
 
 ```protobuf
 enum ActionType {
@@ -236,7 +240,7 @@ ACTION_AUTH_FAIL
 : Play the same action as authentication fails.
 
 ACTION_LIFT
-: Not yet supported.
+: Activate or deactivate the lift.
 
 ```protobuf
 enum StopFlag {
@@ -346,7 +350,7 @@ message BuzzerAction {
 ```
 {: #BuzzerAction }
 
-[signals](#BuzzerAction)
+[signals](#BuzzerSignal)
 : The signals to be played on the buzzer.
 
 ```protobuf
@@ -370,6 +374,38 @@ duration
 
 delay
 : The starting delay in milliseconds. 
+
+```protobuf
+message LiftAction {
+  uint32 liftID;
+  LiftActionType type;
+}
+```
+{: #LiftAction }
+
+liftID
+: The ID of the lift.
+
+[type](#LiftActionType)
+: The action to be executed on the lift.
+
+```protobuf
+enum LiftActionType {
+  LIFT_ACTION_ACTIVATE_FLOORS;
+  LIFT_ACTION_DEACTIVATE_FLOORS;
+  LIFT_ACTION_RELEASE_FLOORS;
+}
+```
+{: #LiftActionType }
+
+LIFT_ACTION_ACTIVATE_FLOORS
+: Activate the floors of the lift.
+
+LIFT_ACTION_DEACTIVATE_FLOORS
+: Deactivate the floors of the lift.
+
+LIFT_ACTION_RELEASE_FLOORS
+: Reset the flags of the lift.
 
 
 ## Config

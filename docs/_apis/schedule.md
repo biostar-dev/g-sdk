@@ -48,7 +48,7 @@ message DailySchedule {
 {: #DailySchedule}
 
 startDate
-: The start time of the schedule in Unix time format.
+: The start date of the schedule in the range of 0 to 365. January 1st is 0.
 
 daySchedules
 : Up to 90 [DaySchedule](#DaySchedule)s can be assigned to a __DailySchedule__.

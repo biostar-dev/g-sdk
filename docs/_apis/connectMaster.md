@@ -353,7 +353,7 @@ Disable SSL on multiple devices
 
 You can add slave devices on a RS485 channel or Wiegand input of a device. For searching and registering slave devices, refer to the corresponding sections in [RS485]({{'/api/rs485/' | relative_url}}#slave-devices) and [Wiegand]({{'/api/wiegand/' | relative_url}}#slave-devices).
 
-The slave information is not stored in the database. So, to access the slave devices, you have to call [SetSlaveDevice](#setslavedevice) when the device gateway is reconnected.
+Like asynchronous connection, there are two kinds of APIs for slave devices. Firstly, you can assign the information manually whenever a device gateway is connected to the master gateway. [SetSlaveDevice](#setslavedevice) is used for these kinds of scenarios. Secondly, you can store the information in the master gateway database. In this case, the master gateway will assign the slaves automatically whenever a device gateway is connected to it. [AddSlaveDeviceDB](#addslavedevicedb) and [DeleteSlaveDeviceDB](#deleteslavedevicedb) are provided for this.
 
 ### GetSlaveDevice
 
@@ -381,3 +381,42 @@ Set the slave device information of a device gateway. The slave devices should b
 | --------- | ---- | ----------- |
 | gatewayID | string | The ID of the device gateway |
 | slaveDeviceInfos | [SlaveDeviceInfo[]](#SlaveDeviceInfo) | The slave device information |
+
+### AddSlaveDeviceDB
+
+Add the slave device information to the master gateway database. The master gateway will assign them to the specified gateway whenever it is reconnected. 
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the device gateway |
+| slaveDeviceInfos | [SlaveDeviceInfo[]]({{'/api/connect/' | relative_url}}#SlaveDeviceInfo) | The slave device information to be added |
+
+### DeleteSlaveDeviceDB
+
+Delete the slave device information from the master gateway database. 
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the device gateway |
+| slaveDeviceInfos | [SlaveDeviceInfo[]]({{'/api/connect/' | relative_url}}#SlaveDeviceInfo) | The slave device information to be deleted |
+
+
+### GetSlaveDeviceIDB
+
+Get the slave device information of a device gateway stored on the database.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| gatewayID | string | The ID of the device gateway |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| slaveDeviceInfos | [SlaveDeviceInfo[]]({{'/api/connect/' | relative_url}}#SlaveDeviceInfo) | The slave device information stored on the database |

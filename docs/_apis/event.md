@@ -16,6 +16,12 @@ message EventLog {
   uint32 subCode;
   tna.Key TNAKey;
   bool hasImage;
+  bool changedOnDevice;
+  uint32 temperature;
+  bytes cardData;
+  DetectInputInfo inputInfo;
+  AlarmZoneInfo alarmZoneInfo;
+  InterlockZoneInfo interlockZoneInfo;
 }
 ```
 {: #EventLog}
@@ -27,7 +33,7 @@ timestamp
 : In Unix time format. The number of seconds elapsed since January 1, 1970.
 
 userID/entityID
-: For user related events such as __EVENT_VERIFY_SUCCESS__ or __EVENT_USER_ENROLL_SUCCESS__, the __userID__ will be set. For other types of events, the __entity_ID__ could be a door ID or zone ID. 
+: For user related events such as __EVENT_VERIFY_SUCCESS__ or __EVENT_USER_ENROLL_SUCCESS__, the __userID__ will be set. For other types of events, the __entity_ID__ could be either a door ID or zone ID. 
 
 eventCode
 : 16 bit code identifying the event type.
@@ -57,16 +63,14 @@ eventCode
   | Device | BS2_EVENT_DEVICE_SYSTEM_RESET | 0x3000 | system reset |
   || BS2_EVENT_DEVICE_SYSTEM_STARTED | 0x3100 | system started |
   || BS2_EVENT_DEVICE_TIME_SET | 0x3200 | system time set |
-  || BS2_EVENT_DEVICE_TIMEZONE_SET | 0x3201 | timezone change |
-  || BS2_EVENT_DEVICE_DST_SET | 0x3202 | DST change |
+  || BS2_EVENT_DEVICE_TIMEZONE_SET | 0x3201 | timezone changed |
+  || BS2_EVENT_DEVICE_DST_SET | 0x3202 | DST changed |
   || BS2_EVENT_DEVICE_LINK_CONNECTED | 0x3300 | LAN cable connected |
-  || BS2_EVENT_DEVICE_LINK_DISCONNETED | 0x3400 | LAN cable disconnected |
+  || BS2_EVENT_DEVICE_LINK_DISCONNECTED | 0x3400 | LAN cable disconnected |
   || BS2_EVENT_DEVICE_DHCP_SUCCESS | 0x3500 | IP address acquired by DHCP |
   || BS2_EVENT_DEVICE_ADMIN_MENU | 0x3600 | enter administrator menu |
-  || BS2_EVENT_DEVICE_UI_LOCKED | 0x3700 | UI locked |
-  || BS2_EVENT_DEVICE_UI_UNLOCKED | 0x3800 | UI unlocked |
-  || BS2_EVENT_DEVICE_COMM_LOCKED | 0x3900 | RS485 communication disabled |
-  || BS2_EVENT_DEVICE_COMM_UNLOCKED | 0x3A00 | RS485 communication enabled |
+  || BS2_EVENT_DEVICE_UI_LOCKED | 0x3700 | device locked |
+  || BS2_EVENT_DEVICE_UI_UNLOCKED | 0x3800 | device unlocked |
   || BS2_EVENT_DEVICE_TCP_CONNECTED | 0x3B00 | TCP connected |
   || BS2_EVENT_DEVICE_TCP_DISCONNECTED | 0x3C00 | TCP disconnected |
   || BS2_EVENT_DEVICE_RS485_CONNECTED | 0x3D00 | RS485 connected |
@@ -74,9 +78,7 @@ eventCode
   || BS2_EVENT_DEVICE_INPUT_DETECTED | 0x3F00 | input signal detected |
   || BS2_EVENT_DEVICE_TAMPER_ON | 0x4000 | tamper SW is on |
   || BS2_EVENT_DEVICE_TAMPER_OFF | 0x4100 | tamper SW is off |
-  || BS2_EVENT_DEVICE_TAMPER_OFF | 0x4100 | tamper SW is off |
-  || BS2_EVENT_DEVICE_EVENT_LOG_CLEARED | 0x4200 | log records cleared |
-  || BS2_EVENT_DEVICE_EVENT_LOG_CLEARED | 0x4200 | log records cleared |
+    || BS2_EVENT_DEVICE_EVENT_LOG_CLEARED | 0x4200 | log records cleared |
   || BS2_EVENT_DEVICE_FIRMWARE_UPGRADED | 0x4300 | firmware upgraded |
   || BS2_EVENT_DEVICE_RESOURCE_UPGRADED | 0x4400 | resource upgraded |
   || BS2_EVENT_DEVICE_CONFIG_RESET | 0x4500 | system configurations initialized (including network) |
@@ -85,20 +87,21 @@ eventCode
   || BS2_EVENT_DEVICE_CONFIG_RESET_EX | 0x4503 | system configurations initialized (excluding network) |
   || BS2_EVENT_SUPERVISED_INPUT_SHORT | 0x4600 | short circuit of a supervised input detected |
   || BS2_EVENT_SUPERVISED_INPUT_OPEN | 0x4700 | disconnection of a supervised input detected |
-  || BS2_EVENT_DEVICE_AC_FAIL | 0x4800 | AC power failure |
-  || BS2_EVENT_DEVICE_AC_SUCCESS | 0x4900 | AC power success |
   | Door | BS2_EVENT_DOOR_UNLOCKED | 0x5000 | door unlocked |
   || BS2_EVENT_DOOR_LOCKED | 0x5100 | door locked |
-  || BS2_EVENT_DOOR_OPENED | 0x5200 | door open |
-  || BS2_EVENT_DOOR_CLOSED | 0x5300 | door closed |
+  || BS2_EVENT_DOOR_OPENED | 0x5200 | door open detected by sensor |
+  || BS2_EVENT_DOOR_CLOSED | 0x5300 | door closed detected by sensor |
   || BS2_EVENT_DOOR_FORCED_OPEN | 0x5400 | door forced open |
   || BS2_EVENT_DOOR_HELD_OPEN | 0x5500 | door held open too long |
   || BS2_EVENT_DOOR_FORCED_OPEN_ALARM | 0x5600 | forced open alarm |
   || BS2_EVENT_DOOR_FORCED_OPEN_ALARM_CLEAR | 0x5700 | forced open alarm cleared |
   || BS2_EVENT_DOOR_HELD_OPEN_ALARM | 0x5800 | held open alarm | 
   || BS2_EVENT_DOOR_HELD_OPEN_ALARM_CLEAR | 0x5900 | held open alarm cleared | 
-  || BS2_EVENT_DOOR_APB_ALARM | 0x5A00 | door anti-passback alarm |
-  || BS2_EVENT_DOOR_APB_ALARM_CLEAR | 0x5B00 | door anti-passback alarm cleared |
+  || BS2_EVENT_DOOR_APB_ALARM | 0x5A00 | anti-passback alarm on a door |
+  || BS2_EVENT_DOOR_APB_ALARM_CLEAR | 0x5B00 | anti-passback alarm on a door cleared |
+  || BS2_EVENT_DOOR_RELEASE | 0x5C00 | door status reset |
+  || BS2_EVENT_DOOR_LOCK | 0x5D00 | lock door |
+  || BS2_EVENT_DOOR_UNLOCK | 0x5E00 | unlock door |
   | Zone | BS2_EVENT_ZONE_APB_VIOLATION | 0x6000 | APB zone violated |
   || BS2_EVENT_ZONE_APB_ALARM | 0x6100 | APB zone alarm |
   || BS2_EVENT_ZONE_APB_ALARM_CLEAR | 0x6200 | APB zone alarm cleared |
@@ -117,10 +120,10 @@ eventCode
   || BS2_EVENT_ZONE_SCHEDULED_LOCK_ALARM_CLEAR | 0x6F00 | scheduled lock zone alarm cleared |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_VIOLATION | 0x9000 | intrusion zone violated |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_ARM_GRANTED | 0x9100 | arming intrusion zone |
-  || BS2_EVENT_ZONE_INTRUSION_ALARM_ARM_SUCCESS | 0x9200 | arming intrusion zone success |
+  || BS2_EVENT_ZONE_INTRUSION_ALARM_ARM_SUCCESS | 0x9200 | intrusion zone armed |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_ARM_FAIL | 0x9300 | arming intrusion zone failure |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_DISARM_GRANTED | 0x9400 | disarming intrusion zone |
-  || BS2_EVENT_ZONE_INTRUSION_ALARM_DISARM_SUCCESS | 0x9500 | disarming intrusion zone success |
+  || BS2_EVENT_ZONE_INTRUSION_ALARM_DISARM_SUCCESS | 0x9500 | intrusion zone disarmed |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_DISARM_FAIL | 0x9600 | disarming intrusion zone failure |
   || BS2_EVENT_ZONE_INTRUSION_ALARM | 0x9800 | intrusion alarm |
   || BS2_EVENT_ZONE_INTRUSION_ALARM_CLEAR | 0x9900 | intrusion alarm  cleared |
@@ -203,6 +206,82 @@ TNAKey
 
 hasImage
 : True if the event has an image log related to it. You can read image logs using [GetImageLog](#getimagelog).
+
+changedOnDevice
+: True if the user is enrolled, changed, or deleted at the device. 
+
+temperature
+: Temperature of the user. Refer to [Thermal API]({{'/api/thermal/' | relative_url}}) for the related options.
+
+cardData
+: If [eventCode](#EventCode) is BS2_EVENT_VERIFY_FAIL and [subCode](#SubCode) is BS2_SUB_EVENT_CREDENTIAL_CARD, this field will have the failed card data.
+
+[inputInfo](#DetectInputInfo)
+: If [eventCode](#EventCode) is BS2_EVENT_DEVICE_INPUT_DETECTED, BS2_EVENT_SUPERVISED_INPUT_SHORT, or BS2_EVENT_SUPERVISED_INPUT_OPEN, it will have additional information about the input port.
+
+[alarmZoneInfo](#AlarmZoneInfo)
+: If [eventCode](#EventCode) is BS2_EVENT_ZONE_INTRUSION_ALARM_ARM_FAIL or BS2_EVENT_ZONE_INTRUSION_ALARM, it will have additional information about the alarm zone.
+
+[interlockZoneInfo](#InterlockZoneInfo)
+: If [eventCode](#EventCode) is BS2_EVENT_ZONE_INTERLOCK_VIOLATION, it will have additional information about the interlock zone.
+
+```protobuf
+message DetectInputInfo {
+  uint32 ioDeviceID;
+  uint32 port;
+  PortValue value;
+}
+```
+{: #DetectInputInfo}
+
+ioDeviceID
+: The device ID of the input port.
+
+port
+: The index of the port
+
+[value](#PortValue)
+: The detected value of the port.
+
+```protobuf
+enum PortValue {
+  OPEN = 0;
+  CLOSED = 1;
+  SUPERVISED_SHORT = 2;
+  SUPERVISED_OPEN = 3;
+};
+```
+{: #PortValue}
+
+OPEN
+: The port is open.
+
+CLOSED
+: The port is closed.
+
+SUPERVISED_SHORT
+: The supervised port is short-circuited. 
+
+SUPERVISED_OPEN
+: The supervised port is open.
+
+```protobuf
+message AlarmZoneInfo {
+  uint32 zoneID;
+  uint32 doorID;
+  uint32 ioDeviceID;
+  uint32 port;
+}
+```
+{: #AlarmZoneInfo}
+
+```protobuf
+message InterlockZoneInfo {
+  uint32 zoneID;
+  repeated uint32 doorIDs; 
+}
+```
+{: #InterlockZoneInfo}
 
 
 ### GetLog

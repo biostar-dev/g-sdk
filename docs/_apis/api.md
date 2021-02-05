@@ -28,6 +28,7 @@ A master gateway manages devices through one or more device gateways. Due to thi
 | [Login]({{'/api/login/' | relative_url}}) | X | O | login as an administrator or a tenant |
 | [Tenant]({{'/api/tenant/' | relative_url}}) | X | O | manage tenants |
 | [Gateway]({{'/api/gateway/' | relative_url}}) | X | O | manage device gateways |
+| [Server]({{'/api/server/' | relative_url}}) | O | X | implement server matching |
 
 
 ### API definition
@@ -112,6 +113,9 @@ Scan a fingerprint. You can also configure the options related to authenticating
 ### [Face]({{ 'api/face/' | relative_url }})
 Scan face templates. You can also configure the options related to authenticating faces.
 
+### [Server]({{ 'api/server/' | relative_url }})
+Implement server matching.
+
 ## Access control APIs
 You can specify which users can access which doors for specific schedules. 
 
@@ -176,6 +180,8 @@ You can configure several types of zones for high-level functions such as anti p
 ### [Scheduled lock zone]({{ 'api/zone/lock' | relative_url }})
 
 ### [Interlock zone]({{ 'api/zone/interlock' | relative_url }})
+
+### [Lift zone]({{ 'api/zone/lift' | relative_url }})
 
 ## Misc. APIs
 
