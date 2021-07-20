@@ -17,6 +17,10 @@ main:
     url: /go/
   - title: "C++"
     url: /cpp/
+  - title: "Kotlin"
+    url: /kotlin/
+  - title: "Swift"
+    url: /swift/
   - title: "Articles"
     url: /categories/
 
@@ -108,7 +112,10 @@ api:
         url: /api/go/
       - title: C++
         url: /api/cpp/
-
+      - title: Kotlin
+        url: /api/kotlin/
+      - title: Swift
+        url: /api/swift/
 
 quick:
   - title: Device Gateway
@@ -165,6 +172,9 @@ java:
         url: "/java/server/"
       - title: "Status"
         url: "/java/status/"
+      - title: "User Synchronization"
+        url: "/java/sync/"
+
 
 csharp:
   - title: "Installation"
@@ -201,6 +211,8 @@ csharp:
         url: "/csharp/server/"
       - title: "Status"
         url: "/csharp/status/"
+      - title: "User Synchronization"
+        url: "/csharp/sync/"
 
 node:
   - title: "Installation"
@@ -237,6 +249,8 @@ node:
         url: "/node/server/"
       - title: "Status"
         url: "/node/status/"
+      - title: "User Synchronization"
+        url: "/node/sync/"
 
 python:
   - title: "Installation"
@@ -273,6 +287,8 @@ python:
         url: "/python/server/"
       - title: "Status"
         url: "/python/status/"
+      - title: "User Synchronization"
+        url: "/python/sync/"
 
 go:
   - title: "Installation"
@@ -315,6 +331,8 @@ go:
         url: "/go/server/"
       - title: "Status"
         url: "/go/status/"
+      - title: "User Synchronization"
+        url: "/go/sync/"
       
 cpp:
   - title: "Installation"
@@ -351,3 +369,23 @@ cpp:
         url: "/cpp/server/"
       - title: "Status"
         url: "/cpp/status/"
+      - title: "User Synchronization"
+        url: "/cpp/sync/"
+
+kotlin:
+  - title: "Installation"
+    url: "/kotlin/install/"
+  - title: "Tutorials"
+    children:
+      - title: "Quick Start"
+        url: "/kotlin/quick/"
+      - title: "Android"
+        url: "/kotlin/android/"
+
+swift:
+  - title: "Installation"
+    url: "/swift/install/"
+  - title: "Tutorials"
+    children:
+      - title: "iOS"
+        url: "/swift/ios/"

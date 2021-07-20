@@ -27,7 +27,7 @@ In some environments, you might fail to connect to the gateway while running the
   $ export GRPC_GO_LOG_VERBOSITY_LEVEL=99 && GRPC_GO_LOG_SEVERITY_LEVEL=info ./quick
   ```
 
-### [Quick Start Guide for Device gateway]({{'/go/quick/' | relative_url}})
+### [Quick Start Guide for Device Gateway]({{'/go/quick/' | relative_url}})
 
 The guide will show you how to use the basic APIs for the device gateway in Go. 
 
@@ -86,3 +86,6 @@ The tutorial shows how to implement server matching.
 ### [Status API]({{'go/status/' | relative_url}})
 
 With headless devices such as BioEntry W2, you can configure the LED and buzzer signals for specified status.
+
+### [User Synchronization]({{'go/sync/' | relative_url}})
+This example shows how to synchronize user information between devices. You can also learn how to use realtime monitoring and [XXX_Multi commands]({{'api/' | relative_url}}#xxx_multi-command).

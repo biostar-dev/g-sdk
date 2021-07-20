@@ -23,6 +23,7 @@ enum Type {
   CARD_TYPE_CSN	= 0x01;
   CARD_TYPE_SECURE = 0x02;
   CARD_TYPE_ACCESS = 0x03;
+  CARD_TYPE_QR = 0x06;
   CARD_TYPE_WIEGAND = 0x0A;    
 }
 ```
@@ -35,6 +36,9 @@ CARD_TYPE_SECURE
 
 CARD_TYPE_ACCESS
 : CARD_TYPE_ACCESS cards stores access group information of users in addition to their credentials. Since all the information for authentication is on a card, the device does not need to store any user information. 
+
+CARD_TYPE_QR
+: [X-Station 2](https://www.supremainc.com/en/hardware/versatile-intelligent-terminal-xstation2.asp) supports QR codes as credentials. See [WriteQRCode](#writeqrcode) and [QRConfig](#QRConfig).
 
 CARD_TYPE_WIEGAND
 : For Wiegand cards, you have to configure the format to decode the data. See [the article](https://support.supremainc.com/en/support/solutions/articles/24000027804--biostar-2-wiegand-configuration-faq) for details. 
@@ -55,7 +59,7 @@ message CardData {
 : 
 
 [CSNCardData](#CSNCardData)
-: Valid only with CARD_TYPE_CSN.
+: Valid only with CARD_TYPE_CSN or CARD_TYPE_QR.
 
 [smartCardData](#SmartCardData)
 : Valid only with CARD_TYPE_SECURE or CARD_TYPE_ACCESS.
@@ -202,6 +206,23 @@ Write a smartcard on a device. If the card is not empty, you have to erase it fi
 | --------- | ---- | ----------- |
 | deviceID | uint32 | The ID of the device |
 | smartCardData | [SmartCardData](#SmartCardData) | The smartcard information to be written |
+
+### WriteQRCode
+
+Convert a QR code into [CSNCardData](#CSNCardData), which can be assigned to user using [User.Enroll]({{'/api/user/' | relative_url }}#enroll-1) or [User.SetCard]({{'/api/user/' | relative_url }}#setcard).
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| QRText | string | Up to 32 ASCII codes |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| cardData | [CSNCardData](#CSNCardData) | The card data which can be assigned to user |
+
 
 ## Config
 
@@ -464,6 +485,58 @@ Change the V1 configurations of multiple devices.
 | --------- | ---- | ----------- |
 | deviceIDs | uint32[] | The IDs of the devices |
 | config | [Card1XConfig](#Card1XConfig) | The V1 card configuration to be written to the devices |
+
+### GetQRConfig
+
+X-Station 2 supports QR codes as credentials. A QR code can be composed of up to 32 ASCII codes. See [WriteQRCode](#writeqrcode) for converting a QR code string into card data.
+
+```protobuf
+message QRConfig {
+  bool useQRCode;
+  uint32 scanTimeout;
+}
+```
+{: #QRConfig }
+
+useQRCode
+: Enable reading QR codes.
+
+scanTimeout
+: Timeout in seconds for reading a QR code.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+
+| Response |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| config | [QRConfig](#QRConfig) | The QR configuration of the device  |
+
+### SetQRConfig
+
+Change the QR configuration of a device.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceID | uint32 | The ID of the device |
+| config | [QRConfig](#QRConfig) | The QR configuration to be written to the device |
+
+### SetQRConfigMulti
+
+Change the QR configurations of multiple devices.
+
+| Request |
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| deviceIDs | uint32[] | The IDs of the devices |
+| config | [QRConfig](#QRConfig) | The QR configuration to be written to the devices |
 
 ## Blacklist
 

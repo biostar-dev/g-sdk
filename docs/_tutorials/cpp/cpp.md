@@ -86,3 +86,6 @@ The tutorial shows how to implement server matching.
 ### [Status API]({{'/cpp/status/' | relative_url}})
 
 With headless devices such as BioEntry W2, you can configure the LED and buzzer signals for specified status.
+
+### [User Synchronization]({{'/cpp/sync/' | relative_url}})
+This example shows how to synchronize user information between devices. You can also learn how to use realtime monitoring and [XXX_Multi commands]({{'api/' | relative_url}}#xxx_multi-command).

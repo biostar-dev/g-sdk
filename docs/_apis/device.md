@@ -81,6 +81,8 @@ message CapabilityInfo {
 
   bool OSDPKeySupported;
   bool RS485ExtSupported;
+
+  bool QRSupported;
 }
 ```
 {: #CapabilityInfo }
@@ -115,6 +117,10 @@ enum Type {
   XPASS_D2_KEYPAD = 0x18;
   FACELITE = 0x19;
   XPASS2_KEYPAD	= 0x1A;
+  FACESTATION_F2_FP = 0x1D;
+  FACESTATION_F2 = 0x1E;
+  XSTATION_2_QR = 0x1F;
+  XSTATION_2 = 0x20;
 }
 ```
 {: #Type }

@@ -9,6 +9,7 @@ title: "Python Installation"
 * Install gRPC
    ```
    python -m pip install grpcio
+   python -m pip install grpcio-status
    ```
 
 ## Python Library
